@@ -7,6 +7,8 @@ using echo17.EndlessBook;
 /// <summary>
 /// Handles updating most values of the Book object
 /// </summary>
+/// 
+#if UNITY_EDITOR
 [CustomEditor(typeof(EndlessBook))]
 public class BookInspector : Editor
 {
@@ -241,3 +243,4 @@ public class BookInspector : Editor
         }
     }
 }
+#endif

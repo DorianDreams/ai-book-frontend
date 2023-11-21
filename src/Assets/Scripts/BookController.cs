@@ -8,7 +8,7 @@ namespace echo17.EndlessBook.Demo03
     /// <summary>
     /// This demo shows one way you could implement manual page dragging in your book
     /// </summary>
-	public class Demo03 : MonoBehaviour
+	public class BookController : MonoBehaviour
 	{
 
         /// <summary>
@@ -73,7 +73,8 @@ namespace echo17.EndlessBook.Demo03
 		{
 			// cache the box collider for faster referencing
 			boxCollider = gameObject.GetComponent<BoxCollider>();
-		}
+            Debug.Log(boxCollider);
+        }
 
         private void Start()
         {
@@ -89,12 +90,21 @@ namespace echo17.EndlessBook.Demo03
         /// </summary>
         void OnMouseDown()
 		{
+			Debug.Log("OnMouseDown");
             if (book.CurrentState == EndlessBook.StateEnum.ClosedFront)
 			{
-                book.SetState(EndlessBook.StateEnum.OpenMiddle);
-                book.TurnToPage(book.CurrentLeftPageNumber + 3, EndlessBook.PageTurnTimeTypeEnum.TimePerPage, 0.1f);
+                book.SetState(EndlessBook.StateEnum.OpenFront);
                 return;
             }
+
+            if (book.CurrentState == EndlessBook.StateEnum.OpenFront)
+            {
+                
+                book.SetState(EndlessBook.StateEnum.OpenMiddle);
+
+                return;
+            }
+
 
             if (book.IsTurningPages || book.IsDraggingPage || UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
 			{
@@ -188,6 +198,7 @@ namespace echo17.EndlessBook.Demo03
 			//isTurning = false;
 		}
         protected virtual void OnBookStateChanged(EndlessBook.StateEnum fromState, EndlessBook.StateEnum toState, int pageNumber)
+
         {
             switch (toState)
             {
