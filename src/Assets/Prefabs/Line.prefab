@@ -139,7 +139,7 @@ LineRenderer:
   m_MaskInteraction: 0
   m_UseWorldSpace: 1
   m_Loop: 0
-  m_ApplyActiveColorSpace: 1
+  m_ApplyActiveColorSpace: 0
 --- !u!114 &6380133735627758489
 MonoBehaviour:
   m_ObjectHideFlags: 0

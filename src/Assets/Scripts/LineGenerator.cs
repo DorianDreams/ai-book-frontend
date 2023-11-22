@@ -47,7 +47,8 @@ public class LineGenerator : MonoBehaviour
         switch (color)
         {
             case "black":
-                lineRenderer.material = black;
+                
+                lineRenderer.material = black;              
                 break;
             case "red":
                 lineRenderer.material = red;
@@ -65,6 +66,8 @@ public class LineGenerator : MonoBehaviour
                 lineRenderer.material = black;
                 break;
         }
+        lineRenderer.material.renderQueue = 2000 + Lines.Count;
+
     }
     bool drawOnTablet()
     {
@@ -104,7 +107,7 @@ public class LineGenerator : MonoBehaviour
             if (Input.GetMouseButtonDown(0) )
             {
                 
-                    GameObject newLine = Instantiate(linePrefab);
+                    GameObject newLine = Instantiate(linePrefab, parentCanvas.transform);
                     Lines.Add(newLine);
                     lineRenderer = newLine.GetComponent<LineRenderer>();
                     AssignSelectedColor(selectedColor, lineRenderer);
