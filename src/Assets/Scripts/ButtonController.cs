@@ -7,11 +7,12 @@ using UnityEngine.UIElements;
 
 public class ButtonController : MonoBehaviour
 {
-    public GameObject greenButton;
+    public Transform buttonGroup;
+    /*public GameObject greenButton;
     public GameObject redButton;
     public GameObject blueButton;
     public GameObject orangeButton;
-    public GameObject blackButton;
+    public GameObject blackButton;*/
 
     [SerializeField]
     float widthSelected = 1.4f;
@@ -23,20 +24,21 @@ public class ButtonController : MonoBehaviour
         switch (color)
         {
             case "green":
-                scaleButton(greenButton);
-                break;
-            case "red":
-                scaleButton(redButton);
-                break;
-            case "blue":
-                scaleButton(blueButton);
+                scaleButton(buttonGroup.transform.GetChild(0).gameObject);
                 break;
             case "orange":
-                scaleButton(orangeButton);
+                scaleButton(buttonGroup.transform.GetChild(1).gameObject);
+                break;
+            case "blue":
+                scaleButton(buttonGroup.transform.GetChild(2).gameObject);
                 break;
             case "black":
-                scaleButton(blackButton);
+                scaleButton(buttonGroup.transform.GetChild(3).gameObject);
                 break;
+            case "red":
+                scaleButton(buttonGroup.transform.GetChild(4).gameObject);
+                break;          
+            
         }
     }
 
@@ -47,10 +49,9 @@ public class ButtonController : MonoBehaviour
 
     void scaleButtonNormal()
     {
-        greenButton.transform.localScale = new Vector3(1, 1, 1);
-        redButton.transform.localScale = new Vector3(1, 1, 1);
-        blueButton.transform.localScale = new Vector3(1, 1, 1);
-        orangeButton.transform.localScale = new Vector3(1, 1, 1);
-        blackButton.transform.localScale = new Vector3(1, 1, 1);
+        foreach (Transform child in transform)
+        {
+            child.localScale = new Vector3(1, 1, 1);
+        }
     }
 }

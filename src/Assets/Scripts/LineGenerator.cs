@@ -20,9 +20,7 @@ public class LineGenerator : MonoBehaviour
     [SerializeField]
     float tolerance = .1f;
 
-   
-    
-
+ 
     Vector3 GetMousePosition()
     {
         Vector2 movePos;
@@ -81,12 +79,12 @@ public class LineGenerator : MonoBehaviour
 
         if (results.Count == 0)
         {
-            return false;
-        }
-        else if (results.Count == 1 && results[0].gameObject.name == "Tablet")
-        {
             return true;
         }
+        /*else if (results.Count == 1 && results[0].gameObject.name == "Tablet")
+        {
+            return true;
+        }*/
         else
         {
             return false;
