@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class SceneController : MonoBehaviour
+public class DrawingScreenController : MonoBehaviour
 {
     public Camera BookCamera;
     public Camera UICamera;
@@ -11,11 +11,14 @@ public class SceneController : MonoBehaviour
     public GameObject Display2;
     public GameObject LineGeneratorPrefab;
     public GameObject ButtonGroupPrefab;
+    public GameObject SendToAIButton;
+
     public int ShowDisplay;
     private GameObject InstantiatedLineGenerator;
 
     [SerializeField]
     float widthSelected = 1.4f;
+
 
 
     // Start is called before the first frame update
@@ -35,6 +38,7 @@ public class SceneController : MonoBehaviour
         }
     }
 
+
     public void SwitchCamera()
     {
         if(ShowDisplay == 2)
@@ -48,19 +52,23 @@ public class SceneController : MonoBehaviour
         }
         else if(ShowDisplay == 1)
         {
-            
-            InstantiatedLineGenerator = Instantiate(LineGeneratorPrefab);
-            InstantiatedLineGenerator.GetComponent<LineGenerator>().parentCanvas = Display2.GetComponent<Canvas>();
+            InstantiateLineGenerator();
             UICamera.enabled = true;
             Display2.SetActive(true);
             BookCamera.enabled = false;
             Display1.SetActive(false);
             ShowDisplay = 2;
-            AssignColor("black");
-            //InstantiatedButtonGroup = Instantiate(ButtonGroupPrefab);
-            //InstantiatedButtonGroup.transform.SetParent(Display2.transform, false);
         }
     }
+
+
+    void InstantiateLineGenerator()
+    {
+        InstantiatedLineGenerator = Instantiate(LineGeneratorPrefab);
+        InstantiatedLineGenerator.GetComponent<LineGenerator>().parentCanvas = Display2.GetComponent<Canvas>();
+        AssignColor("black");
+    }
+
 
     public void AssignColor(string color)
     {
@@ -99,4 +107,6 @@ public class SceneController : MonoBehaviour
             child.localScale = new Vector3(1, 1, 1);
         }
     }
+
+
 }

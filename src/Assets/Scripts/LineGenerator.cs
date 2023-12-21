@@ -65,9 +65,9 @@ public class LineGenerator : MonoBehaviour
                 break;
         }
         lineRenderer.material.renderQueue = 2000 + Lines.Count;
-
     }
-    bool drawOnTablet()
+
+    bool drawOnImage()
     {
         GraphicRaycaster gr = parentCanvas.GetComponent<GraphicRaycaster>();
         PointerEventData ped = new PointerEventData(null);
@@ -77,7 +77,7 @@ public class LineGenerator : MonoBehaviour
 
 
 
-        if (results.Count == 0)
+        if (results.Count == 1 && results[0].gameObject.name == "Image")
         {
             return true;
         }
@@ -95,7 +95,7 @@ public class LineGenerator : MonoBehaviour
     void Update()
     {
         {
-            if (!drawOnTablet())
+            if (!drawOnImage())
             {
                 activeLine = null;
             } else

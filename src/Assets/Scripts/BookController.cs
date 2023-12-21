@@ -4,11 +4,12 @@ namespace echo17.EndlessBook.Demo03
 	using System.Collections.Generic;
 	using UnityEngine;
     using echo17.EndlessBook;
+    using UnityEngine.UI;
 
     /// <summary>
     /// This demo shows one way you could implement manual page dragging in your book
     /// </summary>
-	public class BookController : MonoBehaviour
+    public class BookController : MonoBehaviour
 	{
 
         /// <summary>
@@ -68,6 +69,10 @@ namespace echo17.EndlessBook.Demo03
         /// </summary>
         public AudioSource pagesFlippingSound;
 
+		public Image currentImage;
+
+		public Text currentText;
+
 
         void Awake()
 		{
@@ -78,10 +83,11 @@ namespace echo17.EndlessBook.Demo03
 
         private void Start()
         {
+			DebugCurrentState();
 
             // turn on the audio now that the book state is set the first time,
             // otherwise we'd hear a noise and no change would occur
-          
+
 
         }
 
@@ -90,7 +96,6 @@ namespace echo17.EndlessBook.Demo03
         /// </summary>
         void OnMouseDown()
 		{
-			Debug.Log("OnMouseDown");
             if (book.CurrentState == EndlessBook.StateEnum.ClosedFront)
 			{
                 book.SetState(EndlessBook.StateEnum.OpenFront);
@@ -101,7 +106,6 @@ namespace echo17.EndlessBook.Demo03
             {
                 
                 book.SetState(EndlessBook.StateEnum.OpenMiddle);
-
                 return;
             }
 
@@ -123,7 +127,15 @@ namespace echo17.EndlessBook.Demo03
 
 			// the mosue is now currently down
 			isMouseDown = true;
-		}
+
+        }
+
+
+		void DebugCurrentState()
+		{
+            Debug.Log("CurrentState: " + book.CurrentState);
+			Debug.Log("CurrentPageNumber: " + book.CurrentPageNumber);
+        }
 
 		/// <summary>
 	    /// Fired when the mouse intersects with the collider box while dragging
@@ -160,13 +172,15 @@ namespace echo17.EndlessBook.Demo03
 			book.TurnPageDragStop(turnStopSpeed, PageTurnCompleted, reverse: reversePageIfNotMidway ? (book.TurnPageDragNormalizedTime < 0.5f) : false);
             if (book.TurnPageDragNormalizedTime >= 0.5f)
 			{
-                pageTurnSound.Play();
+                //pageTurnSound.Play();
             }
             
 
             // mouse is no longer down, so we can turn a new page if the animation is also completed
             isMouseDown = false;
-		}
+			
+
+        }
 
 		/// <summary>
 		/// Calculates the normalized time based on the mouse position
@@ -195,11 +209,13 @@ namespace echo17.EndlessBook.Demo03
 		/// </summary>
 		protected virtual void PageTurnCompleted(int leftPageNumber, int rightPageNumber)
 		{
-			//isTurning = false;
-		}
+            //isTurning = false;
+            DebugCurrentState();
+        }
         protected virtual void OnBookStateChanged(EndlessBook.StateEnum fromState, EndlessBook.StateEnum toState, int pageNumber)
 
         {
+            DebugCurrentState();
             switch (toState)
             {
                 case EndlessBook.StateEnum.ClosedFront:
@@ -229,7 +245,7 @@ namespace echo17.EndlessBook.Demo03
 						// stop the flipping sound
 						if (audioOn)
 						{
-							pagesFlippingSound.Stop();
+							//pagesFlippingSound.Stop();
 						}
                     }
 
@@ -248,6 +264,7 @@ namespace echo17.EndlessBook.Demo03
 
                     break;
             }
+            
         }
 
     }
