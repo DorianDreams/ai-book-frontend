@@ -179,7 +179,6 @@ namespace echo17.EndlessBook.Demo03
             // mouse is no longer down, so we can turn a new page if the animation is also completed
             isMouseDown = false;
 			
-
         }
 
 		/// <summary>

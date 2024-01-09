@@ -1,16 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class LineGenerator : MonoBehaviour
 {
+    public static LineGenerator instance;
 
     public GameObject linePrefab;
+    public GameObject Slider;
     public Canvas parentCanvas;
     public string selectedColor = "black";
+
+    private UnityEngine.Color color;
+    private Material material;
     public Material black, red, green, blue, orange;
+
+
     List<GameObject> Lines = new List<GameObject>();
     LineRenderer lineRenderer;
     Line activeLine;
@@ -20,6 +29,31 @@ public class LineGenerator : MonoBehaviour
     [SerializeField]
     float tolerance = .1f;
 
+
+    void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+    }
+
+
+    private void Start()
+    {
+        Material material = new Material(Shader.Find("Unlit/Color"));
+        material.color = Color.black;
+        this.material = material;
+        EventSystem.instance.PressColorButton += OnPressColorButton;
+        EventSystem.instance.DeleteLastLine += OnDeleteLastLine;
+    }
+
+    private void OnPressColorButton(UnityEngine.Color color)
+    {
+        selectedColor = color.ToString();
+        this.color = color;
+        material.color = color;
+    }
  
     Vector3 GetMousePosition()
     {
@@ -32,39 +66,13 @@ public class LineGenerator : MonoBehaviour
         positionToReturn.z = parentCanvas.transform.position.z - 0.01f;
         return positionToReturn;
     }
+
     private void OnDestroy()
     {
         foreach (GameObject line in Lines)
         {
             Destroy(line);
         }
-    }
-
-    void AssignSelectedColor(string color, LineRenderer lineRenderer)
-    {
-        switch (color)
-        {
-            case "black":
-                
-                lineRenderer.material = black;              
-                break;
-            case "red":
-                lineRenderer.material = red;
-                break;
-            case "green":
-                lineRenderer.material = green;
-                break;
-            case "blue":
-                lineRenderer.material = blue;
-                break;
-            case "orange":
-                lineRenderer.material = orange;
-                break;
-            default:
-                lineRenderer.material = black;
-                break;
-        }
-        lineRenderer.material.renderQueue = 2000 + Lines.Count;
     }
 
     bool drawOnImage()
@@ -91,9 +99,19 @@ public class LineGenerator : MonoBehaviour
         }
     }
 
+    private void OnDeleteLastLine()
+    {
+        if (Lines.Count > 0)
+        {
+            Destroy(Lines[Lines.Count - 1]);
+            Lines.RemoveAt(Lines.Count - 1);
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
+        width = Slider.GetComponent<Slider>().value;
         {
             if (!drawOnImage())
             {
@@ -108,7 +126,8 @@ public class LineGenerator : MonoBehaviour
                     GameObject newLine = Instantiate(linePrefab, parentCanvas.transform);
                     Lines.Add(newLine);
                     lineRenderer = newLine.GetComponent<LineRenderer>();
-                    AssignSelectedColor(selectedColor, lineRenderer);
+                    lineRenderer.material = material;
+                    lineRenderer.material.renderQueue = 2000 + Lines.Count;
                     lineRenderer.startWidth = width;
                     activeLine = newLine.GetComponent<Line>();
                             

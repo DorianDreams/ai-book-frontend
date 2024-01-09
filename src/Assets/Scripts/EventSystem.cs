@@ -16,6 +16,24 @@ public class EventSystem : MonoBehaviour
         }
     }
 
+    public event Action DeleteLastLine;
+    public void DeleteLastLineEvent()
+    {
+        if (DeleteLastLine != null)
+        {
+            DeleteLastLine();
+        }
+    }
+
+    public event Action<UnityEngine.Color> PressColorButton;
+    public void PressColorButtonEvent(UnityEngine.Color color)
+    {
+        if (PressColorButton != null)
+        {
+            PressColorButton(color);
+        }
+    }
+
     public event Action PublishToBook;
     public void PublishToBookEvent()
     {

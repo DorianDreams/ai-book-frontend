@@ -2,9 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.Networking;
 
 public class DrawingScreenController : MonoBehaviour
 {
+
+    public Button UndoButton;
+    public GameObject ButtonGroup;
+
     public Camera BookCamera;
     public Camera UICamera;
     public GameObject Display1;
@@ -12,9 +18,12 @@ public class DrawingScreenController : MonoBehaviour
     public GameObject LineGeneratorPrefab;
     public GameObject ButtonGroupPrefab;
     public GameObject SendToAIButton;
+    public GameObject Slider;
 
     public int ShowDisplay;
     private GameObject InstantiatedLineGenerator;
+
+    private string url = "http://localhost:5000/api/Drawings";
 
     [SerializeField]
     float widthSelected = 1.4f;
@@ -27,6 +36,17 @@ public class DrawingScreenController : MonoBehaviour
     {
         Display1.SetActive(true);
         Display2.SetActive(false);
+
+        EventSystem.instance.SendToAI += OnSendToAI;
+
+        UndoButton.onClick.AddListener(OnUndoButtonClicked);
+        SendToAIButton.GetComponent<Button>().onClick.AddListener(OnSendToAI);
+
+        foreach (Button button in ButtonGroup.GetComponentsInChildren<Button>())
+        {
+            button.onClick.AddListener(() => OnColorButtonClicked(button));
+        }
+
     }
 
     // Update is called once per frame
@@ -38,6 +58,7 @@ public class DrawingScreenController : MonoBehaviour
         }
     }
 
+    IEnumerator
 
     public void SwitchCamera()
     {
@@ -61,52 +82,35 @@ public class DrawingScreenController : MonoBehaviour
         }
     }
 
+    public void OnSendToAI()
+    {
+        Debug.Log("Send to AI");
+    }
+
+    void OnUndoButtonClicked()
+    {
+        EventSystem.instance.DeleteLastLineEvent();
+    }
+
+    public void OnColorButtonClicked(Button button)
+    {
+        foreach (Transform child in ButtonGroup.transform)
+        {
+            child.localScale = new Vector3(1, 1, 1);
+        }
+        button.transform.localScale = new Vector3(widthSelected, widthSelected, widthSelected);
+        EventSystem.instance.PressColorButtonEvent(button.GetComponent<Image>().color);
+
+    }
+
 
     void InstantiateLineGenerator()
     {
         InstantiatedLineGenerator = Instantiate(LineGeneratorPrefab);
         InstantiatedLineGenerator.GetComponent<LineGenerator>().parentCanvas = Display2.GetComponent<Canvas>();
-        AssignColor("black");
+        InstantiatedLineGenerator.GetComponent<LineGenerator>().Slider = Slider;
     }
 
 
-    public void AssignColor(string color)
-    {
-        InstantiatedLineGenerator.GetComponent<LineGenerator>().selectedColor = color;
-        scaleButtonNormal();
-        Debug.Log(color);
-        switch (color)
-        {
-            case "green":
-                scaleButton(ButtonGroupPrefab.transform.GetChild(0).gameObject);
-                break;
-            case "orange":
-                scaleButton(ButtonGroupPrefab.transform.GetChild(1).gameObject);
-                break;
-            case "blue":
-                scaleButton(ButtonGroupPrefab.transform.GetChild(2).gameObject);
-                break;
-            case "black":
-                scaleButton(ButtonGroupPrefab.transform.GetChild(3).gameObject);
-                break;
-            case "red":
-                scaleButton(ButtonGroupPrefab.transform.GetChild(4).gameObject);
-                break;
-        }
-    }
-
-    void scaleButton(GameObject button)
-    {
-        button.transform.localScale = new Vector3(widthSelected, widthSelected, widthSelected);
-    }
-
-    void scaleButtonNormal()
-    {
-        foreach (Transform child in ButtonGroupPrefab.transform)
-        {
-            child.localScale = new Vector3(1, 1, 1);
-        }
-    }
-
-
+ 
 }
