@@ -113,10 +113,11 @@ public class LineGenerator : MonoBehaviour
     {
         width = Slider.GetComponent<Slider>().value;
         {
+            
             if (!drawOnImage())
             {
                 activeLine = null;
-            } else
+            } else 
             {
 
            
