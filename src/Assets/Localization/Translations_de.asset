@@ -1,0 +1,83 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: Translations_de
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: de
+  m_SharedData: {fileID: 11400000, guid: e16b3b721490e7b459a81e8e4880de90, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 10954825711616
+    m_Localized: "Willkommen zum kollaborativen Malen.\n\nEine KI wird Ihnen dabei
+      helfen, ein Kinderbuch zu illustrieren.\n\nBitte w\xE4hlen Sie einen Anfangssatz
+      auf dem unteren Bildschirm aus."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 291756725682176
+    m_Localized: Wie soll deine Geschichte beginnen?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1112092086026240
+    m_Localized: "Opa ger\xE4t immer in Schwierigkeiten, wenn er ..."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1112245215870976
+    m_Localized: Edgar, der Elefant, liebt Musik. Er spielt ...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1112733231529984
+    m_Localized: "Ratty lebt in einer M\xFClltonne. Er tr\xE4umt davon, ein ..."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1112856619565056
+    m_Localized: Ich liebe es, bei meiner Oma zu sein. Sie hat immer ...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1113323609178112
+    m_Localized: Es ist Schlafenszeit und Billy kann sein ...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1113871548858368
+    m_Localized: "Wanda ist eine Hexe. Sie tr\xE4gt immer ..."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1113939555303424
+    m_Localized: Sally hat eine kleine Schwester, die nicht  ...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1114166207102976
+    m_Localized: "Ben hat einen gro\xDFen Bruder, der nicht ..."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1114258666340352
+    m_Localized: "Der Sturm in der vergangenen Nacht hat den \xE4ltesten Baum im
+      ..."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1114384575152128
+    m_Localized: Mama sagt, es ist Zeit, ...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1114460261367808
+    m_Localized: Papa sagt, es ist Zeit, ...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1879233131364352
+    m_Localized: Um die Geschichte fortzusetzen, zeichne ein Bild auf dem unteren
+      Bildschirm
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

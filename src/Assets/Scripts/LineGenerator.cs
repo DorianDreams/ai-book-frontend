@@ -24,10 +24,9 @@ public class LineGenerator : MonoBehaviour
     LineRenderer lineRenderer;
     Line activeLine;
 
-    [SerializeField]
-    float width = 1f;
-    [SerializeField]
-    float tolerance = .1f;
+    public float width = 1f;
+    //[SerializeField]
+    //float tolerance = .1f;   |  Maybe introduce to make it fancier
 
 
     void Awake()
@@ -45,7 +44,29 @@ public class LineGenerator : MonoBehaviour
         material.color = Color.black;
         this.material = material;
         EventSystem.instance.PressColorButton += OnPressColorButton;
+        EventSystem.instance.DeleteAllLines += OnDeleeteAllLines;
         EventSystem.instance.DeleteLastLine += OnDeleteLastLine;
+        EventSystem.instance.ShowLines += ShowLines;
+        EventSystem.instance.HideLines += HideLines;
+    }
+
+    
+    private void OnDeleeteAllLines()
+    {
+        foreach (GameObject line in Lines)
+        {
+            Destroy(line);
+        }
+        Lines.Clear();
+    }
+
+    private void OnDeleteLastLine()
+    {
+        if (Lines.Count > 0)
+        {
+            Destroy(Lines[Lines.Count - 1]);
+            Lines.RemoveAt(Lines.Count - 1);
+        }
     }
 
     private void OnPressColorButton(UnityEngine.Color color)
@@ -55,17 +76,6 @@ public class LineGenerator : MonoBehaviour
         material.color = color;
     }
  
-    Vector3 GetMousePosition()
-    {
-        Vector2 movePos;
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(
-            parentCanvas.transform as RectTransform,
-            Input.mousePosition, parentCanvas.worldCamera,
-            out movePos);
-        Vector3 positionToReturn = parentCanvas.transform.TransformPoint(movePos);
-        positionToReturn.z = parentCanvas.transform.position.z - 0.01f;
-        return positionToReturn;
-    }
 
     private void OnDestroy()
     {
@@ -75,6 +85,24 @@ public class LineGenerator : MonoBehaviour
         }
     }
 
+
+    public void HideLines()
+    {
+        foreach (GameObject line in Lines)
+        {
+            line.SetActive(false);
+        }
+    }
+
+    public void ShowLines()
+    {
+        foreach (GameObject line in Lines)
+        {
+            line.SetActive(true);
+        }
+    }
+
+    // Drawing functions
     bool drawOnImage()
     {
         GraphicRaycaster gr = parentCanvas.GetComponent<GraphicRaycaster>();
@@ -85,7 +113,7 @@ public class LineGenerator : MonoBehaviour
 
 
 
-        if (results.Count == 1 && results[0].gameObject.name == "Image")
+        if (results.Count == 1 && results[0].gameObject.name == "DrawingBackground")
         {
             return true;
         }
@@ -99,19 +127,23 @@ public class LineGenerator : MonoBehaviour
         }
     }
 
-    private void OnDeleteLastLine()
+    Vector3 GetMousePosition()
     {
-        if (Lines.Count > 0)
-        {
-            Destroy(Lines[Lines.Count - 1]);
-            Lines.RemoveAt(Lines.Count - 1);
-        }
+        Vector2 movePos;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            parentCanvas.transform as RectTransform,
+            Input.mousePosition, parentCanvas.worldCamera,
+            out movePos);
+        Vector3 positionToReturn = parentCanvas.transform.TransformPoint(movePos);
+        positionToReturn.z = parentCanvas.transform.position.z - 0.01f;
+        return positionToReturn;
     }
+
 
     // Update is called once per frame
     void Update()
     {
-        width = Slider.GetComponent<Slider>().value;
+        //width = Slider.GetComponent<Slider>().value;
         {
             
             if (!drawOnImage())

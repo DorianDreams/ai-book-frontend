@@ -1,49 +1,99 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Networking;
-using static System.Net.WebRequestMethods;
+using UnityEngine.Localization.Settings;
+using TMPro;
+using UnityEngine.Localization;
+using Newtonsoft.Json;
+using System.IO;
+using UnityEngine.Localization.Tables;
 
 public class DrawingScreenController : MonoBehaviour
 {
 
+    // Starting Sentence Selection Screen GameObjects
+    [Header("Starting Screen")]
+    public GameObject StartingScreen;
+    public Button StartStoryButton;
+    public Button EnglishButton;
+    public Button GermanButton;
+    public GameObject StartingHeadline;
+    [SerializeField] 
+    private LocalizedString StartingText;
+
+
+    // Move to other class later
+    private int initialPrompts = 11;
+    private ArrayList initialPromptList;
+    private string[] initialPromptArray;
+
+    //Drawing Scene GameObjects
+    [Header("Drawing Mode")]
+    public GameObject DrawingMode;
+    public Canvas DrawingCanvas;
     public Button UndoButton;
     public GameObject ButtonGroup;
-
-    public Camera BookCamera;
-    public Camera UICamera;
-    public GameObject Display1;
-    public GameObject Display2;
-    public GameObject LineGeneratorPrefab;
-    public GameObject ButtonGroupPrefab;
+    [SerializeField]
+    float SelectedButtonWidth = 1.4f;
+    [SerializeField]
+    float StandardButtonWidth = 1f;
+    [SerializeField]
+    float LineWidth = 1f;
+    //public GameObject Slider;
     public GameObject SendToAIButton;
-    public GameObject Slider;
-    public Canvas DrawingCanvas;
-    public RectTransform rectT;
-
-    public int ShowDisplay;
+    public GameObject DeleteAllButton;
+    public GameObject DrawingBackground;
+    public GameObject LineGeneratorPrefab;
     private GameObject InstantiatedLineGenerator;
 
-    private string url = "http://localhost:5000/api/Drawings";
 
-    [SerializeField]
-    float widthSelected = 1.4f;
+    //Resulting Image for Selection
+    [Header("Result Screen")]
+    public GameObject ResultScreen;
+    public GameObject ImageResult1;
+    //public GameObject ImageResult2;
+    //public GameObject ImageResult3;
+    //public GameObject ImageResult4;
+    public Button PublishToBookButton;
+    public Button BacktoDrawing;
+    private string descriptionCandidate;
 
 
+    
 
-    // Start is called before the first frame update
 
     void Start()
     {
-        Display1.SetActive(true);
-        Display2.SetActive(false);
+        //Move to another class later
+        initialPromptList = new ArrayList();
+        StringTable table = LocalizationSettings.StringDatabase.GetTable("Translations");
+        for (int i = 1; i < initialPrompts+1; i++)
+        {
+            initialPromptList.Add(table.GetEntry("InitialPrompt" + i).LocalizedValue);
+            //Debug.Log(initialPromptList[i-1]);
 
+        }
+        initialPromptArray = (string[])initialPromptList.ToArray(typeof(string));
+
+        StartingScreen.SetActive(true);
         EventSystem.instance.SendToAI += OnSendToAI;
+        EventSystem.instance.StartStory += ShowDrawingSceneStart;
+        EventSystem.instance.ChangeLocale += OnChangeLocale;
 
+        // Assign listeners to buttons
+        PublishToBookButton.onClick.AddListener(OnPublishToBook);
+        EnglishButton.onClick.AddListener(OnButtonEnglish);
+        GermanButton.onClick.AddListener(OnButtonGerman);
+        StartStoryButton.onClick.AddListener(OnStartStoryButton);
         UndoButton.onClick.AddListener(OnUndoButtonClicked);
         SendToAIButton.GetComponent<Button>().onClick.AddListener(OnSendToAI);
+        DeleteAllButton.GetComponent<Button>().onClick.AddListener(EventSystem.instance.DeleteAllLinesEvent);
+        BacktoDrawing.GetComponent<Button>().onClick.AddListener(OnBackToDrawing);
+
+        StartingHeadline.GetComponent<TextMeshProUGUI>().text =StartingText.GetLocalizedString();
+
 
         foreach (Button button in ButtonGroup.GetComponentsInChildren<Button>())
         {
@@ -52,106 +102,182 @@ public class DrawingScreenController : MonoBehaviour
 
     }
 
-    // Update is called once per frame
-    void Update()
+    // Move to other class later
+    void reshuffle(string[] texts)
     {
-        if (Input.GetKeyDown(KeyCode.C))
+        // Knuth shuffle algorithm :: courtesy of Wikipedia :)
+        for (int t = 0; t < texts.Length; t++)
         {
-            SwitchCamera();
+            string tmp = texts[t];
+            int r = Random.Range(t, texts.Length);
+            texts[t] = texts[r];
+            texts[r] = tmp;
+        }
+    }
+
+    public string GetRandomPrompt()
+    {
+        reshuffle(initialPromptArray);
+        return initialPromptArray[0];
+    }
+
+    void OnChangeLocale()
+    {
+        StartingHeadline.GetComponent<TextMeshProUGUI>().text = StartingText.GetLocalizedString();
+    }
+    void OnButtonEnglish()
+    {
+        LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[0];
+        EventSystem.instance.ChangeLocaleEvent();
+    }
+    void OnButtonGerman()
+    {        
+        LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[1];
+        EventSystem.instance.ChangeLocaleEvent();
+    }
+
+    void OnStartStoryButton()
+    {
+        if ( Metadata.singleScreenVersion)
+        {
+            EventSystem.instance.SwitchCameraEvent();
+        }
+        Metadata.Instance.currentTextPage = 1;
+        Metadata.Instance.selectedOpeningSentence = GetRandomPrompt();
+        StartCoroutine(CreateStoryBook());
+        EventSystem.instance.StartStoryEvent();
+    }
+
+    void ShowDrawingSceneStart()
+    {
+        StartingScreen.SetActive(false);
+        DrawingMode.SetActive(true);
+        InstantiateLineGenerator();
+    }
+
+    void ShowDrawingSceneEnd()
+    {
+        UndoButton.gameObject.SetActive(false);
+        ButtonGroup.SetActive(false);
+        DrawingBackground.SetActive(false);
+        //Slider.SetActive(false);
+        Destroy(InstantiatedLineGenerator);
+    }
+
+
+ 
+    IEnumerator CreateStoryBook()
+    {
+        using (UnityWebRequest request = UnityWebRequest.Post("http://127.0.0.1:8000/api/storybooks",
+            "{ \"title\": \"to be defined\", \"duration\": 0, \"iterations\": 0,\"status\": true }", "application/json"))
+        {
+            yield return request.SendWebRequest();
+            if (request.result != UnityWebRequest.Result.Success)
+            {
+                Debug.Log(request.error);
+            }
+            else
+            {
+                Debug.Log(request.downloadHandler.text);
+                Dictionary<string,object> returnVal = JsonConvert.DeserializeObject<Dictionary<string,object>>(request.downloadHandler.text);
+                Metadata.Instance.storyBookId = returnVal["id"].ToString();
+            }
         }
     }
 
 
-    public void SwitchCamera()
+  
+
+    public void OnBackToDrawing()
     {
-        if(ShowDisplay == 2)
-        {
-            Destroy(InstantiatedLineGenerator);
-            BookCamera.enabled = true;
-            Display1.SetActive(true);
-            UICamera.enabled = false;
-            Display2.SetActive(false);
-            ShowDisplay = 1;
-        }
-        else if(ShowDisplay == 1)
-        {
-            InstantiateLineGenerator();
-            UICamera.enabled = true;
-            Display2.SetActive(true);
-            BookCamera.enabled = false;
-            Display1.SetActive(false);
-            ShowDisplay = 2;
-        }
+        EventSystem.instance.ShowLinesEvent(); 
+        ResultScreen.SetActive(false);
+        DrawingMode.SetActive(true);
+        ImageResult1.GetComponent<Image>().sprite = null;
     }
+
+    public void OnPublishToBook() {         
+           EventSystem.instance.PublishToBookEvent(ImageResult1.GetComponent<Image>().sprite, descriptionCandidate);
+           if(Metadata.singleScreenVersion)
+        {
+               EventSystem.instance.SwitchCameraEvent();
+           }
+       }
+
 
     public void OnSendToAI()
     {
-        
+        DrawingMode.SetActive(false);
+        EventSystem.instance.HideLinesEvent();
         Debug.Log("Send to AI");
-        StartCoroutine(CoroutineScrenshot((bytes)=>
+        StartCoroutine(CoroutineScrenshot((bytes) =>
         {
-          
-            StartCoroutine(SendImageToAI(bytes));
-        }));
-        
-        
-        //StartCoroutine(CreateStoryBook());
-        
+            StartCoroutine(SendImageToAI(bytes,
+                (returnVal) => showImageSelection(
+                    returnVal))
+
+                );
+        }
+        ));
 
     }
 
-    IEnumerator SendImageToAI(byte[] bytes)
+    public void showImageSelection(Dictionary<string,object> returnVal)
     {
-        string url = "http://127.0.0.1:8000/api/images/f57bfb83-317c-4c54-8881-d37be8fae019";
+        ResultScreen.SetActive(true);
+        string imagePath = returnVal["image"].ToString();
+        descriptionCandidate = returnVal["description"].ToString();
+        
+        string operatingSystem = SystemInfo.operatingSystem;
+        if (operatingSystem.Contains("Windows"))
+        {
+            imagePath = imagePath.Replace("/", "\\");
+            string fullpath= "E:\\thesis\\backend\\storybookcreator" + imagePath;
+            byte[] bytes = System.IO.File.ReadAllBytes(fullpath);
+            Texture2D texture = new Texture2D(1, 1);
+            texture.LoadImage(bytes);
+            ImageResult1.GetComponent<Image>().sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0, 0));
+        }
+        else if (operatingSystem.Contains("Mac"))
+        {
+            imagePath = imagePath.Replace("\\", "/");
+        } else if (operatingSystem.Contains("Linux"))
+        {
+            imagePath = imagePath.Replace("\\", "/");
+        }
+        Debug.Log("showImageSelection");
+    }
+
+    public void publishToBook()
+    {
+
+    }
+
+
+    IEnumerator SendImageToAI(byte[] bytes, System.Action<Dictionary<string, object>> callback)
+    {
+        string url = "http://127.0.0.1:8000/api/images/" + Metadata.Instance.storyBookId;
         WWWForm form = new WWWForm();
         form.AddBinaryData("image", bytes);
         List<IMultipartFormSection> formData = new List<IMultipartFormSection>();
         formData.Add(new MultipartFormFileSection("image", bytes));
-        UnityWebRequest www = UnityWebRequest.Post(url, form);
+        UnityWebRequest request = UnityWebRequest.Post(url, form);
 
-        yield return www.SendWebRequest();
+        yield return request.SendWebRequest();
 
 
-        if (www.isNetworkError || www.isHttpError)
+        if (request.result != UnityWebRequest.Result.Success)
         {
-            Debug.Log(www.error);
+            Debug.Log(request.error);
         }
         else
         {
-            Debug.Log("Form upload complete! " + www.downloadHandler.text);
-
-        }
-
-        /*
-        UnityWebRequest www = UnityWebRequest.Post(http://127.0.0.1:8000/api/images/f57bfb83-317c-4c54-8881-d37be8fae019, formData);
-        yield return www.SendWebRequest();
-        if (www.result != UnityWebRequest.Result.Success)
-        {
-            Debug.Log(www.error);
-        }
-        else
-        {
-            Debug.Log("Image Upload Complete!");
-        }
-        */
-    }
-
-    IEnumerator CreateStoryBook()
-    {
-
-        using (UnityWebRequest www = UnityWebRequest.Post("http://127.0.0.1:8000/api/<", "{ \"title\": \"unity goes brr\", \"duration\": 2, \"iterations\": 0,\"status\": true }", "application/json"))
-        {
-            yield return www.SendWebRequest();
-            if (www.result != UnityWebRequest.Result.Success)
-            {
-                Debug.Log(www.error);
-            }
-            else
-            {
-                Debug.Log("Form upload complete!");
-            }
+            Dictionary<string, object> returnVal = JsonConvert.DeserializeObject<Dictionary<string, object>>(request.downloadHandler.text);
+            Debug.Log("Form upload complete! " + request.downloadHandler.text);
+            callback(returnVal);
         }
     }
+
 
     void OnUndoButtonClicked()
     {
@@ -162,69 +288,49 @@ public class DrawingScreenController : MonoBehaviour
     {
         foreach (Transform child in ButtonGroup.transform)
         {
-            child.localScale = new Vector3(1, 1, 1);
+            child.localScale = new Vector3(StandardButtonWidth, StandardButtonWidth, StandardButtonWidth);
         }
-        button.transform.localScale = new Vector3(widthSelected, widthSelected, widthSelected);
+        button.transform.localScale = new Vector3(SelectedButtonWidth, SelectedButtonWidth, SelectedButtonWidth);
+        Debug.Log(button.GetComponent<Image>().color);
         EventSystem.instance.PressColorButtonEvent(button.GetComponent<Image>().color);
-
     }
 
 
     void InstantiateLineGenerator()
     {
         InstantiatedLineGenerator = Instantiate(LineGeneratorPrefab);
-        InstantiatedLineGenerator.GetComponent<LineGenerator>().parentCanvas = Display2.GetComponent<Canvas>();
-        InstantiatedLineGenerator.GetComponent<LineGenerator>().Slider = Slider;
+        InstantiatedLineGenerator.GetComponent<LineGenerator>().parentCanvas = DrawingCanvas;
+        InstantiatedLineGenerator.GetComponent<LineGenerator>().width = LineWidth;
+        //InstantiatedLineGenerator.GetComponent<LineGenerator>().Slider = Slider;
     }
 
 
     //Code inspired by https://www.youtube.com/watch?v=d5nENoQN4Tw andhttps://gist.github.com/Shubhra22/bab1052cd90b9f4b89b3
-    private IEnumerator CoroutineScrenshot(System.Action<byte[]>callback)
+    private IEnumerator CoroutineScrenshot(System.Action<byte[]> callback)
     {
         yield return new WaitForEndOfFrame();
-
-        Rect rect = RectTransformUtility.PixelAdjustRect(rectT, DrawingCanvas); //public vars
+        Rect rect = RectTransformUtility.PixelAdjustRect(DrawingBackground.GetComponent<RectTransform>(), DrawingCanvas); //public vars
         int textWidth = System.Convert.ToInt32(rect.width); // width of the object to capture
         int textHeight = System.Convert.ToInt32(rect.height); // height of the object to capture
         var startX = System.Convert.ToInt32(rect.x) + Screen.width / 2; // offset X
         var startY = System.Convert.ToInt32(rect.y) + Screen.height / 2; // offset Y
+
         RenderTexture rt = new RenderTexture(Screen.width, Screen.height, 0);
         Camera.main.targetTexture = rt;
         Texture2D screenShot = new Texture2D(textWidth, textHeight, TextureFormat.RGB24, false);
         Camera.main.Render();
         RenderTexture.active = rt;
+
         screenShot.ReadPixels(new Rect(startX, startY-120, textWidth, textHeight), 0, 0);
         Camera.main.targetTexture = null;
         RenderTexture.active = null;
         Destroy(rt);
 
         byte[] bytes = screenShot.EncodeToPNG();
-
-        /*
-        Vector2 temp = rectT.transform.position;
-        int width = System.Convert.ToInt32(rectT.rect.width);
-        int height = System.Convert.ToInt32(rectT.rect.height);
-        var startX = temp.y - height / 2;
-        var startY = temp.x - width / 2;  
-        Debug.Log(width);
-        Debug.Log(height);
-        Debug.Log(temp.y);
-        Debug.Log(temp.x);
-
-
-        //Picture.transform.position.y, Picture.transform.position.x,
-        var tex = new Texture2D(width, height, TextureFormat.RGB24, false);
-        tex.ReadPixels(new Rect(startX, startY, width, height), 0, 0);
-        tex.Apply();
-        
-        byte[] bytes = tex.EncodeToPNG();
-        Destroy(tex);
-
-
-        */
         string timeStamp = System.DateTime.Now.ToString("dd-MM-yyyy-HH-mm-ss");
         string fileName = "Screenshot" + timeStamp + ".png";
         string filePath = Application.dataPath + "/" + fileName;
+
         Debug.Log(filePath);
         System.IO.File.WriteAllBytes(filePath, bytes);
         Debug.Log("Screenshot taken");

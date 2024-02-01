@@ -1,0 +1,81 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: Translations_en
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: en
+  m_SharedData: {fileID: 11400000, guid: e16b3b721490e7b459a81e8e4880de90, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 10954825711616
+    m_Localized: "Welcome to this collaborative drawing experience. \n\nArtificial
+      Intelligence will help you illustrate a children's book. \n\nPlease select
+      a starting sentence on the pad below."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 291756725682176
+    m_Localized: How would your story start?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1112092086026240
+    m_Localized: "Grandad always gets into trouble when he \u2026"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1112245215870976
+    m_Localized: "Edgar the elephant loves music. He plays \u2026"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1112733231529984
+    m_Localized: Ratty lives in a dustbin (garbage can). He dreams of being ...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1112856619565056
+    m_Localized: "I love to stay at grandma's house. She always \u2026"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1113323609178112
+    m_Localized: "It is bedtime and Billy cannot find his \u2026"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1113871548858368
+    m_Localized: "Wanda is a witch. She always wears \u2026"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1113939555303424
+    m_Localized: "Sally has a little sister who will not \u2026"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1114166207102976
+    m_Localized: "Ben has a big brother who will not \u2026"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1114258666340352
+    m_Localized: "The storm last night fell the oldest tree in the \u2026"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1114384575152128
+    m_Localized: "Mum says it is time to \u2026"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1114460261367808
+    m_Localized: "Dad says it is time to \u2026"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1879233131364352
+    m_Localized: To continue the story, draw a picture on the pad below
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

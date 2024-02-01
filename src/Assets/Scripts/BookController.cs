@@ -5,6 +5,11 @@ namespace echo17.EndlessBook.Demo03
 	using UnityEngine;
     using echo17.EndlessBook;
     using UnityEngine.UI;
+    using UnityEngine.Localization;
+    using static System.Net.Mime.MediaTypeNames;
+    using TMPro;
+    using Image = UnityEngine.UI.Image;
+    using UnityEngine.SceneManagement;
 
     /// <summary>
     /// This demo shows one way you could implement manual page dragging in your book
@@ -12,130 +17,236 @@ namespace echo17.EndlessBook.Demo03
     public class BookController : MonoBehaviour
 	{
 
-        /// <summary>
-        /// Make sure the audio is off so that we don't get an open sound at the beginning
-        /// </summary>
-        protected bool audioOn = true;
+		// Book and Page Control
+        public Camera sceneCamera;					// The scene camera used for ray casting
+        public EndlessBook book;					// The book to control
+        public float turnStopSpeed;					// The speed to play the page turn animation when the mouse is let go
+        public bool reversePageIfNotMidway = true;  // reverse direction if not past midway point of book
+        protected BoxCollider boxCollider;			// The box collider to check for mouse motions
+        protected bool isMouseDown;					// Whether the mouse is currently down
+        protected bool turnBookPage = true;			// Keep track whether or not the book can be turned
 
-        /// <summary>
-        /// The scene camera used for ray casting
-        /// </summary>
-        public Camera sceneCamera;
-
-		/// <summary>
-	    /// The book to control
-	    /// </summary>
-		public EndlessBook book;
-
-		/// <summary>
-		/// The speed to play the page turn animation when the mouse is let go
-		/// </summary>
-		public float turnStopSpeed;
-
-		/// <summary>
-	    /// If this is turned on, then the page will reverse direction
-		/// if the page is not past the midway point of the book.
-	    /// </summary>
-		public bool reversePageIfNotMidway = true;
-
-		/// <summary>
-		/// The box collider to check for mouse motions
-		/// </summary>
-		protected BoxCollider boxCollider;
-
-		/// <summary>
-		/// Whether the mouse is currently down
-		/// </summary>
-		protected bool isMouseDown;
+        // Audio Sources
+        protected bool audioOn = false;				// =false so that we don't get an open sound at the beginning
+        public AudioSource bookOpenSound;			// The sound to make when the book opens
+        public AudioSource bookCloseSound;			// The sound to make when the book closes
+        public AudioSource pageTurnSound;			// The sounds for each of the page components' turn
+        public AudioSource pagesFlippingSound;		// The sound to make when multiple pages are turning
 
 
-        /// <summary>
-        /// The sound to make when the book opens
-        /// </summary>
-        public AudioSource bookOpenSound;
+		
+		[Header("Page Objects")]
+		public GameObject RenderPages;				// Page Cameras to enable/disable after rendering
+        public GameObject textP0;
+		public GameObject DownArrow;
+		public GameObject textP1;
+		public GameObject textP2;
+		public LocalizedString drawPictureText;
+        public GameObject DownArrow2;
+        public GameObject imageP2;
+        public GameObject textP3;
+        public GameObject imageP4;
+        public GameObject textP5;
+        public GameObject imageP6;
 
-        /// <summary>
-        /// The sound to make when the book closes
-        /// </summary>
-        public AudioSource bookCloseSound;
 
-        /// <summary>
-        /// The sounds for each of the page components' turn
-        /// </summary>
-        public AudioSource pageTurnSound;
 
-        /// <summary>
-        /// The sound to make when multiple pages are turning
-        /// </summary>
-        public AudioSource pagesFlippingSound;
+		// Delete after testing
+		private bool endBook = false;
 
-		public Image currentImage;
 
-		public Text currentText;
+        void OnStartStory()
+        {
 
+            book.SetState(EndlessBook.StateEnum.OpenMiddle, onCompleted: StartStory);
+			Metadata.Instance.currentTextPage = 1;
+            turnBookPage = false;
+
+
+        }
+
+        private StateChangedDelegate StartStory;
+
+
+
+
+        [SerializeField]
+		private LocalizedString FirstPageText;
 
         void Awake()
 		{
-			// cache the box collider for faster referencing
-			boxCollider = gameObject.GetComponent<BoxCollider>();
+            // cache the box collider for faster referencing
+            boxCollider = gameObject.GetComponent<BoxCollider>();
             Debug.Log(boxCollider);
+			
         }
+
+		private StateChangedDelegate OnBookOpened;
+		private StateChangedDelegate OnBookClosed;
 
         private void Start()
         {
-			DebugCurrentState();
+			Debug.Log("Start Book Controller");
+            textP0.GetComponent<TypewriterEffect>().CompleteTextRevealed += OnCompleteTextRevealed;
+			textP1.GetComponent<TypewriterEffect>().CompleteTextRevealed += OnCompleteTextRevealed;
+			textP2.GetComponent<TypewriterEffect>().CompleteTextRevealed += OnCompleteTextRevealed;
+            EventSystem.instance.StartStory += OnStartStory;
+			EventSystem.instance.ChangeLocale += OnChangeLocale;
+			EventSystem.instance.PublishToBook += OnPublishToBook;
+			//DownArrow.GetComponent<Button>().onClick.AddListener(OnDownArrowClicked);
+            //DownArrow2.GetComponent<Button>().onClick.AddListener(OnDownArrowClicked);
+            StartStory = (EndlessBook.StateEnum fromState,
+                                                EndlessBook.StateEnum toState,
+                                                int pageNumber) =>
+            {
+				textP1.GetComponent<TextMeshProUGUI>().text = Metadata.Instance.selectedOpeningSentence;
+            };
 
-            // turn on the audio now that the book state is set the first time,
-            // otherwise we'd hear a noise and no change would occur
+            OnBookOpened = (EndlessBook.StateEnum fromState,
+				             EndlessBook.StateEnum toState,
+						                    int pageNumber) =>
+			{
+				turnBookPage = false;
+                
+                textP0.GetComponent<TextMeshProUGUI>().text = FirstPageText.GetLocalizedString();
+            };
 
-
+			OnBookClosed = (EndlessBook.StateEnum fromState,
+							 EndlessBook.StateEnum toState,
+											int pageNumber) =>
+			{
+                StartCoroutine(RestartInThree());
+            };
         }
+		
+		void OnChangeLocale()
+		{
+            textP0.GetComponent<TextMeshProUGUI>().text = FirstPageText.GetLocalizedString();
+        }
+
+        private void OnDownArrowClicked()
+        {
+            if (Metadata.singleScreenVersion)
+			{
+				DownArrow.SetActive(false);
+				DownArrow2.SetActive(false);
+				EventSystem.instance.SwitchCameraEvent();
+
+            }
+        }
+
+
+		IEnumerator RestartInThree()
+		{
+			yield return new WaitForSeconds(3);
+			SceneManager.LoadScene(SceneManager.GetActiveScene().name, LoadSceneMode.Single);
+		}
+
+
+		void OnPublishToBook(Sprite sprite, string description)
+		{
+			description = "\n\n... " + description + " ... ";
+			textP1.GetComponent<TextMeshProUGUI>().text += description;
+			textP2.SetActive(false);
+			imageP2.GetComponent<Image>().sprite = sprite;
+            imageP2.SetActive(true);
+        }
+
+
+        void OnCompleteTextRevealed()
+		{
+            Debug.Log("OnCompleteTextRevealed");
+			switch (Metadata.Instance.currentTextPage)
+			{
+				case 0:
+					DownArrow.SetActive(true);
+
+					if (Metadata.singleScreenVersion)
+					{
+						EventSystem.instance.SwitchCameraEvent();
+					}
+                    
+                    DownArrow.SetActive(false);
+					break;
+				case 1:
+					textP2.GetComponent<TextMeshProUGUI>().text = drawPictureText.GetLocalizedString();
+                    Metadata.Instance.currentTextPage = 2;
+                    break;
+				case 2:
+                    DownArrow2.SetActive(true);
+                    if (Metadata.singleScreenVersion)
+                    {
+                        EventSystem.instance.SwitchCameraEvent();
+                    }
+                    DownArrow2.SetActive(false);
+					Metadata.Instance.currentTextPage = 3;
+                    break;
+				case 3:
+					turnBookPage = true;
+					endBook = true;
+                    break;
+				case 5:
+                    break;
+				case 7:
+                    break;
+
+			}
+        }
+
+
+
 
         /// <summary>
         /// Fired when the mouse intersects with the collider box while mouse down occurs
         /// </summary>
         void OnMouseDown()
 		{
-            if (book.CurrentState == EndlessBook.StateEnum.ClosedFront)
+			Debug.Log("OnMouseDown");
+			if (turnBookPage)
 			{
-                book.SetState(EndlessBook.StateEnum.OpenFront);
-                return;
-            }
+				if (book.CurrentState == EndlessBook.StateEnum.ClosedFront)
+				{
+					book.SetState(EndlessBook.StateEnum.OpenFront, onCompleted: OnBookOpened);
+					Metadata.Instance.currentTextPage = 0;
+					//EventSystem.instance.OpenBookEvent();
+					return;
+				}
 
-            if (book.CurrentState == EndlessBook.StateEnum.OpenFront)
-            {
-                
-                book.SetState(EndlessBook.StateEnum.OpenMiddle);
-                return;
-            }
+				if(endBook)
+				{
+                    book.SetState(EndlessBook.StateEnum.ClosedBack, onCompleted: OnBookClosed);
+                    return;
+                }
+
+				if (book.CurrentState == EndlessBook.StateEnum.OpenFront)
+				{
+
+					book.SetState(EndlessBook.StateEnum.OpenMiddle);
+					return;
+				}
 
 
-            if (book.IsTurningPages || book.IsDraggingPage || UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
-			{
-				// exit if already turning
-				return;
+				if (book.IsTurningPages || book.IsDraggingPage || UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
+				{
+					// exit if already turning
+					return;
+				}
+
+				// get the normalized time based on the mouse position
+				var normalizedTime = GetNormalizedTime();
+
+				// calculate the direction of the page turn based on the mouse position
+				var direction = normalizedTime > 0.5f ? Page.TurnDirectionEnum.TurnForward : Page.TurnDirectionEnum.TurnBackward;
+
+				// tell the book to start turning a page manually
+				book.TurnPageDragStart(direction);
+
+				// the mosue is now currently down
+				isMouseDown = true;
 			}
 
-			// get the normalized time based on the mouse position
-			var normalizedTime = GetNormalizedTime();
-
-			// calculate the direction of the page turn based on the mouse position
-			var direction = normalizedTime > 0.5f ? Page.TurnDirectionEnum.TurnForward : Page.TurnDirectionEnum.TurnBackward;
-
-			// tell the book to start turning a page manually
-			book.TurnPageDragStart(direction);
-
-			// the mosue is now currently down
-			isMouseDown = true;
-
         }
 
-
-		void DebugCurrentState()
-		{
-            Debug.Log("CurrentState: " + book.CurrentState);
-			Debug.Log("CurrentPageNumber: " + book.CurrentPageNumber);
-        }
 
 		/// <summary>
 	    /// Fired when the mouse intersects with the collider box while dragging
@@ -181,9 +292,7 @@ namespace echo17.EndlessBook.Demo03
 			
         }
 
-		/// <summary>
 		/// Calculates the normalized time based on the mouse position
-		/// </summary>
 		protected virtual float GetNormalizedTime()
 		{
 			// get the ray from the camera to the screen
@@ -203,69 +312,20 @@ namespace echo17.EndlessBook.Demo03
 			return (viewportPoint.x >= 0.5f) ? 1 : 0;
 		}
 
-		/// <summary>
 		/// Called when the page completes its manual turn
-		/// </summary>
 		protected virtual void PageTurnCompleted(int leftPageNumber, int rightPageNumber)
 		{
             //isTurning = false;
+			Metadata.Instance.currentTextPage = leftPageNumber;
             DebugCurrentState();
+			
         }
-        protected virtual void OnBookStateChanged(EndlessBook.StateEnum fromState, EndlessBook.StateEnum toState, int pageNumber)
-
+        void DebugCurrentState()
         {
-            DebugCurrentState();
-            switch (toState)
-            {
-                case EndlessBook.StateEnum.ClosedFront:
-                case EndlessBook.StateEnum.ClosedBack:
-
-                    // play the closed sound
-                    if (audioOn)
-                    {
-                        bookCloseSound.Play();
-                    }
-
-
-                    break;
-
-                case EndlessBook.StateEnum.OpenMiddle:
-
-                    if (fromState != EndlessBook.StateEnum.OpenMiddle)
-                    {
-						// play open sound
-						if (audioOn)
-						{
-							bookOpenSound.Play();
-						}
-                    }
-                    else
-                    {
-						// stop the flipping sound
-						if (audioOn)
-						{
-							//pagesFlippingSound.Stop();
-						}
-                    }
-
-                    // turn off the front and back page mini-scenes
-
-                    break;
-
-                case EndlessBook.StateEnum.OpenFront:
-                case EndlessBook.StateEnum.OpenBack:
-
-					// play the open sound
-					if (audioOn)
-					{
-						bookOpenSound.Play();
-					}
-
-                    break;
-            }
-            
+            Debug.Log("CurrentState: " + book.CurrentState);
+            Debug.Log("CurrentPageNumber: " + book.CurrentPageNumber);
         }
-
     }
+
 
 }

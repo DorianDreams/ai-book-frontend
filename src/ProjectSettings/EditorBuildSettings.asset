@@ -11,4 +11,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/WegGLPrototype.unity
     guid: 1c25b4ef8f26cab40bb372444bc43145
-  m_configObjects: {}
+  m_configObjects:
+    com.unity.addressableassets: {fileID: 11400000, guid: be6318f9abe0b4b4aba1c3894a32614a, type: 2}
+    com.unity.localization.settings: {fileID: 11400000, guid: 6b12b965352b8984f9e45a383b207427, type: 2}
