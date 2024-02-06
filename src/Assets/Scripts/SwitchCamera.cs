@@ -38,7 +38,6 @@ public class SwitchCamera : MonoBehaviour
     {
         if (ShowDisplay == 2)
         {
-            Screen.SetResolution(3840, 2160, true);
             BookCamera.enabled = true;
             Display1.SetActive(true);
             UICamera.enabled = false;
@@ -50,7 +49,6 @@ public class SwitchCamera : MonoBehaviour
         }
         else if (ShowDisplay == 1)
         {
-            Screen.SetResolution(3840, 2160, true);
             UICamera.enabled = true;
             Display2.SetActive(true);
             BookCamera.enabled = false;

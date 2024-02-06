@@ -169,7 +169,8 @@ public class DrawingScreenController : MonoBehaviour
     IEnumerator CreateStoryBook()
     {
         using (UnityWebRequest request = UnityWebRequest.Post("http://127.0.0.1:8000/api/storybooks",
-            "{ \"title\": \"to be defined\", \"duration\": 0, \"iterations\": 0,\"status\": true }", "application/json"))
+            "{ \"title\": \"to be defined\", \"duration\": 0, \"iterations\": 0,\"status\": true }", 
+            "application/json"))
         {
             yield return request.SendWebRequest();
             if (request.result != UnityWebRequest.Result.Success)
@@ -179,7 +180,9 @@ public class DrawingScreenController : MonoBehaviour
             else
             {
                 Debug.Log(request.downloadHandler.text);
-                Dictionary<string,object> returnVal = JsonConvert.DeserializeObject<Dictionary<string,object>>(request.downloadHandler.text);
+                Dictionary<string,object> returnVal = JsonConvert.DeserializeObject
+                    <Dictionary<string,object>>(request.downloadHandler.text);
+
                 Metadata.Instance.storyBookId = returnVal["id"].ToString();
             }
         }
@@ -197,7 +200,8 @@ public class DrawingScreenController : MonoBehaviour
     }
 
     public void OnPublishToBook() {         
-           EventSystem.instance.PublishToBookEvent(ImageResult1.GetComponent<Image>().sprite, descriptionCandidate);
+           EventSystem.instance.PublishToBookEvent(ImageResult1.GetComponent<Image>().sprite, 
+               descriptionCandidate);
            if(Metadata.singleScreenVersion)
         {
                EventSystem.instance.SwitchCameraEvent();
@@ -207,8 +211,6 @@ public class DrawingScreenController : MonoBehaviour
 
     public void OnSendToAI()
     {
-        DrawingMode.SetActive(false);
-        EventSystem.instance.HideLinesEvent();
         Debug.Log("Send to AI");
         StartCoroutine(CoroutineScrenshot((bytes) =>
         {
@@ -236,7 +238,8 @@ public class DrawingScreenController : MonoBehaviour
             byte[] bytes = System.IO.File.ReadAllBytes(fullpath);
             Texture2D texture = new Texture2D(1, 1);
             texture.LoadImage(bytes);
-            ImageResult1.GetComponent<Image>().sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0, 0));
+            ImageResult1.GetComponent<Image>().sprite = Sprite.Create(texture, 
+                new Rect(0, 0, texture.width, texture.height), new Vector2(0, 0));
         }
         else if (operatingSystem.Contains("Mac"))
         {
@@ -256,6 +259,9 @@ public class DrawingScreenController : MonoBehaviour
 
     IEnumerator SendImageToAI(byte[] bytes, System.Action<Dictionary<string, object>> callback)
     {
+        //TODO: Show loading screen
+        DrawingMode.gameObject.SetActive(false);
+        EventSystem.instance.HideLinesEvent();
         string url = "http://127.0.0.1:8000/api/images/" + Metadata.Instance.storyBookId;
         WWWForm form = new WWWForm();
         form.AddBinaryData("image", bytes);
@@ -272,7 +278,9 @@ public class DrawingScreenController : MonoBehaviour
         }
         else
         {
-            Dictionary<string, object> returnVal = JsonConvert.DeserializeObject<Dictionary<string, object>>(request.downloadHandler.text);
+            Dictionary<string, object> returnVal = JsonConvert.DeserializeObject
+                <Dictionary<string, object>>(request.downloadHandler.text);
+
             Debug.Log("Form upload complete! " + request.downloadHandler.text);
             callback(returnVal);
         }
@@ -314,7 +322,6 @@ public class DrawingScreenController : MonoBehaviour
         int textHeight = System.Convert.ToInt32(rect.height); // height of the object to capture
         var startX = System.Convert.ToInt32(rect.x) + Screen.width / 2; // offset X
         var startY = System.Convert.ToInt32(rect.y) + Screen.height / 2; // offset Y
-
         RenderTexture rt = new RenderTexture(Screen.width, Screen.height, 0);
         Camera.main.targetTexture = rt;
         Texture2D screenShot = new Texture2D(textWidth, textHeight, TextureFormat.RGB24, false);
@@ -331,9 +338,7 @@ public class DrawingScreenController : MonoBehaviour
         string fileName = "Screenshot" + timeStamp + ".png";
         string filePath = Application.dataPath + "/" + fileName;
 
-        Debug.Log(filePath);
         System.IO.File.WriteAllBytes(filePath, bytes);
-        Debug.Log("Screenshot taken");
         callback(bytes);
     }
 }

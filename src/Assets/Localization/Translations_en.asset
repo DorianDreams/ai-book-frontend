@@ -25,7 +25,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 291756725682176
-    m_Localized: How would your story start?
+    m_Localized: Beginning of adventure
     m_Metadata:
       m_Items: []
   - m_Id: 1112092086026240
@@ -37,7 +37,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1112733231529984
-    m_Localized: Ratty lives in a dustbin (garbage can). He dreams of being ...
+    m_Localized: Ratty lives in a dustbin. He dreams of being ...
     m_Metadata:
       m_Items: []
   - m_Id: 1112856619565056

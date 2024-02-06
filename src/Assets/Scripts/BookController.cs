@@ -145,6 +145,7 @@ namespace echo17.EndlessBook.Demo03
 
 		void OnPublishToBook(Sprite sprite, string description)
 		{
+			DownArrow2.SetActive(false);
 			description = "\n\n... " + description + " ... ";
 			textP1.GetComponent<TextMeshProUGUI>().text += description;
 			textP2.SetActive(false);
@@ -166,7 +167,7 @@ namespace echo17.EndlessBook.Demo03
 						EventSystem.instance.SwitchCameraEvent();
 					}
                     
-                    DownArrow.SetActive(false);
+                    
 					break;
 				case 1:
 					textP2.GetComponent<TextMeshProUGUI>().text = drawPictureText.GetLocalizedString();
@@ -178,7 +179,7 @@ namespace echo17.EndlessBook.Demo03
                     {
                         EventSystem.instance.SwitchCameraEvent();
                     }
-                    DownArrow2.SetActive(false);
+                    
 					Metadata.Instance.currentTextPage = 3;
                     break;
 				case 3:
