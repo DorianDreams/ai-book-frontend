@@ -247,6 +247,13 @@ public class DrawingScreenController : MonoBehaviour
         } else if (operatingSystem.Contains("Linux"))
         {
             imagePath = imagePath.Replace("\\", "/");
+            string fullpath = "/home/aidev/Documents/back-end/storybookcreator" + imagePath;
+            byte[] bytes = System.IO.File.ReadAllBytes(fullpath);
+            Texture2D texture = new Texture2D(1, 1);
+            texture.LoadImage(bytes);
+            ImageResult1.GetComponent<Image>().sprite = Sprite.Create(texture,
+                new Rect(0, 0, texture.width, texture.height), new Vector2(0, 0));
+
         }
         Debug.Log("showImageSelection");
     }
