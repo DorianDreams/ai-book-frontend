@@ -266,14 +266,16 @@ public class DrawingScreenController : MonoBehaviour
 
     IEnumerator SendImageToAI(byte[] bytes, System.Action<Dictionary<string, object>> callback)
     {
-        //TODO: Show loading screen
         DrawingMode.gameObject.SetActive(false);
         EventSystem.instance.HideLinesEvent();
-        string url = "http://127.0.0.1:8000/api/images/" + Metadata.Instance.storyBookId;
+        string url = "http://127.0.0.1:8000/api/images/" + Metadata.Instance.storyBookId 
+                                              +"?prompt="+ Metadata.Instance.selectedOpeningSentence;
         WWWForm form = new WWWForm();
         form.AddBinaryData("image", bytes);
-        List<IMultipartFormSection> formData = new List<IMultipartFormSection>();
-        formData.Add(new MultipartFormFileSection("image", bytes));
+
+        form.headers["Content-Type"] = "multipart/form-data";
+        Debug.Log(form.ToString());
+
         UnityWebRequest request = UnityWebRequest.Post(url, form);
 
         yield return request.SendWebRequest();
