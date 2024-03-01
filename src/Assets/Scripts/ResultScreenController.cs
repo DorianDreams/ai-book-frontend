@@ -163,7 +163,7 @@ public class ResultScreenController : MonoBehaviour
 
     IEnumerator GetImageCaption(byte[] bytes, System.Action<string, byte[]> callback)
     {
-        string url = "http://127.0.0.1:8000/api/chat/caption";
+        string url = "http://127.0.0.1:8000/api/chat/captions";
         WWWForm form = new WWWForm();
         form.AddBinaryData("image", bytes);
         form.headers["Content-Type"] = "multipart/form-data";

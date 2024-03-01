@@ -87,8 +87,18 @@ public class StartSelectionController : MonoBehaviour
 
     IEnumerator CreateStoryBook()
     {
+        /*
+        {
+    "title": "",
+    "starting_sentence": "",
+    "finished_playthrough": false,
+    "drawing": {},
+    "signed_the_book": false,
+    "decision_of_authorship" : ""
+        */
+        //TODO: Import JSON library (do reasearch)!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         using (UnityWebRequest request = UnityWebRequest.Post("http://127.0.0.1:8000/api/storybooks",
-            "{ \"title\": \"to be defined\", \"duration\": 0, \"iterations\": 0,\"status\": true }",
+         "{\"title\": \"to be defined\", \"starting_sentence\":\"to be defined\", \"finished_playthrough\": false, \"drawing\": {},\"signed_the_book\": false,\"decision_of_authorship\":\"to be defined\"}",
             "application/json"))
         {
             yield return request.SendWebRequest();
