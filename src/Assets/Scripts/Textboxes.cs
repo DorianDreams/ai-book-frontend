@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Localization.Settings;
 using UnityEngine.Localization.Tables;
+using UnityEngine.UI;
 
 public class Textboxes : MonoBehaviour
 {
@@ -28,8 +30,21 @@ public class Textboxes : MonoBehaviour
             GameObject textBox = Instantiate(TextBoxPrefab);
             textBox.transform.SetParent(this.transform, false);
             textBox.GetComponentInChildren<TextMeshProUGUI>().SetText(initialPromptArray[i]);
+            textBox.GetComponentInChildren<Button>().onClick.AddListener(()=> onButtonPressed(textBox));
             instantiatedTextBoxes.Add(textBox);
+            
         }
+    }
+
+    void onButtonPressed(GameObject textBox)
+    {
+        foreach (GameObject tb in instantiatedTextBoxes)
+        {
+            tb.transform.GetChild(1).gameObject.SetActive(false);
+        }
+       textBox.transform.GetChild(1).gameObject.SetActive(true);
+       string startingSentence = textBox.GetComponentInChildren<TextMeshProUGUI>().text;
+       Metadata.Instance.selectedOpeningSentence = startingSentence;
     }
 
     void getInitialPrompts()
@@ -43,6 +58,12 @@ public class Textboxes : MonoBehaviour
         }
         initialPromptArray = (string[])initialPromptList.ToArray(typeof(string));
         
+    }
+
+     public string getRandomInitialPrompt()
+    {
+        reshuffle(initialPromptArray);
+        return initialPromptArray[0];
     }
 
     void OnChangeLocale()

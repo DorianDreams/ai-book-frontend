@@ -10,6 +10,7 @@ namespace echo17.EndlessBook.Demo03
     using TMPro;
     using Image = UnityEngine.UI.Image;
     using UnityEngine.SceneManagement;
+    using System.Runtime.CompilerServices;
 
     /// <summary>
     /// This demo shows one way you could implement manual page dragging in your book
@@ -46,14 +47,19 @@ namespace echo17.EndlessBook.Demo03
         public GameObject imageP2;
         public GameObject textP3;
         public GameObject imageP4;
+		public GameObject textP4;
         public GameObject textP5;
         public GameObject imageP6;
+		public GameObject textP6;
 
 
 
 		// Delete after testing
 		private bool endBook = false;
+		private bool bookFinished = false;
+		private bool nextPageFive = false;
 
+		private int nextBookPage = 0;
 
         void OnStartStory()
         {
@@ -86,10 +92,18 @@ namespace echo17.EndlessBook.Demo03
 
         private void Start()
         {
+
+			EventSystem.instance.RestartScene += Reset;
+
+
 			Debug.Log("Start Book Controller");
-            textP0.GetComponent<TypewriterEffect>().CompleteTextRevealed += OnCompleteTextRevealed;
-			textP1.GetComponent<TypewriterEffect>().CompleteTextRevealed += OnCompleteTextRevealed;
-			textP2.GetComponent<TypewriterEffect>().CompleteTextRevealed += OnCompleteTextRevealed;
+            textP0.GetComponent<TypewriterEffect>().CompleteTextRevealed += () => OnCompleteTextRevealed(0);
+			textP1.GetComponent<TypewriterEffect>().CompleteTextRevealed += () => OnCompleteTextRevealed(1);
+			textP2.GetComponent<TypewriterEffect>().CompleteTextRevealed += () => OnCompleteTextRevealed(2);
+			textP3.GetComponent<TypewriterEffect>().CompleteTextRevealed += () => OnCompleteTextRevealed(3);
+            textP4.GetComponent<TypewriterEffect>().CompleteTextRevealed += () => OnCompleteTextRevealed(4);
+            textP5.GetComponent<TypewriterEffect>().CompleteTextRevealed += () => OnCompleteTextRevealed(5);
+            textP6.GetComponent<TypewriterEffect>().CompleteTextRevealed += () => OnCompleteTextRevealed(6);
             EventSystem.instance.StartStory += OnStartStory;
 			EventSystem.instance.ChangeLocale += OnChangeLocale;
 			EventSystem.instance.PublishToBook += OnPublishToBook;
@@ -136,7 +150,12 @@ namespace echo17.EndlessBook.Demo03
         }
 
 
-		IEnumerator RestartInThree()
+        public void Reset()
+        {
+            StartCoroutine(RestartInThree());
+        }
+
+        IEnumerator RestartInThree()
 		{
 			yield return new WaitForSeconds(3);
 			SceneManager.LoadScene(SceneManager.GetActiveScene().name, LoadSceneMode.Single);
@@ -145,19 +164,46 @@ namespace echo17.EndlessBook.Demo03
 
 		void OnPublishToBook(Sprite sprite, string description)
 		{
-			DownArrow2.SetActive(false);
-			description = "\n\n... " + description + " ... ";
-			textP1.GetComponent<TextMeshProUGUI>().text += description;
-			textP2.SetActive(false);
-			imageP2.GetComponent<Image>().sprite = sprite;
-            imageP2.SetActive(true);
+			switch (book.CurrentPageNumber)
+			{
+				case 1:
+                    textP2.SetActive(false);
+                    description = "\n\n... " + description + " ... ";
+                    textP1.GetComponent<TextMeshProUGUI>().text += description;
+                    imageP2.GetComponent<Image>().sprite = sprite;
+                    imageP2.SetActive(true);
+                    turnBookPage = true;
+                    break;
+				case 3:
+					textP4.SetActive(false);
+                    description = "\n\n... " + description + " ... ";
+                    textP3.GetComponent<TextMeshProUGUI>().text += description;
+                    imageP4.GetComponent<Image>().sprite = sprite;
+                    imageP4.SetActive(true);
+                    turnBookPage = true;
+                    break;
+                case 5:
+                    textP6.SetActive(false);
+                    description = "\n\n... " + description + " ... ";
+                    textP5.GetComponent<TextMeshProUGUI>().text += description;
+                    imageP6.GetComponent<Image>().sprite = sprite;
+                    imageP6.SetActive(true);
+                    turnBookPage = true;
+					bookFinished = true;
+					EventSystem.instance.DisableDrawingScreenEvent();
+					EventSystem.instance.EnableOwnershipScreenEvent();
+					EventSystem.instance.SwitchCameraEvent();
+                    break;
+
+            }
+            
         }
 
 
-        void OnCompleteTextRevealed()
+        void OnCompleteTextRevealed(int c)
 		{
             Debug.Log("OnCompleteTextRevealed");
-			switch (Metadata.Instance.currentTextPage)
+			switch (c)
 			{
 				case 0:
 					DownArrow.SetActive(true);
@@ -171,22 +217,37 @@ namespace echo17.EndlessBook.Demo03
 					break;
 				case 1:
 					textP2.GetComponent<TextMeshProUGUI>().text = drawPictureText.GetLocalizedString();
-                    Metadata.Instance.currentTextPage = 2;
                     break;
 				case 2:
-                    DownArrow2.SetActive(true);
+                    //DownArrow2.SetActive(true);
                     if (Metadata.singleScreenVersion)
                     {
                         EventSystem.instance.SwitchCameraEvent();
                     }
                     
-					Metadata.Instance.currentTextPage = 3;
+					
                     break;
 				case 3:
-					turnBookPage = true;
-					endBook = true;
+                    //turnBookPage = true;
+                    //endBook = true;
+                    textP4.GetComponent<TextMeshProUGUI>().text = drawPictureText.GetLocalizedString();
+                    break;
+				case 4:
+                    if (Metadata.singleScreenVersion)
+                    {
+                        EventSystem.instance.SwitchCameraEvent();
+                    }
                     break;
 				case 5:
+                    textP6.GetComponent<TextMeshProUGUI>().text = drawPictureText.GetLocalizedString();
+                    break;
+				case 6:
+                    if (Metadata.singleScreenVersion)
+                    {
+                        EventSystem.instance.SwitchCameraEvent();
+
+                    }
+					
                     break;
 				case 7:
                     break;
@@ -316,8 +377,32 @@ namespace echo17.EndlessBook.Demo03
 		/// Called when the page completes its manual turn
 		protected virtual void PageTurnCompleted(int leftPageNumber, int rightPageNumber)
 		{
-            //isTurning = false;
+            
 			Metadata.Instance.currentTextPage = leftPageNumber;
+			if (!bookFinished) { 
+			switch (book.CurrentPageNumber)
+			{
+					case 3:
+						if (nextBookPage != 5) { 
+
+                    //Metadata.Instance.currentTextPage = 3;
+                    turnBookPage = false;
+                    EventSystem.instance.EnableDrawingScreenEvent();
+					textP3.GetComponent<TextMeshProUGUI>().text = Metadata.Instance.secondGeneratedSentence;
+						nextBookPage = 5;}
+					break;
+				
+                case 5:
+                    //Metadata.Instance.currentTextPage = 5;
+					if (nextBookPage == 5) { 
+                    turnBookPage = false;
+                    EventSystem.instance.EnableDrawingScreenEvent();
+                    textP5.GetComponent<TextMeshProUGUI>().text = Metadata.Instance.thirdGeneratedSentence;
+							nextBookPage = 0;
+                        }
+                        break;
+
+            }}
             DebugCurrentState();
 			
         }
@@ -327,6 +412,4 @@ namespace echo17.EndlessBook.Demo03
             Debug.Log("CurrentPageNumber: " + book.CurrentPageNumber);
         }
     }
-
-
 }

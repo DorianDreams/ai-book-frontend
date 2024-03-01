@@ -11,6 +11,9 @@ public class Metadata : MonoBehaviour
     public int drawingDuration;
     public string storyBookId;
     public string selectedOpeningSentence;
+    public string firstGeneratedSentence;
+    public string secondGeneratedSentence = "What is happening next ?";
+    public string thirdGeneratedSentence = "How should the story end ?";
     public static bool singleScreenVersion = true;
 
     public int currentTextPage = 0;
@@ -19,10 +22,10 @@ public class Metadata : MonoBehaviour
     {
             int drawingDuration = 0;
             string storyBookId = "";
-             string selectedOpeningSentence = "";
-     bool singleScreenVersion = true;
+             
+        bool singleScreenVersion = true;
 
-     int currentTextPage = 0;
+        int currentTextPage = 0;
 
         if (Instance == null)
         {
@@ -37,7 +40,7 @@ public class Metadata : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        selectedOpeningSentence = "";
     }
 
     // Update is called once per frame

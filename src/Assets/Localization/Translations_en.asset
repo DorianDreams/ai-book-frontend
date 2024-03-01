@@ -25,7 +25,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 291756725682176
-    m_Localized: Beginning of adventure
+    m_Localized: How should the story start?
     m_Metadata:
       m_Items: []
   - m_Id: 1112092086026240
@@ -74,6 +74,19 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 1879233131364352
     m_Localized: To continue the story, draw a picture on the pad below
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11503265866760192
+    m_Localized: Inspiring! Your AI partner works on his own imagination of your
+      work ... please select your favourite picture once it is finished ...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11607967233130496
+    m_Localized: Not satisfied? Click here to continue drawing
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12243492365320192
+    m_Localized: 'AI: I understand your picture as ... '
     m_Metadata:
       m_Items: []
   references:

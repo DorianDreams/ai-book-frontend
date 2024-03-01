@@ -71,6 +71,18 @@ MonoBehaviour:
     m_Key: DrawPicture
     m_Metadata:
       m_Items: []
+  - m_Id: 11503265866760192
+    m_Key: WaitForAI
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11607967233130496
+    m_Key: NotSatisfied
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12243492365320192
+    m_Key: AIUnderstandingSentence
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

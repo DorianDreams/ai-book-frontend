@@ -25,7 +25,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 291756725682176
-    m_Localized: Abenteuerbeginn
+    m_Localized: Wie soll die Geschichte beginnen?
     m_Metadata:
       m_Items: []
   - m_Id: 1112092086026240
@@ -76,6 +76,20 @@ MonoBehaviour:
   - m_Id: 1879233131364352
     m_Localized: Um die Geschichte fortzusetzen, zeichne ein Bild auf dem unteren
       Bildschirm
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11503265866760192
+    m_Localized: "Inspirierend! Ihr KI-Partner arbeitet an seiner eigenen Vorstellung
+      von Ihrem Werk .... Bitte w\xE4hlen Sie Ihr Lieblingsbild aus, sobald er fertig
+      ist ..."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11607967233130496
+    m_Localized: Nicht zufrieden? Klicken Sie hier, um weiter zu zeichnen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12243492365320192
+    m_Localized: 'KI: Ich verstehe dein Bild als...'
     m_Metadata:
       m_Items: []
   references:

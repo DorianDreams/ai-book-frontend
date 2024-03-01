@@ -37,6 +37,99 @@ public class EventSystem : MonoBehaviour
         }
     }
 
+    public event Action EnableResultScreen;
+    public void EnableResultScreenEvent()
+    {
+        if (EnableResultScreen != null)
+        {
+            Debug.Log("Event fired: EnableResultScreenEvent");
+            EnableResultScreen();
+        }
+    }
+
+    public event Action DisableResultScreen;
+    public void DisableResultScreenEvent()
+    {
+        if (DisableResultScreen != null)
+        {
+            Debug.Log("Event fired: DisableResultScreenEvent");
+            DisableResultScreen();
+        }
+    }
+
+    public event Action EnableSignScreen;
+    public void EnableSignScreenEvent()
+    {
+        if (EnableSignScreen != null)
+        {
+            Debug.Log("Event fired: EnableSignScreenEvent");
+            EnableSignScreen();
+        }
+    }
+
+    public event Action DisableSignScreen;
+    public void DisableSignScreenEvent()
+    {
+        if (DisableSignScreen != null)
+        {
+            Debug.Log("Event fired: DisableSignScreenEvent");
+            DisableSignScreen();
+        }
+    }
+
+    public event Action RestartScene;
+    public void RestartSceneEvent()
+    {
+        if (RestartScene != null)
+        {
+            Debug.Log("Event fired: RestartSceneEvent");
+            RestartScene();
+        }
+    }
+
+
+    public event Action EnableOwnershipScreen;
+    public void EnableOwnershipScreenEvent()
+    {
+        if (EnableOwnershipScreen != null)
+        {
+            Debug.Log("Event fired: EnableOwnershipScreenEvent");
+            EnableOwnershipScreen();
+        }
+    }
+
+    public event Action DisableOwnershipScreen;
+    public void DisableOwnershipScreenEvent()
+    {
+        if (DisableOwnershipScreen != null)
+        {
+            Debug.Log("Event fired: DisableOwnershipScreenEvent");
+            DisableOwnershipScreen();
+        }
+    }
+
+    public event Action EnableDrawingScreen;
+    public void EnableDrawingScreenEvent()
+    {
+        if (EnableDrawingScreen != null)
+        {
+            Debug.Log("Event fired: EnableDrawingScreenEvent");
+            EnableDrawingScreen();
+        }
+    }
+
+    public event Action DisableDrawingScreen;
+    public void DisableDrawingScreenEvent()
+    {
+        if (DisableDrawingScreen != null)
+        {
+            Debug.Log("Event fired: DisableDrawingScreenEvent");
+            DisableDrawingScreen();
+        }
+    }
+
+
+
     public event Action ChangeLocale;
     public void ChangeLocaleEvent()
     {
@@ -77,6 +170,16 @@ public class EventSystem : MonoBehaviour
         }
     }
 
+    public event Action<byte[]> SendImageToAI;
+    public void SendImageToAIEvent(byte[] image)
+    {
+        if (SendImageToAI != null)
+        {
+            Debug.Log("Event fired: sendImageToAIEvent");
+            SendImageToAI(image);
+        }
+    }
+
     public event Action <Sprite, String> PublishToBook;
     public void PublishToBookEvent(Sprite sprite, String description)
     {
@@ -87,16 +190,7 @@ public class EventSystem : MonoBehaviour
         }
     }
 
-    public event Action SendToAI;
-    public void SendToAIEvent()
-    {
-        if (SendToAI != null)
-        {
-            Debug.Log("Event fired: SendToAIEvent");
-            SendToAI();
-        }
-    }
-
+   
     public event Action OpenBook;
     public void OpenBookEvent()
     {
