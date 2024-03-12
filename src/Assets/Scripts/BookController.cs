@@ -11,6 +11,7 @@ namespace echo17.EndlessBook.Demo03
     using Image = UnityEngine.UI.Image;
     using UnityEngine.SceneManagement;
     using System.Runtime.CompilerServices;
+    using System.Linq;
 
     /// <summary>
     /// This demo shows one way you could implement manual page dragging in your book
@@ -107,13 +108,11 @@ namespace echo17.EndlessBook.Demo03
             EventSystem.instance.StartStory += OnStartStory;
 			EventSystem.instance.ChangeLocale += OnChangeLocale;
 			EventSystem.instance.PublishToBook += OnPublishToBook;
-			//DownArrow.GetComponent<Button>().onClick.AddListener(OnDownArrowClicked);
-            //DownArrow2.GetComponent<Button>().onClick.AddListener(OnDownArrowClicked);
             StartStory = (EndlessBook.StateEnum fromState,
                                                 EndlessBook.StateEnum toState,
                                                 int pageNumber) =>
             {
-				textP1.GetComponent<TextMeshProUGUI>().text = Metadata.Instance.selectedOpeningSentence;
+				textP1.GetComponent<TextMeshProUGUI>().text = Metadata.Instance.currentPrompt;
             };
 
             OnBookOpened = (EndlessBook.StateEnum fromState,
@@ -162,13 +161,40 @@ namespace echo17.EndlessBook.Demo03
 		}
 
 
-		void OnPublishToBook(Sprite sprite, string description)
-		{
-			switch (book.CurrentPageNumber)
+        void OnPublishToBook(Sprite sprite, string description, int index)
+        {
+            if (Metadata.Instance.testVersion == 2)
+            { }
+            else { 
+                string continuation = description.Split(".").Last();
+            if (continuation.Length == 0) {
+                continuation = description.Split(".").Last();
+                if (continuation.Length == 0)
+                {
+                    description = description.Substring(0, description.Length / 2);
+                    continuation = description.Substring(description.Length / 2);
+                }
+                else
+                {
+                    description = description.Replace(continuation, "");
+                }
+
+            }
+            else
+            {
+                description = description.Replace(continuation, "");
+            }
+
+            description = "\n\n... " + description + " ... ";
+            continuation = "\n\n... " + continuation + " ... ";
+            Metadata.Instance.currentPrompt = continuation;
+        }
+            switch (book.CurrentPageNumber)
 			{
-				case 1:
+                case 1:
                     textP2.SetActive(false);
-                    description = "\n\n... " + description + " ... ";
+					
+					Metadata.Instance.currentChapter = "ch2";
                     textP1.GetComponent<TextMeshProUGUI>().text += description;
                     imageP2.GetComponent<Image>().sprite = sprite;
                     imageP2.SetActive(true);
@@ -176,7 +202,7 @@ namespace echo17.EndlessBook.Demo03
                     break;
 				case 3:
 					textP4.SetActive(false);
-                    description = "\n\n... " + description + " ... ";
+                    Metadata.Instance.currentChapter = "ch3";
                     textP3.GetComponent<TextMeshProUGUI>().text += description;
                     imageP4.GetComponent<Image>().sprite = sprite;
                     imageP4.SetActive(true);
@@ -184,7 +210,6 @@ namespace echo17.EndlessBook.Demo03
                     break;
                 case 5:
                     textP6.SetActive(false);
-                    description = "\n\n... " + description + " ... ";
                     textP5.GetComponent<TextMeshProUGUI>().text += description;
                     imageP6.GetComponent<Image>().sprite = sprite;
                     imageP6.SetActive(true);
@@ -192,7 +217,7 @@ namespace echo17.EndlessBook.Demo03
 					bookFinished = true;
 					EventSystem.instance.DisableDrawingScreenEvent();
 					EventSystem.instance.EnableOwnershipScreenEvent();
-					EventSystem.instance.SwitchCameraEvent();
+					//EventSystem.instance.SwitchCameraEvent();
                     break;
 
             }
@@ -388,8 +413,8 @@ namespace echo17.EndlessBook.Demo03
                     //Metadata.Instance.currentTextPage = 3;
                     turnBookPage = false;
                     EventSystem.instance.EnableDrawingScreenEvent();
-					textP3.GetComponent<TextMeshProUGUI>().text = Metadata.Instance.secondGeneratedSentence;
-						nextBookPage = 5;}
+					textP3.GetComponent<TextMeshProUGUI>().text = Metadata.Instance.currentPrompt;
+					nextBookPage = 5;}
 					break;
 				
                 case 5:
@@ -397,11 +422,10 @@ namespace echo17.EndlessBook.Demo03
 					if (nextBookPage == 5) { 
                     turnBookPage = false;
                     EventSystem.instance.EnableDrawingScreenEvent();
-                    textP5.GetComponent<TextMeshProUGUI>().text = Metadata.Instance.thirdGeneratedSentence;
+                    textP5.GetComponent<TextMeshProUGUI>().text = Metadata.Instance.currentPrompt;
 							nextBookPage = 0;
                         }
                         break;
-
             }}
             DebugCurrentState();
 			

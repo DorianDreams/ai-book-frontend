@@ -36,7 +36,8 @@ using Object = UnityEngine.Object;
 
         // Event Functionality
         private WaitForSeconds _textboxFullEventDelay;
-        [SerializeField][Range(0.1f, 0.5f)] private float sendDoneDelay = 0.25f; // In testing, I found 0.25 to be a good value
+        // In testing, I found 0.25 to be a good value
+        [SerializeField][Range(0.1f, 0.5f)] private float sendDoneDelay = 0.25f;
 
         //Events to notify other scripts
         public event Action CompleteTextRevealed;

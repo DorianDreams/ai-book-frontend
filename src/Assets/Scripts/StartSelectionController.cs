@@ -7,6 +7,7 @@ using UnityEngine.UI;
 using UnityEngine.Localization.Settings;
 using UnityEngine.Localization;
 using UnityEngine.Networking;
+using System;
 
 public class StartSelectionController : MonoBehaviour
 {
@@ -64,12 +65,12 @@ public class StartSelectionController : MonoBehaviour
         }
         Metadata.Instance.currentTextPage = 1;
         Debug.Log("Start Story Button Clicked");
-        Debug.Log(Metadata.Instance.selectedOpeningSentence);
+        Debug.Log(Metadata.Instance.currentPrompt);
 
-        if (Metadata.Instance.selectedOpeningSentence == "")
+        if (Metadata.Instance.currentPrompt == "")
         {
             Debug.Log("Get Random Prompt");
-            Metadata.Instance.selectedOpeningSentence = Textboxes.GetComponent<Textboxes>().getRandomInitialPrompt();
+            Metadata.Instance.currentPrompt = Textboxes.GetComponent<Textboxes>().getRandomInitialPrompt();
         }
 
         StartCoroutine(CreateStoryBook());
@@ -86,20 +87,12 @@ public class StartSelectionController : MonoBehaviour
 
 
     IEnumerator CreateStoryBook()
-    {
-        /*
-        {
-    "title": "",
-    "starting_sentence": "",
-    "finished_playthrough": false,
-    "drawing": {},
-    "signed_the_book": false,
-    "decision_of_authorship" : ""
-        */
-        //TODO: Import JSON library (do reasearch)!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        using (UnityWebRequest request = UnityWebRequest.Post("http://127.0.0.1:8000/api/storybooks",
-         "{\"title\": \"to be defined\", \"starting_sentence\":\"to be defined\", \"finished_playthrough\": false, \"drawing\": {},\"signed_the_book\": false,\"decision_of_authorship\":\"to be defined\"}",
-            "application/json"))
+    {        
+        StoryBook storyBook = new StoryBook(Metadata.Instance.currentPrompt, false, false);
+        Metadata.Instance.storyBook = storyBook;
+        string json = JsonUtility.ToJson(storyBook);
+        Debug.Log("json: " + json);
+        using (UnityWebRequest request = UnityWebRequest.Post("http://127.0.0.1:8000/api/storybooks", json, "application/json"))
         {
             yield return request.SendWebRequest();
             if (request.result != UnityWebRequest.Result.Success)

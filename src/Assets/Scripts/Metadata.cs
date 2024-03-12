@@ -5,18 +5,23 @@ using UnityEngine;
 
 public class Metadata : MonoBehaviour
 {
-    
+
+    // JSON Objects
+    public StoryBook storyBook;
+
+
     public static Metadata Instance { get; private set; }
 
     public int drawingDuration;
     public string storyBookId;
-    public string selectedOpeningSentence;
-    public string firstGeneratedSentence;
-    public string secondGeneratedSentence = "What is happening next ?";
-    public string thirdGeneratedSentence = "How should the story end ?";
+    public string currentPrompt;
     public static bool singleScreenVersion = true;
 
     public int currentTextPage = 0;
+
+    public int testVersion;
+
+    public string currentChapter = "ch1";
 
     private void Awake()
     {
@@ -40,7 +45,8 @@ public class Metadata : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        selectedOpeningSentence = "";
+
+        currentPrompt = "";
     }
 
     // Update is called once per frame

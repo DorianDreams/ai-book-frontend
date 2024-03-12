@@ -102,6 +102,21 @@ public class LineGenerator : MonoBehaviour
         }
     }
 
+    public int CountStrokes()
+    {
+        return Lines.Count;
+    }
+
+    public int CountPoints()
+    {
+        int count = 0;
+        foreach (GameObject line in Lines)
+        {
+            count += line.GetComponent<Line>().lineRenderer.positionCount;
+        }
+        return count;
+    }
+
     // Drawing functions
     bool drawOnImage()
     {
@@ -117,10 +132,7 @@ public class LineGenerator : MonoBehaviour
         {
             return true;
         }
-        /*else if (results.Count == 1 && results[0].gameObject.name == "Tablet")
-        {
-            return true;
-        }*/
+       
         else
         {
             return false;

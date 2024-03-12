@@ -37,25 +37,28 @@ public class EventSystem : MonoBehaviour
         }
     }
 
-    public event Action EnableResultScreen;
-    public void EnableResultScreenEvent()
+    // --------------- Start Story Events ---------------
+    public event Action ChangeLocale;
+    public void ChangeLocaleEvent()
     {
-        if (EnableResultScreen != null)
+        if (ChangeLocale != null)
         {
-            Debug.Log("Event fired: EnableResultScreenEvent");
-            EnableResultScreen();
+            Debug.Log("Event fired: ChangeLocaleEvent");
+            ChangeLocale();
         }
     }
 
-    public event Action DisableResultScreen;
-    public void DisableResultScreenEvent()
+    public event Action StartStory;
+    public void StartStoryEvent()
     {
-        if (DisableResultScreen != null)
+        if (StartStory != null)
         {
-            Debug.Log("Event fired: DisableResultScreenEvent");
-            DisableResultScreen();
+            Debug.Log("Event fired: StartStoryEvent");
+            StartStory();
         }
     }
+
+
 
     public event Action EnableSignScreen;
     public void EnableSignScreenEvent()
@@ -87,7 +90,11 @@ public class EventSystem : MonoBehaviour
         }
     }
 
+    
 
+    
+
+    // --------------- Ownership Events ---------------
     public event Action EnableOwnershipScreen;
     public void EnableOwnershipScreenEvent()
     {
@@ -108,6 +115,7 @@ public class EventSystem : MonoBehaviour
         }
     }
 
+    // --------------- Drawing Events ---------------
     public event Action EnableDrawingScreen;
     public void EnableDrawingScreenEvent()
     {
@@ -125,18 +133,6 @@ public class EventSystem : MonoBehaviour
         {
             Debug.Log("Event fired: DisableDrawingScreenEvent");
             DisableDrawingScreen();
-        }
-    }
-
-
-
-    public event Action ChangeLocale;
-    public void ChangeLocaleEvent()
-    {
-        if (ChangeLocale != null)
-        {
-            Debug.Log("Event fired: ChangeLocaleEvent");
-            ChangeLocale();
         }
     }
 
@@ -160,58 +156,6 @@ public class EventSystem : MonoBehaviour
         }
     }
 
-    public event Action<UnityEngine.Color> PressColorButton;
-    public void PressColorButtonEvent(UnityEngine.Color color)
-    {
-        if (PressColorButton != null)
-        {
-            Debug.Log("Event fired: PressColorButtonEvent");
-            PressColorButton(color);
-        }
-    }
-
-    public event Action<byte[]> SendImageToAI;
-    public void SendImageToAIEvent(byte[] image)
-    {
-        if (SendImageToAI != null)
-        {
-            Debug.Log("Event fired: sendImageToAIEvent");
-            SendImageToAI(image);
-        }
-    }
-
-    public event Action <Sprite, String> PublishToBook;
-    public void PublishToBookEvent(Sprite sprite, String description)
-    {
-        if (PublishToBook != null)
-        {
-            Debug.Log("Event fired: PublishToBookEvent");
-            PublishToBook(sprite, description);
-        }
-    }
-
-   
-    public event Action OpenBook;
-    public void OpenBookEvent()
-    {
-        if (OpenBook != null)
-        {
-            Debug.Log("Event fired: OpenBookEvent");
-            OpenBook();
-        }
-    }
-
-    public event Action StartStory;
-    public void StartStoryEvent()
-    {
-        if (StartStory != null)
-        {
-            Debug.Log("Event fired: StartStoryEvent");
-            StartStory();
-        }
-    }
-
-
     public event Action HideLines;
     public void HideLinesEvent()
     {
@@ -232,67 +176,78 @@ public class EventSystem : MonoBehaviour
         }
     }
 
-
-
-
-    //USED EVENTS? TODO: DELETE UNUSED
-
-    public event Action NextPage;
-    public void NextPageEvent()
+    public event Action PauseDrawing;
+    public void PauseDrawingEvent()
     {
-        if (NextPage != null)
+        if (PauseDrawing != null)
         {
-            Debug.Log("Event fired: NextPageEvent");
-            NextPage();
+            Debug.Log("Event fired: PauseDrawingEvent");
+            PauseDrawing();
         }
     }
 
-    public event Action LastPage;
-    public void LastPageEvent()
+    public event Action ContinueDrawing;
+    public void ContinueDrawingEvent()
     {
-        if (LastPage != null)
+        if (ContinueDrawing != null)
         {
-            Debug.Log("Event fired: LastPageEvent");
-            LastPage();
+            Debug.Log("Event fired: ContinueDrawingEvent");
+            ContinueDrawing();
         }
     }
 
-    public event Action Signature;
-    public void SignatureEvent()
+    public event Action<UnityEngine.Color> PressColorButton;
+    public void PressColorButtonEvent(UnityEngine.Color color)
     {
-        if (Signature != null)
+        if (PressColorButton != null)
         {
-            Debug.Log("Event fired: SignatureEvent");
-            Signature();
-        }
-    }
-    public event Action NewScene;
-    public void NewSceneEvent()
-    {
-        if (NewScene != null)
-        {
-            NewScene();
+            Debug.Log("Event fired: PressColorButtonEvent");
+            PressColorButton(color);
         }
     }
 
-    public event Action<string> ChangeLanguage;
-    public void ChangeLanguageEvent(string language)
+    public event Action<byte[]> SendImageToAI;
+    public void SendImageToAIEvent(byte[] image)
     {
-        if (ChangeLanguage != null)
+        if (SendImageToAI != null)
         {
-            Debug.Log("Event fired: ChangeLanguageEvent");
-            ChangeLanguage(language);
+            Debug.Log("Event fired: sendImageToAIEvent");
+            SendImageToAI(image);
         }
     }
 
-    public event Action StartDrawing;
-    public void StartDrawingEvent()
+    // --------------- Result Screen Events ---------------
+    public event Action EnableResultScreen;
+    public void EnableResultScreenEvent()
     {
-        if (StartDrawing != null)
+        if (EnableResultScreen != null)
         {
-            Debug.Log("Event fired: StartDrawingEvent");
-            StartDrawing();
+            Debug.Log("Event fired: EnableResultScreenEvent");
+            EnableResultScreen();
         }
     }
+
+    public event Action DisableResultScreen;
+    public void DisableResultScreenEvent()
+    {
+        if (DisableResultScreen != null)
+        {
+            Debug.Log("Event fired: DisableResultScreenEvent");
+            DisableResultScreen();
+        }
+    }
+
+    public event Action <Sprite, string, int> PublishToBook;
+
+    public void PublishToBookEvent(Sprite sprite, String description, int drawingNum)
+    {
+        if (PublishToBook != null)
+        {
+            Debug.Log("Event fired: PublishToBookEvent");
+            PublishToBook(sprite, description, drawingNum);
+        }
+    }
+
+
 
 }

@@ -49,13 +49,16 @@ public class ResultScreenController : MonoBehaviour
     private string descriptionCandidate;
     private int numberOfImages; // keeps track of number of images on the result screen
     private Image currentSelectedImage;
+    private int selectedImageIndex;
 
+    private List<byte[]> imageByteList = new List<byte[]>();
     private void Start()
     {
         EventSystem.instance.ChangeLocale += OnChangeLocale;
         EventSystem.instance.EnableResultScreen += Enable;
         EventSystem.instance.DisableResultScreen += Disable;
         EventSystem.instance.SendImageToAI += OnSendImageToAI;
+        
 
         DisableSelectionButtons();
         ImageResult0.GetComponent<Button>().onClick.AddListener(() => SelectImage(0) );
@@ -114,20 +117,45 @@ public class ResultScreenController : MonoBehaviour
 
     public void OnBackToDrawing()
     {
-        EventSystem.instance.ShowLinesEvent();
-        EventSystem.instance.EnableDrawingScreenEvent();
+        EventSystem.instance.ContinueDrawingEvent();
         EventSystem.instance.DisableResultScreenEvent();
     }
+
     public void OnPublishToBook()
     {
-        numberOfImages = 0;
-        EventSystem.instance.PublishToBookEvent(currentSelectedImage.sprite,descriptionCandidate);
-        if (Metadata.singleScreenVersion)
+        if (Metadata.Instance.testVersion == 2)
         {
-            EventSystem.instance.SwitchCameraEvent();
+            byte[] bytes = imageByteList[selectedImageIndex];
+            StartCoroutine(GetImageCaption2(bytes, (caption) =>
+            {
+                numberOfImages = 0;
+                EventSystem.instance.PublishToBookEvent(currentSelectedImage.sprite, caption, selectedImageIndex);
+                if (Metadata.singleScreenVersion)
+                {
+                    EventSystem.instance.SwitchCameraEvent();
+                }
+                EventSystem.instance.DisableResultScreenEvent();
+            }
+             ));
+        } else
+        {
+            byte[] bytes = imageByteList[selectedImageIndex];
+            StartCoroutine(GetLlamaDescription(bytes, (generated_sentence) =>
+            {
+
+                numberOfImages = 0;
+                EventSystem.instance.PublishToBookEvent(currentSelectedImage.sprite, generated_sentence, selectedImageIndex);
+                if (Metadata.singleScreenVersion)
+                {
+                    EventSystem.instance.SwitchCameraEvent();
+                }
+                EventSystem.instance.DisableResultScreenEvent();
+            }
+             ));
         }
-        EventSystem.instance.DisableResultScreenEvent();
+        
     }
+
     void OnSendImageToAI(byte[]bytes) {
         AIUnderstandingText.SetActive(true);
         Texture2D texture = new Texture2D(1, 1);
@@ -158,18 +186,17 @@ public class ResultScreenController : MonoBehaviour
                 }));
             }));
         }));
-        }));
+    }));
     }
 
     IEnumerator GetImageCaption(byte[] bytes, System.Action<string, byte[]> callback)
     {
-        string url = "http://127.0.0.1:8000/api/chat/captions";
+        string url = "http://127.0.0.1:8000/api/chat/captions?prompt="+ Metadata.Instance.currentPrompt;
         WWWForm form = new WWWForm();
         form.AddBinaryData("image", bytes);
         form.headers["Content-Type"] = "multipart/form-data";
         Debug.Log(form.ToString());
-
-      
+ 
         UnityWebRequest request = UnityWebRequest.Post(url, form);
         yield return request.SendWebRequest();
         if (request.result != UnityWebRequest.Result.Success)
@@ -185,12 +212,61 @@ public class ResultScreenController : MonoBehaviour
         }
     }
 
-    
+
+    IEnumerator GetImageCaption2(byte[] bytes, System.Action<string> callback)
+    {
+        string url = "http://127.0.0.1:8000/api/chat/test?prompt=" + Metadata.Instance.currentPrompt;
+        WWWForm form = new WWWForm();
+        form.AddBinaryData("image", bytes);
+        form.headers["Content-Type"] = "multipart/form-data";
+        Debug.Log(form.ToString());
+
+
+        UnityWebRequest request = UnityWebRequest.Post(url, form);
+        yield return request.SendWebRequest();
+        if (request.result != UnityWebRequest.Result.Success)
+        {
+            Debug.Log(request.error);
+        }
+        else
+        {
+            Dictionary<string, string> returnVal = JsonConvert.DeserializeObject
+                <Dictionary<string, string>>(request.downloadHandler.text);
+            string caption = returnVal["caption"].ToString();
+            callback(caption);
+        }
+    }
+
+    IEnumerator GetLlamaDescription(byte[] bytes, System.Action<string> callback)
+    {
+        string url = "http://127.0.0.1:8000/api/chat/descriptions?prompt=" + Metadata.Instance.currentPrompt
+                                                               +"&chapter_index=" + Metadata.Instance.currentChapter;
+        WWWForm form = new WWWForm();
+        form.AddBinaryData("image", bytes);
+        form.headers["Content-Type"] = "multipart/form-data";
+        Debug.Log(form.ToString());
+
+
+        UnityWebRequest request = UnityWebRequest.Post(url, form);
+        yield return request.SendWebRequest();
+        if (request.result != UnityWebRequest.Result.Success)
+        {
+            Debug.Log(request.error);
+        }
+        else
+        {
+            Dictionary<string, string> returnVal = JsonConvert.DeserializeObject
+                <Dictionary<string, string>>(request.downloadHandler.text);
+            string generated_description = returnVal["generated_description"].ToString();
+            callback(generated_description);
+        }
+    }
+
     IEnumerator SendImageToAIIteration(string caption, float strength, byte[] bytes, System.Action<string,byte[]> callback)
     {
         Debug.Log("Send to AI");
         string json = "{\"strength" + "\":" + strength + ",\"story_chapter" + "\":\"" + chapter + "\"}";
-        string prompt = Metadata.Instance.selectedOpeningSentence + caption;
+        string prompt = Metadata.Instance.currentPrompt + caption;
         string url = "http://127.0.0.1:8000/api/images/" + Metadata.Instance.storyBookId
                                               + "?prompt=" + prompt
                                               + "&parameters=" + json;
@@ -214,6 +290,7 @@ public class ResultScreenController : MonoBehaviour
 
             showImageSelection(returnVal);
             numberOfImages++;
+
             callback(caption,bytes);
         }
     }
@@ -241,6 +318,7 @@ public class ResultScreenController : MonoBehaviour
 
         // Display Image on screen
         byte[] bytes = System.IO.File.ReadAllBytes(fullpath);
+        imageByteList.Add(bytes);
         Texture2D texture = new Texture2D(1, 1);
         texture.LoadImage(bytes);
         switch (numberOfImages)
@@ -284,18 +362,22 @@ public class ResultScreenController : MonoBehaviour
             case 0:
                 ImageResult0Selected.SetActive(true);
                 currentSelectedImage = ImageResult0.GetComponent<Image>();
+                selectedImageIndex = 0;
                 break;
             case 1:
                 ImageResult1Selected.SetActive(true);
                 currentSelectedImage = ImageResult1.GetComponent<Image>();
+                selectedImageIndex = 1;
                 break;
             case 2:
                 ImageResult2Selected.SetActive(true);
                 currentSelectedImage = ImageResult2.GetComponent<Image>();
+                selectedImageIndex = 2;
                 break;
             case 3:
                 ImageResult3Selected.SetActive(true);
                 currentSelectedImage = ImageResult3.GetComponent<Image>();
+                selectedImageIndex = 3;
                 break;
         }
     }

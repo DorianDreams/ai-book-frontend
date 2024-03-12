@@ -9,9 +9,7 @@ using UnityEngine.UI;
 
 public class Textboxes : MonoBehaviour
 {
-
     public GameObject TextBoxPrefab;
-
     private int initialPrompts = 11;
     private ArrayList initialPromptList;
     private string[] initialPromptArray;
@@ -44,7 +42,7 @@ public class Textboxes : MonoBehaviour
         }
        textBox.transform.GetChild(1).gameObject.SetActive(true);
        string startingSentence = textBox.GetComponentInChildren<TextMeshProUGUI>().text;
-       Metadata.Instance.selectedOpeningSentence = startingSentence;
+       Metadata.Instance.currentPrompt = startingSentence;
     }
 
     void getInitialPrompts()
