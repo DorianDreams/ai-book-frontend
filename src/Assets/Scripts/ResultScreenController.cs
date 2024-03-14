@@ -127,13 +127,25 @@ public class ResultScreenController : MonoBehaviour
     {
         byte[] bytes = imageByteList[selectedImageIndex];
         imageByteList.Clear();
-
         Dictionary<string, object> returnVal = imageReturnVals[selectedImageIndex];
+
+/*
+        for(int i = 0; i <4; i++){
+            if (i==selectedImageIndex){
+                continue;
+            } else {
+                StartCoroutine(DeleteStoryImage(imageReturnVals[selectedImageIndex]["id"].ToString()));
+            }
+        }
+*/
 
         string imgID = returnVal["id"].ToString();
         string imgPath = returnVal["image"].ToString();
 
         imageReturnVals.Clear();
+
+
+
         StartCoroutine(GetStorySentences(bytes, (generated_sentence) =>
         {
             StartCoroutine(PostImageDescription(bytes, imgID, (story_generation, bytes) =>
@@ -206,6 +218,17 @@ public class ResultScreenController : MonoBehaviour
                 <Dictionary<string, string>>(request.downloadHandler.text);
             string caption = returnVal["caption"].ToString();
             callback(caption,bytes);
+        }
+    }
+
+    IEnumerator DeleteStoryImage(string image_id)
+    {
+        string url = "http://127.0.0.1:8000/api/images/delete/"+ image_id;
+        UnityWebRequest request = UnityWebRequest.Delete(url);
+        yield return request.SendWebRequest();
+        if (request.result != UnityWebRequest.Result.Success)
+        {
+            Debug.Log(request.error);
         }
     }
 

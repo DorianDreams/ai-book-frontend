@@ -6,6 +6,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
+using Newtonsoft.Json;
 
 public class Metadata : MonoBehaviour
 {
@@ -62,7 +63,9 @@ public class Metadata : MonoBehaviour
 
     IEnumerator PutFinishedStoryBook(System.Action callback)
     {
-        string json = JsonUtility.ToJson(this.storyBook);
+        this.storyBook.finished_playthrough = true;
+        //string json = JsonUtility.ToJson(this.storyBook);
+        string json = JsonConvert.SerializeObject(this.storyBook);
         Debug.Log("json: " + json);
         using (UnityWebRequest request = UnityWebRequest.Put("http://127.0.0.1:8000/api/storybooks/"+storyBookId, json))
         {
@@ -73,7 +76,7 @@ public class Metadata : MonoBehaviour
             }
             else
             {
-                Debug.Log(request.downloadHandler.text);
+                //Debug.Log(request.downloadHandler.text);
                 Dictionary<string, object> returnVal = JsonConvert.DeserializeObject
                     <Dictionary<string, object>>(request.downloadHandler.text);
             }
