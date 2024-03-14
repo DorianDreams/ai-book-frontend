@@ -78,7 +78,7 @@ public class OwnershipSelectionController : MonoBehaviour
             } 
             else
             {
-            EventSystem.instance.RestartSceneEvent();
+            EventSystem.instance.PublishMetadataEvent();
             } 
 
         } else
@@ -98,15 +98,16 @@ public class OwnershipSelectionController : MonoBehaviour
                 InstantiatedLineGenerator.GetComponent<LineGenerator>().parentCanvas = DrawingCanvas;
                 InstantiatedLineGenerator.GetComponent<LineGenerator>().width = LineWidth;
 
+
             }
             else
             {
-                EventSystem.instance.RestartSceneEvent();
+                EventSystem.instance.PublishMetadataEvent();
             }
         } else  
         if (currentState == "signing")
         {
-            EventSystem.instance.RestartSceneEvent();
+            EventSystem.instance.PublishMetadataEvent();
         }
         
         
@@ -143,4 +144,6 @@ public class OwnershipSelectionController : MonoBehaviour
     {
         
     }
+
+
 }

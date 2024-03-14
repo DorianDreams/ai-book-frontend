@@ -105,6 +105,7 @@ public class StartSelectionController : MonoBehaviour
                 Dictionary<string, object> returnVal = JsonConvert.DeserializeObject
                     <Dictionary<string, object>>(request.downloadHandler.text);
 
+
                 Metadata.Instance.storyBookId = returnVal["id"].ToString();
             }
         }

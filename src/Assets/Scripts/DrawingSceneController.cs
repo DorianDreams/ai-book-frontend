@@ -9,6 +9,7 @@ using UnityEngine.Localization;
 using Newtonsoft.Json;
 using System.IO;
 using UnityEngine.Localization.Tables;
+using System;
 
 public class DrawingScreenController : MonoBehaviour
 {
@@ -140,7 +141,16 @@ public class DrawingScreenController : MonoBehaviour
         Camera.main.Render();
         RenderTexture.active = rt;
 
-        screenShot.ReadPixels(new Rect(startX, startY - 120, textWidth, textHeight), 0, 0);
+        string operatingSystem = SystemInfo.operatingSystem;
+        if (operatingSystem.Contains("Windows"))
+        {
+            screenShot.ReadPixels(new Rect(startX, startY - 120, textWidth, textHeight), 0, 0);
+
+        }
+        else
+        {
+            screenShot.ReadPixels(new Rect(startX, startY + 120, textWidth, textHeight), 0, 0);
+        }
         Camera.main.targetTexture = null;
         RenderTexture.active = null;
         Destroy(rt);
@@ -158,9 +168,11 @@ public class DrawingScreenController : MonoBehaviour
         callback(bytes);
     }
 
-    void OnPublishToBook(Sprite sprite, string description, int index)
+    void OnPublishToBook(Sprite sprite, string description, string continuation, int index)
     {
         drawingPage.selected_image = index;
+        drawingPage.time = timer;
+        drawingPage.iterations = currentIteration;
         Metadata.Instance.storyBook.drawing.drawingPages.Add(drawingPage);
         timer = 0.0f;
         Disable();

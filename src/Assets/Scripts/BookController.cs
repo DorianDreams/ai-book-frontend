@@ -161,63 +161,43 @@ namespace echo17.EndlessBook.Demo03
 		}
 
 
-        void OnPublishToBook(Sprite sprite, string description, int index)
+        void OnPublishToBook(Sprite sprite, string description, string continuation, int index)
         {
-            if (Metadata.Instance.testVersion == 2)
-            { }
-            else { 
-                string continuation = description.Split(".").Last();
-            if (continuation.Length == 0) {
-                continuation = description.Split(".").Last();
-                if (continuation.Length == 0)
-                {
-                    description = description.Substring(0, description.Length / 2);
-                    continuation = description.Substring(description.Length / 2);
-                }
-                else
-                {
-                    description = description.Replace(continuation, "");
-                }
-
-            }
-            else
-            {
-                description = description.Replace(continuation, "");
-            }
-
-            description = "\n\n... " + description + " ... ";
-            continuation = "\n\n... " + continuation + " ... ";
-            Metadata.Instance.currentPrompt = continuation;
-        }
+            description = description + ".";
+			continuation = continuation + ".";
             switch (book.CurrentPageNumber)
 			{
                 case 1:
                     textP2.SetActive(false);
 					
 					Metadata.Instance.currentChapter = "ch2";
-                    textP1.GetComponent<TextMeshProUGUI>().text += description;
+					Metadata.Instance.currentPrompt = continuation;
+                    textP1.GetComponent<TextMeshProUGUI>().text = description;
                     imageP2.GetComponent<Image>().sprite = sprite;
                     imageP2.SetActive(true);
                     turnBookPage = true;
                     break;
+
 				case 3:
 					textP4.SetActive(false);
                     Metadata.Instance.currentChapter = "ch3";
-                    textP3.GetComponent<TextMeshProUGUI>().text += description;
+                    Metadata.Instance.currentPrompt = continuation;
+                    textP3.GetComponent<TextMeshProUGUI>().text = description;
                     imageP4.GetComponent<Image>().sprite = sprite;
                     imageP4.SetActive(true);
                     turnBookPage = true;
                     break;
+
                 case 5:
                     textP6.SetActive(false);
-                    textP5.GetComponent<TextMeshProUGUI>().text += description;
+                    textP5.GetComponent<TextMeshProUGUI>().text = description + continuation;
                     imageP6.GetComponent<Image>().sprite = sprite;
                     imageP6.SetActive(true);
                     turnBookPage = true;
 					bookFinished = true;
 					EventSystem.instance.DisableDrawingScreenEvent();
 					EventSystem.instance.EnableOwnershipScreenEvent();
-					//EventSystem.instance.SwitchCameraEvent();
+					EventSystem.instance.SwitchCameraEvent();
                     break;
 
             }
@@ -288,7 +268,7 @@ namespace echo17.EndlessBook.Demo03
         /// </summary>
         void OnMouseDown()
 		{
-			Debug.Log("OnMouseDown");
+			//Debug.Log("OnMouseDown");
 			if (turnBookPage)
 			{
 				if (book.CurrentState == EndlessBook.StateEnum.ClosedFront)

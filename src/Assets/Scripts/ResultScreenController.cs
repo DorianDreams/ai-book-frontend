@@ -52,6 +52,8 @@ public class ResultScreenController : MonoBehaviour
     private int selectedImageIndex;
 
     private List<byte[]> imageByteList = new List<byte[]>();
+    private List<Dictionary<string, object>> imageReturnVals = new List<Dictionary<string, object>>();
+
     private void Start()
     {
         EventSystem.instance.ChangeLocale += OnChangeLocale;
@@ -123,37 +125,33 @@ public class ResultScreenController : MonoBehaviour
 
     public void OnPublishToBook()
     {
-        if (Metadata.Instance.testVersion == 2)
-        {
-            byte[] bytes = imageByteList[selectedImageIndex];
-            StartCoroutine(GetImageCaption2(bytes, (caption) =>
-            {
-                numberOfImages = 0;
-                EventSystem.instance.PublishToBookEvent(currentSelectedImage.sprite, caption, selectedImageIndex);
-                if (Metadata.singleScreenVersion)
-                {
-                    EventSystem.instance.SwitchCameraEvent();
-                }
-                EventSystem.instance.DisableResultScreenEvent();
-            }
-             ));
-        } else
-        {
-            byte[] bytes = imageByteList[selectedImageIndex];
-            StartCoroutine(GetLlamaDescription(bytes, (generated_sentence) =>
-            {
+        byte[] bytes = imageByteList[selectedImageIndex];
+        imageByteList.Clear();
 
+        Dictionary<string, object> returnVal = imageReturnVals[selectedImageIndex];
+
+        string imgID = returnVal["id"].ToString();
+        string imgPath = returnVal["image"].ToString();
+
+        imageReturnVals.Clear();
+        StartCoroutine(GetStorySentences(bytes, (generated_sentence) =>
+        {
+            StartCoroutine(PostImageDescription(bytes, imgID, (story_generation, bytes) =>
+            {
                 numberOfImages = 0;
-                EventSystem.instance.PublishToBookEvent(currentSelectedImage.sprite, generated_sentence, selectedImageIndex);
+                
+                string story_description = story_generation.Split(".")[0];
+                string story_continuation = story_generation.Split(".")[1];
+                generated_sentence = generated_sentence + story_description;
+
+                EventSystem.instance.PublishToBookEvent(currentSelectedImage.sprite, generated_sentence, story_continuation, selectedImageIndex);
                 if (Metadata.singleScreenVersion)
                 {
                     EventSystem.instance.SwitchCameraEvent();
                 }
                 EventSystem.instance.DisableResultScreenEvent();
-            }
-             ));
-        }
-        
+            }));
+        }));
     }
 
     void OnSendImageToAI(byte[]bytes) {
@@ -181,7 +179,6 @@ public class ResultScreenController : MonoBehaviour
                         NotSatisfiedTextBox.SetActive(true);
                         NotSatisfiedTextBox.GetComponent<TextMeshProUGUI>().text = NotSatisfiedText.GetLocalizedString();
                         BacktoDrawing.SetActive(true);
-
                     }));
                 }));
             }));
@@ -213,9 +210,35 @@ public class ResultScreenController : MonoBehaviour
     }
 
 
-    IEnumerator GetImageCaption2(byte[] bytes, System.Action<string> callback)
+    IEnumerator PostImageDescription(byte[] bytes, string image_id, System.Action<string, byte[]> callback)
     {
-        string url = "http://127.0.0.1:8000/api/chat/test?prompt=" + Metadata.Instance.currentPrompt;
+        string url = "http://127.0.0.1:8000/api/descriptions/" + Metadata.Instance.storyBookId  + "/" + image_id +
+                        "?prompt=" + Metadata.Instance.currentPrompt + "&chapter_index=" + Metadata.Instance.currentChapter;
+        WWWForm form = new WWWForm();
+        form.AddBinaryData("image", bytes);
+        form.headers["Content-Type"] = "multipart/form-data";
+        Debug.Log(form.ToString());
+
+        UnityWebRequest request = UnityWebRequest.Post(url, form);
+        yield return request.SendWebRequest();
+        if (request.result != UnityWebRequest.Result.Success)
+        {
+            Debug.Log(request.error);
+        }
+        else
+        {
+            Dictionary<string, string> returnVal = JsonConvert.DeserializeObject
+                <Dictionary<string, string>>(request.downloadHandler.text);
+            string description = returnVal["description"].ToString();
+            callback(description, bytes);
+        }
+    }
+
+
+    IEnumerator GetStorySentences(byte[] bytes, System.Action<string> callback)
+    {
+        string url = "http://127.0.0.1:8000/api/chat/storysentences?prompt=" + Metadata.Instance.currentPrompt
+                                                               + "&chapter_index=" + Metadata.Instance.currentChapter;
         WWWForm form = new WWWForm();
         form.AddBinaryData("image", bytes);
         form.headers["Content-Type"] = "multipart/form-data";
@@ -232,10 +255,12 @@ public class ResultScreenController : MonoBehaviour
         {
             Dictionary<string, string> returnVal = JsonConvert.DeserializeObject
                 <Dictionary<string, string>>(request.downloadHandler.text);
-            string caption = returnVal["caption"].ToString();
-            callback(caption);
+            string generated_description = returnVal["generated_description"].ToString();
+            callback(generated_description);
         }
     }
+
+
 
     IEnumerator GetLlamaDescription(byte[] bytes, System.Action<string> callback)
     {
@@ -298,7 +323,7 @@ public class ResultScreenController : MonoBehaviour
     public void showImageSelection(Dictionary<string, object> returnVal)
     {
         string imagePath = returnVal["image"].ToString();
-
+        
         string operatingSystem = SystemInfo.operatingSystem;
         string fullpath = "";
         if (operatingSystem.Contains("Windows"))
@@ -318,6 +343,7 @@ public class ResultScreenController : MonoBehaviour
 
         // Display Image on screen
         byte[] bytes = System.IO.File.ReadAllBytes(fullpath);
+        imageReturnVals.Add(returnVal);
         imageByteList.Add(bytes);
         Texture2D texture = new Texture2D(1, 1);
         texture.LoadImage(bytes);
