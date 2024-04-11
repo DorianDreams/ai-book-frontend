@@ -173,7 +173,7 @@ public class DrawingScreenController : MonoBehaviour
         drawingPage.selected_image = index;
         drawingPage.time = timer;
         drawingPage.iterations = currentIteration;
-        Metadata.Instance.storyBook.drawing.drawingPages.Add(drawingPage);
+        Metadata.Instance.storyBook.drawing.drawingPages.Add(Metadata.Instance.currentChapter, drawingPage);
         timer = 0.0f;
         Disable();
         currentIteration = 0;

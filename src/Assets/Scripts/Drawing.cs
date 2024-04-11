@@ -7,11 +7,14 @@ using UnityEngine;
 [Serializable]
 public class Drawing 
 {
-    public ArrayList drawingPages;
+
+    public Dictionary<string, DrawingPage> drawingPages;
+
 
     public Drawing()
     {
-        drawingPages = new ArrayList();
+        //this.drawingPages = new List<DrawingPage>();
+        this.drawingPages = new Dictionary<string, DrawingPage>();
     }
 }
 [Serializable]
