@@ -13,6 +13,7 @@ public class Metadata : MonoBehaviour
     // JSON Objects
     public StoryBook storyBook;
 
+    public bool useCaptioning;
 
     public static Metadata Instance { get; private set; }
 

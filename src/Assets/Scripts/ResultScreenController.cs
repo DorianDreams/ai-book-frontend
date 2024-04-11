@@ -7,6 +7,7 @@ using UnityEngine.Networking;
 using UnityEngine.UI;
 using System.Collections;
 using System.Security.Cryptography;
+using UnityEditor.Experimental.GraphView;
 
 public class ResultScreenController : MonoBehaviour
 {
@@ -140,11 +141,8 @@ public class ResultScreenController : MonoBehaviour
             {
                 numberOfImages = 0;
                 
-                string story_description = story_generation.Split(".")[0];
-                string story_continuation = story_generation.Split(".")[1];
-                generated_sentence = generated_sentence + story_description;
-
-                EventSystem.instance.PublishToBookEvent(currentSelectedImage.sprite, generated_sentence, story_continuation, selectedImageIndex);
+                EventSystem.instance.PublishToBookEvent(currentSelectedImage.sprite, generated_sentence,
+                    story_generation, selectedImageIndex);
                 if (Metadata.singleScreenVersion)
                 {
                     EventSystem.instance.SwitchCameraEvent();
@@ -188,24 +186,31 @@ public class ResultScreenController : MonoBehaviour
 
     IEnumerator GetImageCaption(byte[] bytes, System.Action<string, byte[]> callback)
     {
-        string url = "http://127.0.0.1:8000/api/chat/captions?prompt="+ Metadata.Instance.currentPrompt;
-        WWWForm form = new WWWForm();
-        form.AddBinaryData("image", bytes);
-        form.headers["Content-Type"] = "multipart/form-data";
-        Debug.Log(form.ToString());
- 
-        UnityWebRequest request = UnityWebRequest.Post(url, form);
-        yield return request.SendWebRequest();
-        if (request.result != UnityWebRequest.Result.Success)
+        if (Metadata.Instance.useCaptioning)
         {
-            Debug.Log(request.error);
+            string url = "http://127.0.0.1:8000/api/chat/captions?prompt=" + Metadata.Instance.currentPrompt;
+            WWWForm form = new WWWForm();
+            form.AddBinaryData("image", bytes);
+            form.headers["Content-Type"] = "multipart/form-data";
+            Debug.Log(form.ToString());
+
+            UnityWebRequest request = UnityWebRequest.Post(url, form);
+            yield return request.SendWebRequest();
+            if (request.result != UnityWebRequest.Result.Success)
+            {
+                Debug.Log(request.error);
+            }
+            else
+            {
+                Dictionary<string, string> returnVal = JsonConvert.DeserializeObject
+                    <Dictionary<string, string>>(request.downloadHandler.text);
+                string caption = returnVal["caption"].ToString();
+                callback(caption, bytes);
+            }
         }
         else
         {
-            Dictionary<string, string> returnVal = JsonConvert.DeserializeObject
-                <Dictionary<string, string>>(request.downloadHandler.text);
-            string caption = returnVal["caption"].ToString();
-            callback(caption,bytes);
+            callback("",bytes);
         }
     }
 

@@ -108,6 +108,7 @@ namespace echo17.EndlessBook.Demo03
             EventSystem.instance.StartStory += OnStartStory;
 			EventSystem.instance.ChangeLocale += OnChangeLocale;
 			EventSystem.instance.PublishToBook += OnPublishToBook;
+
             StartStory = (EndlessBook.StateEnum fromState,
                                                 EndlessBook.StateEnum toState,
                                                 int pageNumber) =>
@@ -163,7 +164,7 @@ namespace echo17.EndlessBook.Demo03
 
         void OnPublishToBook(Sprite sprite, string description, string continuation, int index)
         {
-            description = description + ".";
+            description = "... " + description + ".";
 			continuation = continuation + ".";
             switch (book.CurrentPageNumber)
 			{
@@ -171,8 +172,9 @@ namespace echo17.EndlessBook.Demo03
                     textP2.SetActive(false);
 					
 					Metadata.Instance.currentChapter = "ch2";
-					Metadata.Instance.currentPrompt = continuation;
-                    textP1.GetComponent<TextMeshProUGUI>().text = description;
+                    textP1.GetComponent<TextMeshProUGUI>().text = Metadata.Instance.currentPrompt + "\n" + description;
+                    Metadata.Instance.currentPrompt = continuation;
+                    
                     imageP2.GetComponent<Image>().sprite = sprite;
                     imageP2.SetActive(true);
                     turnBookPage = true;
@@ -181,8 +183,8 @@ namespace echo17.EndlessBook.Demo03
 				case 3:
 					textP4.SetActive(false);
                     Metadata.Instance.currentChapter = "ch3";
-                    Metadata.Instance.currentPrompt = continuation;
                     textP3.GetComponent<TextMeshProUGUI>().text = description;
+                    Metadata.Instance.currentPrompt = continuation;
                     imageP4.GetComponent<Image>().sprite = sprite;
                     imageP4.SetActive(true);
                     turnBookPage = true;
@@ -190,7 +192,7 @@ namespace echo17.EndlessBook.Demo03
 
                 case 5:
                     textP6.SetActive(false);
-                    textP5.GetComponent<TextMeshProUGUI>().text = description + continuation;
+                    textP5.GetComponent<TextMeshProUGUI>().text = description;
                     imageP6.GetComponent<Image>().sprite = sprite;
                     imageP6.SetActive(true);
                     turnBookPage = true;
