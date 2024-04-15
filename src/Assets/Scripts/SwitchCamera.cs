@@ -1,4 +1,4 @@
-using System.Collections;
+/*using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -16,13 +16,14 @@ public class SwitchCamera : MonoBehaviour
     {
         //Screen.fullScreen = false;
 
-        Screen.SetResolution(3840, 2160, true);
-        EventSystem.instance.SwitchCamera += switchCamera;
+        //Screen.SetResolution(3840, 2160, true);
+        //EventSystem.instance.SwitchCamera += switchCamera;
     }
 
     // Update is called once per frame
-    void Update()
+   /* void Update()
     {
+        
         if (Input.GetKeyDown(KeyCode.C))
         {
             EventSystem.instance.SwitchCameraEvent();
@@ -31,10 +32,10 @@ public class SwitchCamera : MonoBehaviour
         {
             Application.Quit();
         }
-    }
+    }*/
 
 
-    public void switchCamera()
+    /*public void switchCamera()
     {
         if (ShowDisplay == 2)
         {
@@ -56,7 +57,5 @@ public class SwitchCamera : MonoBehaviour
             ShowDisplay = 2;
            // Screen.fullScreen = false;
 
-            //Screen.SetResolution(1080, 1920, true);
         }
-    }
-}
+    }*/

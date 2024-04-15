@@ -7,7 +7,6 @@ using UnityEngine.Networking;
 using UnityEngine.UI;
 using System.Collections;
 using System.Security.Cryptography;
-using UnityEditor.Experimental.GraphView;
 
 public class ResultScreenController : MonoBehaviour
 {
@@ -47,7 +46,6 @@ public class ResultScreenController : MonoBehaviour
     //Todo: interaction with book controller?
     string chapter = "chapter_1_prompt";
 
-    private string descriptionCandidate;
     private int numberOfImages; // keeps track of number of images on the result screen
     private Image currentSelectedImage;
     private int selectedImageIndex;
@@ -62,7 +60,6 @@ public class ResultScreenController : MonoBehaviour
         EventSystem.instance.DisableResultScreen += Disable;
         EventSystem.instance.SendImageToAI += OnSendImageToAI;
         
-
         DisableSelectionButtons();
         ImageResult0.GetComponent<Button>().onClick.AddListener(() => SelectImage(0) );
         ImageResult1.GetComponent<Button>().onClick.AddListener(() => SelectImage(1));
@@ -130,22 +127,20 @@ public class ResultScreenController : MonoBehaviour
         imageByteList.Clear();
         Dictionary<string, object> returnVal = imageReturnVals[selectedImageIndex];
 
-/*
-        for(int i = 0; i <4; i++){
-            if (i==selectedImageIndex){
-                continue;
-            } else {
-                StartCoroutine(DeleteStoryImage(imageReturnVals[selectedImageIndex]["id"].ToString()));
+        /*
+            for(int i = 0; i <4; i++){
+                if (i==selectedImageIndex){
+                    continue;
+                } else {
+                    StartCoroutine(DeleteStoryImage(imageReturnVals[selectedImageIndex]["id"].ToString()));
+                }
             }
-        }
-*/
+        */
 
         string imgID = returnVal["id"].ToString();
         string imgPath = returnVal["image"].ToString();
 
         imageReturnVals.Clear();
-
-
 
         StartCoroutine(GetStorySentences(bytes, (generated_sentence) =>
         {
@@ -173,9 +168,8 @@ public class ResultScreenController : MonoBehaviour
         StartCoroutine(GetImageCaption(bytes, (caption, bytes) =>
         {
             Debug.Log("Caption: " + caption);
-            ImageCaptionProposal.SetActive(true);
-            ImageCaptionProposal.GetComponent<TextMeshProUGUI>().text = "..." + caption;
-            descriptionCandidate = caption;
+            //ImageCaptionProposal.SetActive(true);
+            //ImageCaptionProposal.GetComponent<TextMeshProUGUI>().text = "..." + caption;
 
             StartCoroutine(SendImageToAIIteration(caption, 0.5f, bytes, (caption,bytes) =>
         {
@@ -198,31 +192,39 @@ public class ResultScreenController : MonoBehaviour
 
     IEnumerator GetImageCaption(byte[] bytes, System.Action<string, byte[]> callback)
     {
-        if (Metadata.Instance.useCaptioning)
-        {
-            string url = "http://127.0.0.1:8000/api/chat/captions?prompt=" + Metadata.Instance.currentPrompt;
-            WWWForm form = new WWWForm();
-            form.AddBinaryData("image", bytes);
-            form.headers["Content-Type"] = "multipart/form-data";
-            Debug.Log(form.ToString());
+        string url = "http://127.0.0.1:8000/api/chat/captions?prompt=" + Metadata.Instance.currentPrompt;
+        WWWForm form = new WWWForm();
+        form.AddBinaryData("image", bytes);
+        form.headers["Content-Type"] = "multipart/form-data";
+        Debug.Log(form.ToString());
 
-            UnityWebRequest request = UnityWebRequest.Post(url, form);
-            yield return request.SendWebRequest();
-            if (request.result != UnityWebRequest.Result.Success)
+        UnityWebRequest request = UnityWebRequest.Post(url, form);
+        yield return request.SendWebRequest();
+        if (request.result != UnityWebRequest.Result.Success)
+        {
+            int count = 0;
+            while(request.result != UnityWebRequest.Result.Success)
             {
                 Debug.Log(request.error);
+                request = UnityWebRequest.Post(url, form);
+                yield return request.SendWebRequest();
+                count++;
+                if (count > 10)
+                {
+                    EventSystem.instance.RestartSceneEvent();
+                }
             }
-            else
-            {
-                Dictionary<string, string> returnVal = JsonConvert.DeserializeObject
-                    <Dictionary<string, string>>(request.downloadHandler.text);
-                string caption = returnVal["caption"].ToString();
-                callback(caption, bytes);
-            }
+            Dictionary<string, string> returnVal = JsonConvert.DeserializeObject
+                <Dictionary<string, string>>(request.downloadHandler.text);
+            string caption = returnVal["caption"].ToString();
+            callback(caption, bytes);
         }
         else
         {
-            callback("",bytes);
+            Dictionary<string, string> returnVal = JsonConvert.DeserializeObject
+                <Dictionary<string, string>>(request.downloadHandler.text);
+            string caption = returnVal["caption"].ToString();
+            callback(caption, bytes);
         }
     }
 
@@ -251,7 +253,22 @@ public class ResultScreenController : MonoBehaviour
         yield return request.SendWebRequest();
         if (request.result != UnityWebRequest.Result.Success)
         {
-            Debug.Log(request.error);
+            int count = 0;
+            while(request.result != UnityWebRequest.Result.Success)
+            {
+                Debug.Log(request.error);
+                request = UnityWebRequest.Post(url, form);
+                yield return request.SendWebRequest();
+                count++;
+                if (count > 10)
+                {
+                    EventSystem.instance.RestartSceneEvent();
+                }
+            }
+            Dictionary<string, string> returnVal = JsonConvert.DeserializeObject
+                <Dictionary<string, string>>(request.downloadHandler.text);
+            string description = returnVal["description"].ToString();
+            callback(description, bytes);
         }
         else
         {
@@ -265,19 +282,31 @@ public class ResultScreenController : MonoBehaviour
 
     IEnumerator GetStorySentences(byte[] bytes, System.Action<string> callback)
     {
-        string url = "http://127.0.0.1:8000/api/chat/storysentences?prompt=" + Metadata.Instance.currentPrompt
-                                                               + "&chapter_index=" + Metadata.Instance.currentChapter;
+        string url = "http://127.0.0.1:8000/api/chat/completions?prompt=" + Metadata.Instance.currentPrompt;
         WWWForm form = new WWWForm();
         form.AddBinaryData("image", bytes);
         form.headers["Content-Type"] = "multipart/form-data";
-        Debug.Log(form.ToString());
-
 
         UnityWebRequest request = UnityWebRequest.Post(url, form);
         yield return request.SendWebRequest();
         if (request.result != UnityWebRequest.Result.Success)
         {
-            Debug.Log(request.error);
+            int count = 0;
+            while (request.result != UnityWebRequest.Result.Success)
+            {
+                Debug.Log(request.error);
+                request = UnityWebRequest.Post(url, form);
+                yield return request.SendWebRequest();
+                count++;
+                if (count > 10)
+                {
+                    EventSystem.instance.RestartSceneEvent();
+                }
+            }
+            Dictionary<string, string> returnVal = JsonConvert.DeserializeObject
+                <Dictionary<string, string>>(request.downloadHandler.text);
+            string generated_description = returnVal["generated_description"].ToString();
+            callback(generated_description);
         }
         else
         {
@@ -288,32 +317,6 @@ public class ResultScreenController : MonoBehaviour
         }
     }
 
-
-
-    IEnumerator GetLlamaDescription(byte[] bytes, System.Action<string> callback)
-    {
-        string url = "http://127.0.0.1:8000/api/chat/descriptions?prompt=" + Metadata.Instance.currentPrompt
-                                                               +"&chapter_index=" + Metadata.Instance.currentChapter;
-        WWWForm form = new WWWForm();
-        form.AddBinaryData("image", bytes);
-        form.headers["Content-Type"] = "multipart/form-data";
-        Debug.Log(form.ToString());
-
-
-        UnityWebRequest request = UnityWebRequest.Post(url, form);
-        yield return request.SendWebRequest();
-        if (request.result != UnityWebRequest.Result.Success)
-        {
-            Debug.Log(request.error);
-        }
-        else
-        {
-            Dictionary<string, string> returnVal = JsonConvert.DeserializeObject
-                <Dictionary<string, string>>(request.downloadHandler.text);
-            string generated_description = returnVal["generated_description"].ToString();
-            callback(generated_description);
-        }
-    }
 
     IEnumerator SendImageToAIIteration(string caption, float strength, byte[] bytes, System.Action<string,byte[]> callback)
     {
@@ -334,7 +337,26 @@ public class ResultScreenController : MonoBehaviour
 
         if (request.result != UnityWebRequest.Result.Success)
         {
-            Debug.Log(request.error);
+            int count = 0;
+            while (request.result != UnityWebRequest.Result.Success)
+            {
+                Debug.Log(request.error);
+                request = UnityWebRequest.Post(url, form);
+                yield return request.SendWebRequest();
+                count++;
+                if (count > 10)
+                {
+                    EventSystem.instance.RestartSceneEvent();
+                }
+            }
+            Dictionary<string, object> returnVal = JsonConvert.DeserializeObject
+                <Dictionary<string, object>>(request.downloadHandler.text);
+
+            showImageSelection(returnVal);
+            numberOfImages++;
+
+            callback(caption, bytes);
+
         }
         else
         {
@@ -435,5 +457,31 @@ public class ResultScreenController : MonoBehaviour
                 break;
         }
     }
+
+    IEnumerator GetLlamaDescription(byte[] bytes, System.Action<string> callback)
+    {
+        string url = "http://127.0.0.1:8000/api/chat/descriptions?prompt=" + Metadata.Instance.currentPrompt
+                                                               + "&chapter_index=" + Metadata.Instance.currentChapter;
+        WWWForm form = new WWWForm();
+        form.AddBinaryData("image", bytes);
+        form.headers["Content-Type"] = "multipart/form-data";
+        Debug.Log(form.ToString());
+
+
+        UnityWebRequest request = UnityWebRequest.Post(url, form);
+        yield return request.SendWebRequest();
+        if (request.result != UnityWebRequest.Result.Success)
+        {
+            Debug.Log(request.error);
+        }
+        else
+        {
+            Dictionary<string, string> returnVal = JsonConvert.DeserializeObject
+                <Dictionary<string, string>>(request.downloadHandler.text);
+            string generated_description = returnVal["generated_description"].ToString();
+            callback(generated_description);
+        }
+    }
+
 }
 

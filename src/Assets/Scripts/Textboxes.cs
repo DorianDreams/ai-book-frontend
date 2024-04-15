@@ -43,6 +43,8 @@ public class Textboxes : MonoBehaviour
        textBox.transform.GetChild(1).gameObject.SetActive(true);
        string startingSentence = textBox.GetComponentInChildren<TextMeshProUGUI>().text;
        Metadata.Instance.currentPrompt = startingSentence;
+        Metadata.Instance.startingPrompt = startingSentence;
+        
     }
 
     void getInitialPrompts()

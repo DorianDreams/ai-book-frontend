@@ -46,6 +46,7 @@ public class LineGenerator : MonoBehaviour
     private void Start()
     {
         Material material = new Material(Shader.Find("Unlit/Color"));
+        //Material material = new Material(Shader.Find("Sprites/Default"));
         material.color = Color.black;
         this.material = material;
         EventSystem.instance.PressColorButton += OnPressColorButton;

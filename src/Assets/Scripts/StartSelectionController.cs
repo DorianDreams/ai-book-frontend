@@ -70,7 +70,9 @@ public class StartSelectionController : MonoBehaviour
         if (Metadata.Instance.currentPrompt == "")
         {
             Debug.Log("Get Random Prompt");
-            Metadata.Instance.currentPrompt = Textboxes.GetComponent<Textboxes>().getRandomInitialPrompt();
+            string random_prompt = Textboxes.GetComponent<Textboxes>().getRandomInitialPrompt();
+            Metadata.Instance.currentPrompt = random_prompt;
+            Metadata.Instance.startingPrompt = random_prompt;
         }
 
         StartCoroutine(CreateStoryBook());

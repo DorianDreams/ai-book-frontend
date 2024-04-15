@@ -20,6 +20,7 @@ public class Metadata : MonoBehaviour
 
     public string storyBookId;
     public string currentPrompt;
+    public string startingPrompt;
 
 
     // Metadata used for State Management: Todo: Move to StateManager

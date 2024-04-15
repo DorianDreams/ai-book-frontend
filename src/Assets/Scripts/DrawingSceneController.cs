@@ -88,7 +88,6 @@ public class DrawingScreenController : MonoBehaviour
     {
         measureTime = false;
         EventSystem.instance.DeleteAllLinesEvent();
-
         DrawingMode.SetActive(false);
     }
 
@@ -160,7 +159,7 @@ public class DrawingScreenController : MonoBehaviour
         string fileName = "Screenshot" + timeStamp + ".png";
         string filePath = Application.dataPath + "/" + fileName;
 
-        System.IO.File.WriteAllBytes(filePath, bytes);
+        //System.IO.File.WriteAllBytes(filePath, bytes);
 
         EventSystem.instance.PauseDrawingEvent();
         EventSystem.instance.EnableResultScreenEvent();
@@ -194,5 +193,4 @@ public class DrawingScreenController : MonoBehaviour
         Debug.Log(button.GetComponent<Image>().color);
         EventSystem.instance.PressColorButtonEvent(button.GetComponent<Image>().color);
     }
- 
 }
