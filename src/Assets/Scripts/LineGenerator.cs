@@ -54,9 +54,17 @@ public class LineGenerator : MonoBehaviour
         EventSystem.instance.DeleteLastLine += OnDeleteLastLine;
         EventSystem.instance.ShowLines += ShowLines;
         EventSystem.instance.HideLines += HideLines;
+
+        EventSystem.instance.SetLineRendererWidth += OnChangeWidth;
+
     }
 
-    
+    private void OnChangeWidth(float width)
+    {
+        //width = Slider.GetComponent<Slider>().value;
+        this.width = width;
+    }
+
     private void OnDeleeteAllLines()
     {
         foreach (GameObject line in Lines)
@@ -186,6 +194,7 @@ public class LineGenerator : MonoBehaviour
 
             if (Input.GetMouseButtonUp(0))
             {
+                    /*
                     if (lineRenderer.positionCount < 100)
                     {
                         lineRenderer.Simplify(0.03f);
@@ -196,7 +205,7 @@ public class LineGenerator : MonoBehaviour
                     {
                         lineRenderer.Simplify(0.01f);
                     }
-                    
+                    */
                     //lineRenderer.Simplify(tolerance);
                     /* (lineRenderer.positionCount == 1)
                     {

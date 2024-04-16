@@ -26,6 +26,11 @@ public class DrawingScreenController : MonoBehaviour
     [SerializeField]
     float LineWidth = 1f;
 
+    public GameObject LargeButton;
+    public GameObject MediumButton;
+    public GameObject SmallButton;
+
+
     public GameObject SendToAIButton;
     public GameObject DeleteAllButton;
     public GameObject DrawingBackground;
@@ -61,6 +66,10 @@ public class DrawingScreenController : MonoBehaviour
         {
             button.onClick.AddListener(() => OnColorButtonClicked(button));
         }
+
+        LargeButton.GetComponent<Button>().onClick.AddListener(() => OnSizeButtonClicked(0.8f));
+        MediumButton.GetComponent<Button>().onClick.AddListener(() => OnSizeButtonClicked(0.5f));
+        SmallButton.GetComponent<Button>().onClick.AddListener(() => OnSizeButtonClicked(0.2f));
     }
 
     void Update()
@@ -192,5 +201,10 @@ public class DrawingScreenController : MonoBehaviour
         button.transform.localScale = new Vector3(SelectedButtonWidth, SelectedButtonWidth, SelectedButtonWidth);
         Debug.Log(button.GetComponent<Image>().color);
         EventSystem.instance.PressColorButtonEvent(button.GetComponent<Image>().color);
+    }
+
+    public void OnSizeButtonClicked(float size)
+    {
+        EventSystem.instance.SetLineRendererWidthEvent(size);
     }
 }
