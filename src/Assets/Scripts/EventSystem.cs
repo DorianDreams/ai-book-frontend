@@ -91,6 +91,15 @@ public class EventSystem : MonoBehaviour
     }
 
     
+    public event Action <float> SetLineRendererWidth;
+    public void SetLineRendererWidthEvent(float width)
+    {
+        if (SetLineRendererWidth != null)
+        {
+            Debug.Log("Event fired: SetLineRendererWidthEvent");
+            SetLineRendererWidth(width);
+        }
+    }
 
     
 

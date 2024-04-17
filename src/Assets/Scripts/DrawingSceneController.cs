@@ -32,6 +32,11 @@ public class DrawingScreenController : MonoBehaviour
     public GameObject LineGeneratorPrefab;
     private GameObject InstantiatedLineGenerator=null;
 
+    public GameObject LargeButton;
+    public GameObject MediumButton;
+    public GameObject SmallButton;
+
+
     private DrawingPage drawingPage;
     int currentIteration = 0;
     float timer = 0.0f;
@@ -61,7 +66,18 @@ public class DrawingScreenController : MonoBehaviour
         {
             button.onClick.AddListener(() => OnColorButtonClicked(button));
         }
+
+        LargeButton.GetComponent<Button>().onClick.AddListener(() => OnSizeButtonClicked(0.8f));
+        MediumButton.GetComponent<Button>().onClick.AddListener(() => OnSizeButtonClicked(0.5f));
+        SmallButton.GetComponent<Button>().onClick.AddListener(() => OnSizeButtonClicked(0.2f));
+
     }
+
+        public void OnSizeButtonClicked(float size)
+    {
+        EventSystem.instance.SetLineRendererWidthEvent(size);
+    }
+
 
     void Update()
     {
@@ -148,7 +164,7 @@ public class DrawingScreenController : MonoBehaviour
         }
         else
         {
-            screenShot.ReadPixels(new Rect(startX, startY + 120, textWidth, textHeight), 0, 0);
+            screenShot.ReadPixels(new Rect(startX, startY, textWidth, textHeight), 0, 0);
         }
         Camera.main.targetTexture = null;
         RenderTexture.active = null;

@@ -16,13 +16,10 @@ public class AddDisplay : MonoBehaviour
         for (int i = 1; i < Display.displays.Length; i++)
         {
             Display.displays[i].Activate();
+            Display.displays[i].SetRenderingResolution(1920, 1080);
+
         }
 
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

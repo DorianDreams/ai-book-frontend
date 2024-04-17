@@ -23,6 +23,17 @@ public class Metadata : MonoBehaviour
     public string startingPrompt;
 
 
+    public enum LLM
+    {
+        TinyLlama,
+        BLIPInstruct,
+        Mistral
+    };
+
+    public LLM currentLLM;
+
+
+
     // Metadata used for State Management: Todo: Move to StateManager
     public static bool singleScreenVersion = true;
     public int currentTextPage = 0;

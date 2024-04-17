@@ -88,6 +88,9 @@ namespace echo17.EndlessBook.Demo03
 			
         }
 
+		public Vector3 screenPosition;
+
+
 		private StateChangedDelegate OnBookOpened;
 		private StateChangedDelegate OnBookClosed;
 
@@ -164,8 +167,7 @@ namespace echo17.EndlessBook.Demo03
 
         void OnPublishToBook(Sprite sprite, string description, string continuation, int index)
         {
-            description = "... " + description + ".";
-			continuation = continuation + ".";
+			continuation = continuation;
             switch (book.CurrentPageNumber)
 			{
                 case 1:
@@ -183,7 +185,7 @@ namespace echo17.EndlessBook.Demo03
 				case 3:
 					textP4.SetActive(false);
                     Metadata.Instance.currentChapter = "ch3";
-                    textP3.GetComponent<TextMeshProUGUI>().text = description;
+                    textP3.GetComponent<TextMeshProUGUI>().text = Metadata.Instance.currentPrompt + "\n" + description;
                     Metadata.Instance.currentPrompt = continuation;
                     imageP4.GetComponent<Image>().sprite = sprite;
                     imageP4.SetActive(true);
@@ -192,7 +194,7 @@ namespace echo17.EndlessBook.Demo03
 
                 case 5:
                     textP6.SetActive(false);
-                    textP5.GetComponent<TextMeshProUGUI>().text = description;
+                    textP5.GetComponent<TextMeshProUGUI>().text = Metadata.Instance.currentPrompt + "\n" + description;
                     imageP6.GetComponent<Image>().sprite = sprite;
                     imageP6.SetActive(true);
                     turnBookPage = true;
@@ -270,9 +272,9 @@ namespace echo17.EndlessBook.Demo03
         /// </summary>
         void OnMouseDown()
 		{
-			//Debug.Log("OnMouseDown");
-			if (turnBookPage)
-			{
+			Debug.Log("OnMouseDown");
+			if(turnBookPage){
+			
 				if (book.CurrentState == EndlessBook.StateEnum.ClosedFront)
 				{
 					book.SetState(EndlessBook.StateEnum.OpenFront, onCompleted: OnBookOpened);
@@ -365,7 +367,7 @@ namespace echo17.EndlessBook.Demo03
 		protected virtual float GetNormalizedTime()
 		{
 			// get the ray from the camera to the screen
-			var ray = sceneCamera.ScreenPointToRay(Input.mousePosition);
+			var ray = sceneCamera.ScreenPointToRay(Display.RelativeMouseAt(Input.mousePosition));
 			RaycastHit hit;
 
 			// cast a ray and see where it hits
@@ -377,7 +379,7 @@ namespace echo17.EndlessBook.Demo03
 
 			// if we didn't hit the collider, then check to see if we are on the
 			// left or right side of the screen and calculate the normalized time appropriately
-			var viewportPoint = sceneCamera.ScreenToViewportPoint(Input.mousePosition);
+			var viewportPoint = sceneCamera.ScreenToViewportPoint(Display.RelativeMouseAt(Input.mousePosition));
 			return (viewportPoint.x >= 0.5f) ? 1 : 0;
 		}
 

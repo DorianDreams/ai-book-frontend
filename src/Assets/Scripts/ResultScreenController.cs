@@ -142,6 +142,7 @@ public class ResultScreenController : MonoBehaviour
 
         imageReturnVals.Clear();
 
+        EventSystem.instance.DisableResultScreenEvent();
         StartCoroutine(GetStorySentences(bytes, (generated_sentence) =>
         {
             StartCoroutine(PostImageDescription(bytes, imgID, (story_generation, bytes) =>
@@ -150,11 +151,8 @@ public class ResultScreenController : MonoBehaviour
                 
                 EventSystem.instance.PublishToBookEvent(currentSelectedImage.sprite, generated_sentence,
                     story_generation, selectedImageIndex);
-                if (Metadata.singleScreenVersion)
-                {
-                    EventSystem.instance.SwitchCameraEvent();
-                }
-                EventSystem.instance.DisableResultScreenEvent();
+
+                
             }));
         }));
     }
@@ -168,8 +166,6 @@ public class ResultScreenController : MonoBehaviour
         StartCoroutine(GetImageCaption(bytes, (caption, bytes) =>
         {
             Debug.Log("Caption: " + caption);
-            //ImageCaptionProposal.SetActive(true);
-            //ImageCaptionProposal.GetComponent<TextMeshProUGUI>().text = "..." + caption;
 
             StartCoroutine(SendImageToAIIteration(caption, 0.5f, bytes, (caption,bytes) =>
         {
@@ -243,7 +239,8 @@ public class ResultScreenController : MonoBehaviour
     IEnumerator PostImageDescription(byte[] bytes, string image_id, System.Action<string, byte[]> callback)
     {
         string url = "http://127.0.0.1:8000/api/descriptions/" + Metadata.Instance.storyBookId  + "/" + image_id +
-                        "?prompt=" + Metadata.Instance.currentPrompt;
+                                                "?prompt=" + Metadata.Instance.currentPrompt + "&llm=" + Metadata.Instance.currentLLM;
+
         WWWForm form = new WWWForm();
         form.AddBinaryData("image", bytes);
         form.headers["Content-Type"] = "multipart/form-data";
@@ -322,7 +319,7 @@ public class ResultScreenController : MonoBehaviour
     IEnumerator SendImageToAIIteration(string caption, float strength, byte[] bytes, System.Action<string,byte[]> callback)
     {
         Debug.Log("Send to AI");
-        string json = "{\"strength" + "\":" + strength + ",\"story_chapter" + "\":\"" + chapter + "\"}";
+        string json = "{\"strength" + "\":" + strength + ",\"story_chapter" + "\":\"" + chapter + "\"}";        
         string prompt = Metadata.Instance.currentPrompt + caption;
         string url = "http://127.0.0.1:8000/api/images/" + Metadata.Instance.storyBookId
                                               + "?prompt=" + prompt
