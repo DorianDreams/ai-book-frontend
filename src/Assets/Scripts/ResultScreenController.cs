@@ -243,7 +243,7 @@ public class ResultScreenController : MonoBehaviour
     IEnumerator PostImageDescription(byte[] bytes, string image_id, System.Action<string, byte[]> callback)
     {
         string url = "http://127.0.0.1:8000/api/descriptions/" + Metadata.Instance.storyBookId  + "/" + image_id +
-                        "?prompt=" + Metadata.Instance.currentPrompt + "&chapter_index=" + Metadata.Instance.currentChapter;
+                        "?prompt=" + Metadata.Instance.currentPrompt;
         WWWForm form = new WWWForm();
         form.AddBinaryData("image", bytes);
         form.headers["Content-Type"] = "multipart/form-data";
@@ -263,6 +263,7 @@ public class ResultScreenController : MonoBehaviour
                 if (count > 10)
                 {
                     EventSystem.instance.RestartSceneEvent();
+                    break;
                 }
             }
             Dictionary<string, string> returnVal = JsonConvert.DeserializeObject

@@ -8,7 +8,7 @@ public class AddDisplay : MonoBehaviour
     void Start()
     {
         Screen.fullScreen = true;
-        Screen.SetResolution(3840, 2160, true);
+        Screen.SetResolution(1920, 1080, true);
         Debug.Log("displays connected: " + Display.displays.Length);
         // Display.displays[0] is the primary, default display and is always ON, so start at index 1.
         // Check if additional displays are available and activate each.
