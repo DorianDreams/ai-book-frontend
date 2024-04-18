@@ -62,6 +62,9 @@ namespace echo17.EndlessBook.Demo03
 
 		private int nextBookPage = 0;
 
+        public float turnTime = 1f;
+
+
         void OnStartStory()
         {
 
@@ -75,6 +78,32 @@ namespace echo17.EndlessBook.Demo03
         private StateChangedDelegate StartStory;
 
 
+        public void GoToNextPage()
+        {
+            book.TurnForward(turnTime,
+                        onCompleted: OnBookTurnToPageCompleted,
+                        onPageTurnStart: OnPageTurnStart,
+                        onPageTurnEnd: OnPageTurnEnd);
+        }
+
+        public void GoToPreviousPage()
+        {
+            book.TurnBackward(turnTime,
+                        onCompleted: OnBookTurnToPageCompleted,
+                        onPageTurnStart: OnPageTurnStart,
+                        onPageTurnEnd: OnPageTurnEnd);
+        }
+
+
+        protected virtual void OnPageTurnStart(Page page, int pageNumberFront, int pageNumberBack, int pageNumberFirstVisible, int pageNumberLastVisible, Page.TurnDirectionEnum turnDirection)
+        {
+            Debug.Log("OnPageTurnStart: front [" + pageNumberFront + "] back [" + pageNumberBack + "] fv [" + pageNumberFirstVisible + "] lv [" + pageNumberLastVisible + "] dir [" + turnDirection + "]");
+        }
+
+        protected virtual void OnPageTurnEnd(Page page, int pageNumberFront, int pageNumberBack, int pageNumberFirstVisible, int pageNumberLastVisible, Page.TurnDirectionEnum turnDirection)
+        {
+            Debug.Log("OnPageTurnEnd: front [" + pageNumberFront + "] back [" + pageNumberBack + "] fv [" + pageNumberFirstVisible + "] lv [" + pageNumberLastVisible + "] dir [" + turnDirection + "]");
+        }
 
 
         [SerializeField]
@@ -112,6 +141,8 @@ namespace echo17.EndlessBook.Demo03
 			EventSystem.instance.ChangeLocale += OnChangeLocale;
 			EventSystem.instance.PublishToBook += OnPublishToBook;
 
+            EventSystem.instance.GoToNextPage += GoToNextPage;
+            EventSystem.instance.GoPreviousPage += GoToPreviousPage;
             StartStory = (EndlessBook.StateEnum fromState,
                                                 EndlessBook.StateEnum toState,
                                                 int pageNumber) =>
@@ -366,8 +397,16 @@ namespace echo17.EndlessBook.Demo03
 		/// Calculates the normalized time based on the mouse position
 		protected virtual float GetNormalizedTime()
 		{
-			// get the ray from the camera to the screen
-			var ray = sceneCamera.ScreenPointToRay(Display.RelativeMouseAt(Input.mousePosition));
+            // get the ray from the camera to the screen
+            Ray ray;
+            if (Metadata.Instance.testingMode)
+            {
+                ray = sceneCamera.ScreenPointToRay(Input.mousePosition);
+            }
+            else
+            {
+                ray = sceneCamera.ScreenPointToRay(Display.RelativeMouseAt(Input.mousePosition));
+            }
 			RaycastHit hit;
 
 			// cast a ray and see where it hits
@@ -377,9 +416,18 @@ namespace echo17.EndlessBook.Demo03
 				return (hit.point.x + (boxCollider.size.x / 2.0f)) / boxCollider.size.x;
 			}
 
-			// if we didn't hit the collider, then check to see if we are on the
-			// left or right side of the screen and calculate the normalized time appropriately
-			var viewportPoint = sceneCamera.ScreenToViewportPoint(Display.RelativeMouseAt(Input.mousePosition));
+            // if we didn't hit the collider, then check to see if we are on the
+            // left or right side of the screen and calculate the normalized time appropriately#
+
+            Vector3 viewportPoint;
+            if (Metadata.Instance.testingMode)
+			{
+               viewportPoint = sceneCamera.ScreenToViewportPoint((Input.mousePosition));
+            }
+            else
+            {
+                 viewportPoint = sceneCamera.ScreenToViewportPoint(Display.RelativeMouseAt(Input.mousePosition));
+            }
 			return (viewportPoint.x >= 0.5f) ? 1 : 0;
 		}
 
@@ -413,6 +461,40 @@ namespace echo17.EndlessBook.Demo03
             }}
             DebugCurrentState();
 			
+        }
+
+        protected virtual void OnBookTurnToPageCompleted(EndlessBook.StateEnum fromState, EndlessBook.StateEnum toState, int currentPageNumber)
+        {
+            Debug.Log("OnBookTurnToPageCompleted: State set to " + toState + ". Current Page Number = " + currentPageNumber);
+            if (!bookFinished)
+            {
+                switch (book.CurrentPageNumber)
+                {
+                    case 3:
+                        if (nextBookPage != 5)
+                        {
+
+                            //Metadata.Instance.currentTextPage = 3;
+                            turnBookPage = false;
+                            EventSystem.instance.EnableDrawingScreenEvent();
+                            textP3.GetComponent<TextMeshProUGUI>().text = Metadata.Instance.currentPrompt;
+                            nextBookPage = 5;
+                        }
+                        break;
+
+                    case 5:
+                        //Metadata.Instance.currentTextPage = 5;
+                        if (nextBookPage == 5)
+                        {
+                            turnBookPage = false;
+                            EventSystem.instance.EnableDrawingScreenEvent();
+                            textP5.GetComponent<TextMeshProUGUI>().text = Metadata.Instance.currentPrompt;
+                            nextBookPage = 0;
+                        }
+                        break;
+                }
+            }
+            DebugCurrentState();
         }
         void DebugCurrentState()
         {

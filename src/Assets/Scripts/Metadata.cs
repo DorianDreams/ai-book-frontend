@@ -22,6 +22,8 @@ public class Metadata : MonoBehaviour
     public string currentPrompt;
     public string startingPrompt;
 
+    public bool testingMode = false;
+
 
     public enum LLM
     {

@@ -196,6 +196,7 @@ public class ResultScreenController : MonoBehaviour
                     EventSystem.instance.PublishToBookEvent(currentSelectedImage.sprite, completed_sentence,
                         story_generation, selectedImageIndex);
                     EventSystem.instance.DisableResultScreenEvent();
+                    EventSystem.instance.EnableTextResultScreenEvent();
      
                 //}));
             }));

@@ -58,7 +58,44 @@ public class EventSystem : MonoBehaviour
         }
     }
 
+    public event Action EnableTextResultScreen;
+    public void EnableTextResultScreenEvent()
+    {
+        if (EnableTextResultScreen != null)
+        {
+            Debug.Log("Event fired: TextResultScreenEvent");
+            EnableTextResultScreen();
+        }
+    }
 
+    public event Action GoToNextPage;
+    public void GoToNextPageEvent()
+    {
+        if (GoToNextPage != null)
+        {
+            Debug.Log("Event fired: GoToNextPageEvent");
+            GoToNextPage();
+        }
+    }
+    public event Action GoPreviousPage;
+    public void GoPreviousPageEvent()
+    {
+        if (GoPreviousPage != null)
+        {
+            Debug.Log("Event fired: GoPreviousPageEvent");
+            GoPreviousPage();
+        }
+    }
+
+    public event Action DisableTextResultScreen;
+    public void DisableTextResultScreenEvent()
+    {
+        if (DisableTextResultScreen != null)
+        {
+            Debug.Log("Event fired: DisableTextResultScreenEvent");
+            DisableTextResultScreen();
+        }
+    }
 
     public event Action EnableSignScreen;
     public void EnableSignScreenEvent()
