@@ -56,7 +56,6 @@ public class DrawingScreenController : MonoBehaviour
 
     void Start()
     {
-
         // Assign listeners to buttons
         UndoButton.onClick.AddListener(OnUndoButtonClicked);
         SendToAIButton.GetComponent<Button>().onClick.AddListener(OnSendToAI);

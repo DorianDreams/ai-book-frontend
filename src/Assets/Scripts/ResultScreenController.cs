@@ -12,6 +12,18 @@ public class ResultScreenController : MonoBehaviour
 {
     //Resulting Image for Selection
 
+    enum State 
+    {
+        GENERATING, 
+        INPUT,
+        BACK,
+        PUBLISH,
+        SELECTED    
+    }
+
+    private State currentState;
+
+
     public GameObject ResultScreen;
 
     [Header("Result Images")]
@@ -27,11 +39,12 @@ public class ResultScreenController : MonoBehaviour
     [Header("Buttons")]
     public GameObject PublishToBook;
     public GameObject BacktoDrawing;
+    public GameObject ReGenerateImages;
 
-    [Header("Textboxes")]
-    public GameObject ImageCaptionProposal;
-    public GameObject AIUnderstandingText;
-    public GameObject NotSatisfiedTextBox;
+    //[Header("Textboxes")]
+    //public GameObject ImageCaptionProposal;
+    //public GameObject AIUnderstandingText;
+    //public GameObject NotSatisfiedTextBox;
 
     [Header("Localized Texts")]
     [SerializeField]
@@ -50,11 +63,24 @@ public class ResultScreenController : MonoBehaviour
     private Image currentSelectedImage;
     private int selectedImageIndex;
 
+    public GameObject Spinner1;
+    public GameObject Spinner2;
+    public GameObject Spinner3;
+    public GameObject Spinner4;
+
+
+    private byte[] currentScreenshot;
+
     private List<byte[]> imageByteList = new List<byte[]>();
     private List<Dictionary<string, object>> imageReturnVals = new List<Dictionary<string, object>>();
 
     private void Start()
     {
+        Spinner1.SetActive(false);
+        Spinner2.SetActive(false);
+        Spinner3.SetActive(false);
+        Spinner4.SetActive(false);
+
         EventSystem.instance.ChangeLocale += OnChangeLocale;
         EventSystem.instance.EnableResultScreen += Enable;
         EventSystem.instance.DisableResultScreen += Disable;
@@ -69,6 +95,8 @@ public class ResultScreenController : MonoBehaviour
 
         BacktoDrawing.GetComponent<Button>().onClick.AddListener(OnBackToDrawing);
         PublishToBook.GetComponent<Button>().onClick.AddListener(OnPublishToBook);
+        ReGenerateImages.GetComponent<Button>().onClick.AddListener(OnRegenerateImages);
+        
         numberOfImages = 0;
     }
 
@@ -98,21 +126,35 @@ public class ResultScreenController : MonoBehaviour
         ImageResult3.GetComponent<Image>().sprite = null;
         DisableSelectionButtons();
 
-        ImageCaptionProposal.SetActive(false);
-        ImageCaptionProposal.GetComponent<TextMeshProUGUI>().text = "";
+        //ImageCaptionProposal.SetActive(false);
+        //ImageCaptionProposal.GetComponent<TextMeshProUGUI>().text = "";
 
-        PublishToBook.SetActive(false);
-        NotSatisfiedTextBox.SetActive(false);
-        AIUnderstandingText.SetActive(false);
-        BacktoDrawing.SetActive(false);
+        //PublishToBook.SetActive(false);
+        //NotSatisfiedTextBox.SetActive(false);
+        //AIUnderstandingText.SetActive(false);
         UnselectImage();
         numberOfImages = 0;
     }
 
     void OnChangeLocale()
     {
-        AIUnderstandingText.GetComponent<TextMeshProUGUI>().text = AIUnderstandingSentence.GetLocalizedString();
-        NotSatisfiedTextBox.GetComponent<TextMeshProUGUI>().text = NotSatisfiedText.GetLocalizedString();
+        //AIUnderstandingText.GetComponent<TextMeshProUGUI>().text = AIUnderstandingSentence.GetLocalizedString();
+        //NotSatisfiedTextBox.GetComponent<TextMeshProUGUI>().text = NotSatisfiedText.GetLocalizedString();
+    }
+
+    public void OnRegenerateImages()
+    {
+
+        ImageResult0Selected.SetActive(false);
+        ImageResult1Selected.SetActive(false);
+        ImageResult2Selected.SetActive(false);
+        ImageResult3Selected.SetActive(false);
+        ImageResult0.GetComponent<Image>().sprite = null;
+        ImageResult1.GetComponent<Image>().sprite = null;
+        ImageResult2.GetComponent<Image>().sprite = null;
+        ImageResult3.GetComponent<Image>().sprite = null;
+
+        OnSendImageToAI(currentScreenshot);
     }
 
     public void OnBackToDrawing()
@@ -127,7 +169,7 @@ public class ResultScreenController : MonoBehaviour
         imageByteList.Clear();
         Dictionary<string, object> returnVal = imageReturnVals[selectedImageIndex];
 
-        /*
+        /* //Remove unused Images
             for(int i = 0; i <4; i++){
                 if (i==selectedImageIndex){
                     continue;
@@ -142,43 +184,58 @@ public class ResultScreenController : MonoBehaviour
 
         imageReturnVals.Clear();
 
-        EventSystem.instance.DisableResultScreenEvent();
-        StartCoroutine(GetStorySentences(bytes, (generated_sentence) =>
+        DisableSelectionButtons();
+        StartCoroutine(GetFullSentences(bytes, (completed_sentence) =>
         {
-            StartCoroutine(PostImageDescription(bytes, imgID, (story_generation, bytes) =>
+            StartCoroutine(GetChapterStories(completed_sentence,(story_generation) =>
             {
-                numberOfImages = 0;
-                
-                EventSystem.instance.PublishToBookEvent(currentSelectedImage.sprite, generated_sentence,
-                    story_generation, selectedImageIndex);
-
-                
+                //StartCoroutine(PostImageDescription(bytes, imgID, (completed_sentence, bytes) =>
+                //{
+                    numberOfImages = 0;
+                    
+                    EventSystem.instance.PublishToBookEvent(currentSelectedImage.sprite, completed_sentence,
+                        story_generation, selectedImageIndex);
+                    EventSystem.instance.DisableResultScreenEvent();
+     
+                //}));
             }));
         }));
     }
 
-    void OnSendImageToAI(byte[]bytes) {
-        AIUnderstandingText.SetActive(true);
+    
+
+    void OnSendImageToAI(byte[] bytes) {
+        this.currentState = State.GENERATING;
+        currentScreenshot = bytes;
+
+        //AIUnderstandingText.SetActive(true);
         Texture2D texture = new Texture2D(1, 1);
         texture.LoadImage(bytes);
-
+        Spinner1.SetActive(true);
+        Spinner2.SetActive(true);
+        Spinner3.SetActive(true);
+        Spinner4.SetActive(true);
 
         StartCoroutine(GetImageCaption(bytes, (caption, bytes) =>
         {
             Debug.Log("Caption: " + caption);
+            
 
             StartCoroutine(SendImageToAIIteration(caption, 0.5f, bytes, (caption,bytes) =>
         {
+            
             StartCoroutine(SendImageToAIIteration(caption,0.8f, bytes, (caption, bytes) => 
             {
+                
                 StartCoroutine(SendImageToAIIteration(caption,0.9f,bytes, (caption, bytes) =>
                 {
+                    
                     StartCoroutine(SendImageToAIIteration(caption,1f, bytes, (caption, bytes) =>
                     {
                         EnableSelectionButtons();
-                        NotSatisfiedTextBox.SetActive(true);
-                        NotSatisfiedTextBox.GetComponent<TextMeshProUGUI>().text = NotSatisfiedText.GetLocalizedString();
-                        BacktoDrawing.SetActive(true);
+                        //NotSatisfiedTextBox.SetActive(true);
+                        //NotSatisfiedTextBox.GetComponent<TextMeshProUGUI>().text = NotSatisfiedText.GetLocalizedString();
+                        numberOfImages = 0;
                     }));
                 }));
             }));
@@ -239,7 +296,7 @@ public class ResultScreenController : MonoBehaviour
     IEnumerator PostImageDescription(byte[] bytes, string image_id, System.Action<string, byte[]> callback)
     {
         string url = "http://127.0.0.1:8000/api/descriptions/" + Metadata.Instance.storyBookId  + "/" + image_id +
-                                                "?prompt=" + Metadata.Instance.currentPrompt + "&llm=" + Metadata.Instance.currentLLM;
+                                                "?prompt=" + Metadata.Instance.currentPrompt ;
 
         WWWForm form = new WWWForm();
         form.AddBinaryData("image", bytes);
@@ -277,10 +334,10 @@ public class ResultScreenController : MonoBehaviour
         }
     }
 
-
-    IEnumerator GetStorySentences(byte[] bytes, System.Action<string> callback)
+    // Calls Instruct-Blip
+    IEnumerator GetFullSentences(byte[] bytes, System.Action<string> callback)
     {
-        string url = "http://127.0.0.1:8000/api/chat/completions?prompt=" + Metadata.Instance.currentPrompt;
+        string url = "http://127.0.0.1:8000/api/chat/fullsentences?prompt=" + Metadata.Instance.currentPrompt;
         WWWForm form = new WWWForm();
         form.AddBinaryData("image", bytes);
         form.headers["Content-Type"] = "multipart/form-data";
@@ -313,6 +370,46 @@ public class ResultScreenController : MonoBehaviour
             string generated_description = returnVal["generated_description"].ToString();
             callback(generated_description);
         }
+    }
+
+    // Calls Tiny-Llama
+    IEnumerator GetChapterStories(string completion, System.Action<string> callback)
+    {
+        string url = "http://127.0.0.1:8000/api/chat/chapterstories?prompt=" + Metadata.Instance.currentPrompt + "&ch_index=" +Metadata.Instance.currentChapter;
+        WWWForm form = new WWWForm();
+        //form.headers["Content-Type"] = "multipart/form-data";
+        UnityWebRequest request = UnityWebRequest.Post(url, form);
+        yield return request.SendWebRequest();
+            if (request.result != UnityWebRequest.Result.Success)
+            {
+                EventSystem.instance.RestartSceneEvent();
+                int count = 0;
+                
+                while (request.result != UnityWebRequest.Result.Success)
+                {
+                    Debug.Log(request.error);
+                    request = UnityWebRequest.Post(url, form);
+                    yield return request.SendWebRequest();
+                    count++;
+                    if (count > 10)
+                    {
+                        
+                    }
+                }
+                
+                Dictionary<string, string> returnVal = JsonConvert.DeserializeObject
+                    <Dictionary<string, string>>(request.downloadHandler.text);
+                string generated_description = returnVal["generated_description"].ToString();
+                callback(generated_description);
+            }
+            else
+            {
+                Dictionary<string, string> returnVal = JsonConvert.DeserializeObject
+                    <Dictionary<string, string>>(request.downloadHandler.text);
+                string generated_description = returnVal["generated_description"].ToString();
+                callback(generated_description);
+            }
+        
     }
 
 
@@ -400,18 +497,22 @@ public class ResultScreenController : MonoBehaviour
             case 0:
                 ImageResult0.GetComponent<Image>().sprite = Sprite.Create(texture,
                                                           new Rect(0, 0, texture.width, texture.height), new Vector2(0, 0));
+                Spinner1.SetActive(false);
                 break;
             case 1:
                 ImageResult1.GetComponent<Image>().sprite = Sprite.Create(texture,
                                        new Rect(0, 0, texture.width, texture.height), new Vector2(0, 0));
+                Spinner2.SetActive(false);
                 break;
             case 2:
                 ImageResult2.GetComponent<Image>().sprite = Sprite.Create(texture,
                                        new Rect(0, 0, texture.width, texture.height), new Vector2(0, 0));
+                Spinner3.SetActive(false);
                 break;
             case 3:
                 ImageResult3.GetComponent<Image>().sprite = Sprite.Create(texture,
                                        new Rect(0, 0, texture.width, texture.height), new Vector2(0, 0));
+                Spinner4.SetActive(false);
                 break;
         }
     }
@@ -425,10 +526,10 @@ public class ResultScreenController : MonoBehaviour
     }
     private void SelectImage(int i)
     {
-        AIUnderstandingText.SetActive(false);
+        //AIUnderstandingText.SetActive(false);
         UnselectImage();
-        ImageCaptionProposal.GetComponent<TextMeshProUGUI>().text = null;
-        ImageCaptionProposal.SetActive(false);
+        //ImageCaptionProposal.GetComponent<TextMeshProUGUI>().text = null;
+        //ImageCaptionProposal.SetActive(false);
         PublishToBook.SetActive(true);
 
         switch (i)
@@ -453,31 +554,6 @@ public class ResultScreenController : MonoBehaviour
                 currentSelectedImage = ImageResult3.GetComponent<Image>();
                 selectedImageIndex = 3;
                 break;
-        }
-    }
-
-    IEnumerator GetLlamaDescription(byte[] bytes, System.Action<string> callback)
-    {
-        string url = "http://127.0.0.1:8000/api/chat/descriptions?prompt=" + Metadata.Instance.currentPrompt
-                                                               + "&chapter_index=" + Metadata.Instance.currentChapter;
-        WWWForm form = new WWWForm();
-        form.AddBinaryData("image", bytes);
-        form.headers["Content-Type"] = "multipart/form-data";
-        Debug.Log(form.ToString());
-
-
-        UnityWebRequest request = UnityWebRequest.Post(url, form);
-        yield return request.SendWebRequest();
-        if (request.result != UnityWebRequest.Result.Success)
-        {
-            Debug.Log(request.error);
-        }
-        else
-        {
-            Dictionary<string, string> returnVal = JsonConvert.DeserializeObject
-                <Dictionary<string, string>>(request.downloadHandler.text);
-            string generated_description = returnVal["generated_description"].ToString();
-            callback(generated_description);
         }
     }
 
