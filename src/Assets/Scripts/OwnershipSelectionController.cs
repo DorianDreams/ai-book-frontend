@@ -97,6 +97,7 @@ public class OwnershipSelectionController : MonoBehaviour
                 GameObject InstantiatedLineGenerator = Instantiate(LineGeneratorPrefab);
                 InstantiatedLineGenerator.GetComponent<LineGenerator>().parentCanvas = DrawingCanvas;
                 InstantiatedLineGenerator.GetComponent<LineGenerator>().width = LineWidth;
+                EventSystem.instance.PressColorButtonEvent(Color.black);
 
 
             }
