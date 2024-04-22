@@ -58,13 +58,13 @@ public class EventSystem : MonoBehaviour
         }
     }
 
-    public event Action EnableTextResultScreen;
-    public void EnableTextResultScreenEvent()
+    public event Action EnableBookNavigator;
+    public void EnableBookNavigatorEvent()
     {
-        if (EnableTextResultScreen != null)
+        if (EnableBookNavigator != null)
         {
             Debug.Log("Event fired: TextResultScreenEvent");
-            EnableTextResultScreen();
+            EnableBookNavigator();
         }
     }
 
@@ -87,13 +87,13 @@ public class EventSystem : MonoBehaviour
         }
     }
 
-    public event Action DisableTextResultScreen;
-    public void DisableTextResultScreenEvent()
+    public event Action DisableBookNavigator;
+    public void DisableBookNavigatorEvent()
     {
-        if (DisableTextResultScreen != null)
+        if (DisableBookNavigator != null)
         {
-            Debug.Log("Event fired: DisableTextResultScreenEvent");
-            DisableTextResultScreen();
+            Debug.Log("Event fired: DisableBookNavigatorEvent");
+            DisableBookNavigator();
         }
     }
 
@@ -283,13 +283,13 @@ public class EventSystem : MonoBehaviour
         }
     }
 
-    public event Action <Sprite, string, string, int> PublishToBook;
-    public void PublishToBookEvent(Sprite sprite, String description, String continuation, int index)
+    public event System.Action <Sprite, string, string, int, byte[]> PublishToBook;
+    public void PublishToBookEvent(Sprite sprite, String description, String continuation, int index, byte[] imagebytes)
     {
         if (PublishToBook != null)
         {
             Debug.Log("Event fired: PublishToBookEvent");
-            PublishToBook(sprite, description, continuation, index);
+            PublishToBook(sprite, description, continuation, index, imagebytes);
         }
     }
 

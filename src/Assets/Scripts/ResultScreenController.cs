@@ -60,7 +60,7 @@ public class ResultScreenController : MonoBehaviour
     string chapter = "chapter_1_prompt";
 
     private int numberOfImages; // keeps track of number of images on the result screen
-    private Image currentSelectedImage;
+    private Image currentSelectedImage = null;
     private int selectedImageIndex;
 
     public GameObject Spinner1;
@@ -124,6 +124,7 @@ public class ResultScreenController : MonoBehaviour
         ImageResult1.GetComponent<Image>().sprite = null;
         ImageResult2.GetComponent<Image>().sprite = null;
         ImageResult3.GetComponent<Image>().sprite = null;
+        currentSelectedImage = null;
         DisableSelectionButtons();
 
         //ImageCaptionProposal.SetActive(false);
@@ -165,6 +166,7 @@ public class ResultScreenController : MonoBehaviour
 
     public void OnPublishToBook()
     {
+        if (currentSelectedImage != null){
         byte[] bytes = imageByteList[selectedImageIndex];
         imageByteList.Clear();
         Dictionary<string, object> returnVal = imageReturnVals[selectedImageIndex];
@@ -185,7 +187,7 @@ public class ResultScreenController : MonoBehaviour
         imageReturnVals.Clear();
 
         DisableSelectionButtons();
-        StartCoroutine(GetFullSentences(bytes, (completed_sentence) =>
+        StartCoroutine(GetFullSentences(bytes, 0.5f, (completed_sentence) =>
         {
             StartCoroutine(GetChapterStories(completed_sentence,(story_generation) =>
             {
@@ -194,16 +196,18 @@ public class ResultScreenController : MonoBehaviour
                     numberOfImages = 0;
                     
                     EventSystem.instance.PublishToBookEvent(currentSelectedImage.sprite, completed_sentence,
-                        story_generation, selectedImageIndex);
+                        story_generation, selectedImageIndex, bytes);
                     EventSystem.instance.DisableResultScreenEvent();
-                    EventSystem.instance.EnableTextResultScreenEvent();
+
+                    EventSystem.instance.EnableBookNavigatorEvent();
      
                 //}));
             }));
         }));
+        }
     }
 
-    
+
 
     void OnSendImageToAI(byte[] bytes) {
         this.currentState = State.GENERATING;
@@ -335,10 +339,10 @@ public class ResultScreenController : MonoBehaviour
         }
     }
 
-    // Calls Instruct-Blip
-    IEnumerator GetFullSentences(byte[] bytes, System.Action<string> callback)
+    // Calls llama to complete the sentence
+    IEnumerator GetFullSentences(byte[] bytes, float temperature, System.Action<string> callback)
     {
-        string url = "http://127.0.0.1:8000/api/chat/fullsentences?prompt=" + Metadata.Instance.currentPrompt;
+        string url = "http://127.0.0.1:8000/api/chat/fullsentences?prompt=" + Metadata.Instance.currentPrompt + "&temperature=" + temperature;
         WWWForm form = new WWWForm();
         form.AddBinaryData("image", bytes);
         form.headers["Content-Type"] = "multipart/form-data";
@@ -376,7 +380,7 @@ public class ResultScreenController : MonoBehaviour
     // Calls Tiny-Llama
     IEnumerator GetChapterStories(string completion, System.Action<string> callback)
     {
-        string url = "http://127.0.0.1:8000/api/chat/chapterstories?prompt=" + Metadata.Instance.currentPrompt + "&ch_index=" +Metadata.Instance.currentChapter;
+        string url = "http://127.0.0.1:8000/api/chat/chapterstories?prompt=" + Metadata.Instance.currentPrompt + completion + "&ch_index=" +Metadata.Instance.currentChapter ;
         WWWForm form = new WWWForm();
         //form.headers["Content-Type"] = "multipart/form-data";
         UnityWebRequest request = UnityWebRequest.Post(url, form);

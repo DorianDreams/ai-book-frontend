@@ -21,6 +21,7 @@ public class Metadata : MonoBehaviour
     public string storyBookId;
     public string currentPrompt;
     public string startingPrompt;
+    public string previousPrompt;
 
     public bool testingMode = false;
 
