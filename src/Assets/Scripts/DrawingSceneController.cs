@@ -182,7 +182,7 @@ public class DrawingScreenController : MonoBehaviour
         callback(bytes);
     }
 
-    void OnPublishToBook(Sprite sprite, string description, string continuation, int index)
+    void OnPublishToBook(Sprite sprite, string description, string continuation, int index, byte[] bytes)
     {
         drawingPage.selected_image = index;
         drawingPage.time = timer;
