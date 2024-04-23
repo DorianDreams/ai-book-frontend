@@ -303,7 +303,7 @@ public class ResultScreenController : MonoBehaviour
     }
 
 
-    IEnumerator PostImageDescription(string image_id, string description, System.Action callback)
+    IEnumerator PostImageDescription(string description,string image_id, System.Action callback)
     {
         string url = "http://127.0.0.1:8000/api/descriptions/" + Metadata.Instance.storyBookId + "/" + image_id;
         // remove newline characters from description to make proper json
@@ -316,13 +316,14 @@ public class ResultScreenController : MonoBehaviour
         description = sb.ToString();
 
 
-        string json = "{ \"description:\r\n\":" + "\"" + description + "\"" + "}";
+        string json = "{ \"description\":" + "\"" + description + "\"" + "}";
 
-        UnityWebRequest request = UnityWebRequest.Post(url, json, "application/json");
-        yield return request.SendWebRequest();
-        
-         callback();
-        
+        using (UnityWebRequest request = UnityWebRequest.Post(url, json, "application/json"))
+        {
+            yield return request.SendWebRequest();
+
+            callback();
+        }
     }
 
     // Calls llama to complete the sentence
