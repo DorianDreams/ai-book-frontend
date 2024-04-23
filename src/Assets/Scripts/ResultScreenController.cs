@@ -195,17 +195,20 @@ public class ResultScreenController : MonoBehaviour
                 //Calls description
             StartCoroutine(GetChapterStories(completed_sentence,(story_generation) =>
             {
-                StartCoroutine(PostImageDescription(completed_sentence + story_generation,  imgID, () =>
+                StartCoroutine(GetNextprompt(completed_sentence, (next_prompt) =>
+                {
+                    StartCoroutine(PostImageDescription(completed_sentence + story_generation,  imgID, () =>
                 {
                     numberOfImages = 0;
                     
                     EventSystem.instance.PublishToBookEvent(currentSelectedImage.sprite, completed_sentence,
-                        story_generation, "The story continues. Once upon a time, something terrible happens", selectedImageIndex, bytes);
+                        story_generation, next_prompt, selectedImageIndex, bytes);
 
                     EventSystem.instance.DisableResultScreenEvent();
 
                     EventSystem.instance.EnableBookNavigatorEvent();
      
+                }));
                 }));
             }));
         }));
@@ -364,10 +367,50 @@ public class ResultScreenController : MonoBehaviour
         }
     }
 
+    // Calls llama to complete the sentence
+    IEnumerator GetNextprompt(string previous_story, System.Action<string> callback)
+    {
+        string url = "http://127.0.0.1:8000/api/chat/nextprompts?prev_story=" + previous_story;
+        WWWForm form = new WWWForm();
+        //form.headers["Content-Type"] = "multipart/form-data";
+        UnityWebRequest request = UnityWebRequest.Post(url, form);
+        yield return request.SendWebRequest();
+        if (request.result != UnityWebRequest.Result.Success)
+        {
+            EventSystem.instance.RestartSceneEvent();
+            int count = 0;
+
+            while (request.result != UnityWebRequest.Result.Success)
+            {
+                Debug.Log(request.error);
+                request = UnityWebRequest.Post(url, form);
+                yield return request.SendWebRequest();
+                count++;
+                if (count > 10)
+                {
+
+                }
+            }
+
+            Dictionary<string, string> returnVal = JsonConvert.DeserializeObject
+                <Dictionary<string, string>>(request.downloadHandler.text);
+            string generated_description = returnVal["next_prompt"].ToString();
+            callback(generated_description);
+        }
+        else
+        {
+            Dictionary<string, string> returnVal = JsonConvert.DeserializeObject
+                <Dictionary<string, string>>(request.downloadHandler.text);
+            string generated_description = returnVal["next_prompt"].ToString();
+            callback(generated_description);
+        }
+
+    }
+
     // Calls Tiny-Llama
     IEnumerator GetChapterStories(string completion, System.Action<string> callback)
     {
-        string url = "http://127.0.0.1:8000/api/chat/chapterstories?prompt=" + Metadata.Instance.currentPrompt + completion + "&ch_index=" +Metadata.Instance.currentChapter ;
+        string url = "http://127.0.0.1:8000/api/chat/chapterstories?ch_index=" + Metadata.Instance.currentChapter + "&prompt=" + completion ;
         WWWForm form = new WWWForm();
         //form.headers["Content-Type"] = "multipart/form-data";
         UnityWebRequest request = UnityWebRequest.Post(url, form);
