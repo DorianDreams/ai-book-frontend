@@ -378,7 +378,7 @@ namespace echo17.EndlessBook.Demo03
                     Metadata.Instance.previousPrompt = Metadata.Instance.startingPrompt;
 					
 					Metadata.Instance.currentChapter = "ch2";
-                    textP1.GetComponent<TextMeshProUGUI>().text = description;
+                    textP1.GetComponent<TextMeshProUGUI>().text = Metadata.Instance.currentPrompt +  description;
                     Metadata.Instance.currentPrompt = continuation;
 
                     imageP2bytes = imagebytes;
@@ -392,7 +392,7 @@ namespace echo17.EndlessBook.Demo03
 					textP4.SetActive(false);
                     Metadata.Instance.previousPrompt = Metadata.Instance.currentPrompt;
                     Metadata.Instance.currentChapter = "ch3";
-                    textP3.GetComponent<TextMeshProUGUI>().text = description;
+                    textP3.GetComponent<TextMeshProUGUI>().text = Metadata.Instance.currentPrompt + description;
                     Metadata.Instance.currentPrompt = continuation;
                     imageP4.GetComponent<Image>().sprite = sprite;
                     imageP4bytes = imagebytes;
@@ -405,7 +405,7 @@ namespace echo17.EndlessBook.Demo03
                 case 5:
                     textP6.SetActive(false);
                     Metadata.Instance.previousPrompt = Metadata.Instance.currentPrompt;
-                    textP5.GetComponent<TextMeshProUGUI>().text = description;
+                    textP5.GetComponent<TextMeshProUGUI>().text = Metadata.Instance.currentPrompt + description;
                     imageP6.GetComponent<Image>().sprite = sprite;
                     imageP6.SetActive(true);
                     imageP6bytes = imagebytes;
