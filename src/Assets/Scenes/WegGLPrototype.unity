@@ -16072,6 +16072,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SpinnerResult0
       objectReference: {fileID: 0}
+    - target: {fileID: 100012, guid: 42a6b30c4f44ecd4894e1303b18472ff, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 11400000, guid: 42a6b30c4f44ecd4894e1303b18472ff, type: 3}
       propertyPath: m_Color.b
       value: 0.15686275
@@ -21604,12 +21608,12 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
-  m_renderer: {fileID: 1993039801}
-  m_maskType: 0
   _SortingLayer: 0
   _SortingLayerID: 0
   _SortingOrder: 0
+  m_hasFontAssetChanged: 0
+  m_renderer: {fileID: 1993039801}
+  m_maskType: 0
 --- !u!23 &1993039801
 MeshRenderer:
   m_ObjectHideFlags: 0

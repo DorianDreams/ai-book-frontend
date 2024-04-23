@@ -7,6 +7,8 @@ using UnityEngine.Networking;
 using UnityEngine.UI;
 using System.Collections;
 using System.Security.Cryptography;
+using System.Text;
+using System.Xml;
 
 public class ResultScreenController : MonoBehaviour
 {
@@ -187,21 +189,24 @@ public class ResultScreenController : MonoBehaviour
         imageReturnVals.Clear();
 
         DisableSelectionButtons();
+            //Calls Completion 
         StartCoroutine(GetFullSentences(bytes, 0.5f, (completed_sentence) =>
         {
+                //Calls description
             StartCoroutine(GetChapterStories(completed_sentence,(story_generation) =>
             {
-                //StartCoroutine(PostImageDescription(bytes, imgID, (completed_sentence, bytes) =>
-                //{
+                StartCoroutine(PostImageDescription(completed_sentence + story_generation,  imgID, () =>
+                {
                     numberOfImages = 0;
                     
                     EventSystem.instance.PublishToBookEvent(currentSelectedImage.sprite, completed_sentence,
-                        story_generation, selectedImageIndex, bytes);
+                        story_generation, "The story continues. Once upon a time, something terrible happens", selectedImageIndex, bytes);
+
                     EventSystem.instance.DisableResultScreenEvent();
 
                     EventSystem.instance.EnableBookNavigatorEvent();
      
-                //}));
+                }));
             }));
         }));
         }
@@ -298,45 +303,26 @@ public class ResultScreenController : MonoBehaviour
     }
 
 
-    IEnumerator PostImageDescription(byte[] bytes, string image_id, System.Action<string, byte[]> callback)
+    IEnumerator PostImageDescription(string image_id, string description, System.Action callback)
     {
-        string url = "http://127.0.0.1:8000/api/descriptions/" + Metadata.Instance.storyBookId  + "/" + image_id +
-                                                "?prompt=" + Metadata.Instance.currentPrompt ;
+        string url = "http://127.0.0.1:8000/api/descriptions/" + Metadata.Instance.storyBookId + "/" + image_id;
+        // remove newline characters from description to make proper json
 
-        WWWForm form = new WWWForm();
-        form.AddBinaryData("image", bytes);
-        form.headers["Content-Type"] = "multipart/form-data";
-        Debug.Log(form.ToString());
+        var sb = new StringBuilder(description.Length);
 
-        UnityWebRequest request = UnityWebRequest.Post(url, form);
+        foreach (char i in description)
+            if (i != '\n' && i != '\r' && i != '\t' && i != '"')
+                sb.Append(i);
+        description = sb.ToString();
+
+
+        string json = "{ \"description:\r\n\":" + "\"" + description + "\"" + "}";
+
+        UnityWebRequest request = UnityWebRequest.Post(url, json, "application/json");
         yield return request.SendWebRequest();
-        if (request.result != UnityWebRequest.Result.Success)
-        {
-            int count = 0;
-            while(request.result != UnityWebRequest.Result.Success)
-            {
-                Debug.Log(request.error);
-                request = UnityWebRequest.Post(url, form);
-                yield return request.SendWebRequest();
-                count++;
-                if (count > 10)
-                {
-                    EventSystem.instance.RestartSceneEvent();
-                    break;
-                }
-            }
-            Dictionary<string, string> returnVal = JsonConvert.DeserializeObject
-                <Dictionary<string, string>>(request.downloadHandler.text);
-            string description = returnVal["description"].ToString();
-            callback(description, bytes);
-        }
-        else
-        {
-            Dictionary<string, string> returnVal = JsonConvert.DeserializeObject
-                <Dictionary<string, string>>(request.downloadHandler.text);
-            string description = returnVal["description"].ToString();
-            callback(description, bytes);
-        }
+        
+         callback();
+        
     }
 
     // Calls llama to complete the sentence

@@ -283,13 +283,13 @@ public class EventSystem : MonoBehaviour
         }
     }
 
-    public event System.Action <Sprite, string, string, int, byte[]> PublishToBook;
-    public void PublishToBookEvent(Sprite sprite, String description, String continuation, int index, byte[] imagebytes)
+    public event System.Action <Sprite, string, string, string, int, byte[]> PublishToBook;
+    public void PublishToBookEvent(Sprite sprite, string completion, string description, string newprompt, int index, byte[] imagebytes)
     {
         if (PublishToBook != null)
         {
             Debug.Log("Event fired: PublishToBookEvent");
-            PublishToBook(sprite, description, continuation, index, imagebytes);
+            PublishToBook(sprite, completion, description, newprompt, index, imagebytes);
         }
     }
 

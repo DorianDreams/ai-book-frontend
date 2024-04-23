@@ -369,7 +369,7 @@ namespace echo17.EndlessBook.Demo03
 		}
 
 
-        void OnPublishToBook(Sprite sprite, string description, string continuation, int index ,byte[] imagebytes)
+        void OnPublishToBook(Sprite sprite, string completion, string description, string newprompt, int index ,byte[] imagebytes)
         {
             switch (book.CurrentPageNumber)
 			{
@@ -378,8 +378,8 @@ namespace echo17.EndlessBook.Demo03
                     Metadata.Instance.previousPrompt = Metadata.Instance.startingPrompt;
 					
 					Metadata.Instance.currentChapter = "ch2";
-                    textP1.GetComponent<TextMeshProUGUI>().text = Metadata.Instance.currentPrompt +  description;
-                    Metadata.Instance.currentPrompt = continuation;
+                    textP1.GetComponent<TextMeshProUGUI>().text = completion;
+                    Metadata.Instance.currentPrompt = newprompt;
 
                     imageP2bytes = imagebytes;
                     imageP2.GetComponent<Image>().sprite = sprite;
@@ -392,8 +392,8 @@ namespace echo17.EndlessBook.Demo03
 					textP4.SetActive(false);
                     Metadata.Instance.previousPrompt = Metadata.Instance.currentPrompt;
                     Metadata.Instance.currentChapter = "ch3";
-                    textP3.GetComponent<TextMeshProUGUI>().text = Metadata.Instance.currentPrompt + description;
-                    Metadata.Instance.currentPrompt = continuation;
+                    textP3.GetComponent<TextMeshProUGUI>().text = completion + "\n\n" + description;
+                    Metadata.Instance.currentPrompt = newprompt;
                     imageP4.GetComponent<Image>().sprite = sprite;
                     imageP4bytes = imagebytes;
                     imageP4.SetActive(true);
@@ -405,7 +405,7 @@ namespace echo17.EndlessBook.Demo03
                 case 5:
                     textP6.SetActive(false);
                     Metadata.Instance.previousPrompt = Metadata.Instance.currentPrompt;
-                    textP5.GetComponent<TextMeshProUGUI>().text = Metadata.Instance.currentPrompt + description;
+                    textP5.GetComponent<TextMeshProUGUI>().text = completion + "\n\n" + description;
                     imageP6.GetComponent<Image>().sprite = sprite;
                     imageP6.SetActive(true);
                     imageP6bytes = imagebytes;
@@ -417,9 +417,7 @@ namespace echo17.EndlessBook.Demo03
 					//EventSystem.instance.EnableOwnershipScreenEvent();
                     finishBook.SetActive(true);
 
-					
                     break;
-
             }
             
         }
