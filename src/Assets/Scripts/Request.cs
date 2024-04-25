@@ -47,7 +47,7 @@ public class Request : MonoBehaviour
     // Language Model Inference Calls 
     public static IEnumerator GetSentenceCompletion(byte[] bytes, string sentence, float temperature)
     {
-        string url = "http://127.0.0.1:8000/api/chat/fullsentences?prompt=" + sentence + "&temperature=" + temperature;
+        string url = "http://127.0.0.1:8000/api/chat/chapters?prompt=" + sentence + "&temperature=" + temperature + "&ch_index=" + Metadata.Instance.currentChapter;
         WWWForm form = new WWWForm();
         form.AddBinaryData("image", bytes);
         form.headers["Content-Type"] = "multipart/form-data";
@@ -76,7 +76,7 @@ public class Request : MonoBehaviour
 
 
     // Unused for now
-    IEnumerator GetChapterStories(string completion, System.Action<string> callback)
+    public static IEnumerator GetChapterStories(string completion)
     {
         string url = "http://127.0.0.1:8000/api/chat/chapterstories?ch_index=" + Metadata.Instance.currentChapter + "&prompt=" + completion;
         WWWForm form = new WWWForm();
@@ -87,7 +87,7 @@ public class Request : MonoBehaviour
         Dictionary<string, string> returnVal = JsonConvert.DeserializeObject
             <Dictionary<string, string>>(request.downloadHandler.text);
         string generated_description = returnVal["generated_description"].ToString();
-        callback(generated_description);
+        yield return generated_description;
         
 
     }

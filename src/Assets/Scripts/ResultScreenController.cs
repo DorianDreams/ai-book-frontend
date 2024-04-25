@@ -151,16 +151,17 @@ public class ResultScreenController : MonoBehaviour
 
     IEnumerator SentenceCompletions(byte[] genImage, string sentence)
     {
-        float[] tempVals = { 0.4f, 0.6f, 0.8f, 1.0f };
+        float[] tempVals = { 0.8f, 1.2f, 1.6f, 2f };
         int i = 0;
         foreach (var temperature in tempVals) 
         {
             CoroutineWithData cd_completion = new CoroutineWithData(this, Request.GetSentenceCompletion(genImage, sentence, temperature));
             yield return cd_completion.coroutine;
-            string completion = (string)cd_completion.result;
-            TextResult[i].GetComponent<TextMeshProUGUI>().text = completion;
-            SpinnerArr[i].SetActive(false);
+            string completion = (string)cd_completion.result;           
 
+            TextResult[i].GetComponent<TextMeshProUGUI>().text = completion;
+
+            SpinnerArr[i].SetActive(false);
             i++;
 
         }
