@@ -56,6 +56,7 @@ public class OwnershipSelectionController : MonoBehaviour
         } else
         {
             Metadata.Instance.storyBook.signed_the_book = false;
+            
         }
     }
 
@@ -117,6 +118,7 @@ public class OwnershipSelectionController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        OwnershipSelectionScreen.SetActive(false);
         instantiatedTextBoxes.Add(SelectAIButton);
         SelectAIButton.GetComponentInChildren<Button>().onClick.AddListener(() => onButtonPressed(SelectAIButton));
         instantiatedTextBoxes.Add(SelectMeButton);

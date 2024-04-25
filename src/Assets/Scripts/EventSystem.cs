@@ -283,6 +283,36 @@ public class EventSystem : MonoBehaviour
         }
     }
 
+    public event Action<Sprite, int, byte[]> SelectImage;
+    public void SelectImageEvent(Sprite sprite, int index, byte[] imagebytes)
+    {
+        if (SelectImage != null)
+        {
+            Debug.Log("Event fired: SelectImageEvent");
+            SelectImage(sprite, index, imagebytes);
+        }
+    }
+
+    public event Action<string> SelectText;
+    public void SelectTextEvent(string completion)
+    {
+        if (SelectText != null)
+        {
+            Debug.Log("Event fired: SelectTextEvent");
+            SelectText(completion);
+        }
+    }
+
+    public event Action<string> PublishNextPrompt;
+    public void PublishNextPromptEvent(string newprompt)
+    {
+        if (PublishNextPrompt != null)
+        {
+            Debug.Log("Event fired: PublishNextPromptEvent");
+            PublishNextPrompt(newprompt);
+        }
+    }
+
     public event System.Action <Sprite, string, string, string, int, byte[]> PublishToBook;
     public void PublishToBookEvent(Sprite sprite, string completion, string description, string newprompt, int index, byte[] imagebytes)
     {

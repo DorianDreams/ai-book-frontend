@@ -17,66 +17,39 @@ public class DrawingScreenController : MonoBehaviour
     [Header("Drawing Mode Objects")]
     public GameObject DrawingMode;
     public Canvas DrawingCanvas;
-    public Button UndoButton;
     public GameObject ButtonGroup;
+    public GameObject DrawingBackground;
+    public GameObject LineGeneratorPrefab;
+    private GameObject InstantiatedLineGenerator = null;
+
     [SerializeField]
     float SelectedButtonWidth = 1.4f;
     [SerializeField]
     float StandardButtonWidth = 1f;
     [SerializeField]
-    float LineWidth = 1f;
+    float LineWidth = 0.2f;
 
-    public GameObject SendToAIButton;
-    public GameObject DeleteAllButton;
-    public GameObject DrawingBackground;
-    public GameObject LineGeneratorPrefab;
-    private GameObject InstantiatedLineGenerator=null;
-
-    public GameObject LargeButton;
-    public GameObject MediumButton;
-    public GameObject SmallButton;
-
-
+    
     private DrawingPage drawingPage;
     int currentIteration = 0;
     float timer = 0.0f;
     bool measureTime = false;
-
-
-
-    void Awake()
+ 
+    void Start()
     {
+        DrawingMode.SetActive(false);
         EventSystem.instance.StartStory += Enable;
         EventSystem.instance.PublishToBook += OnPublishToBook;
         EventSystem.instance.DisableDrawingScreen += Disable;
         EventSystem.instance.EnableDrawingScreen += Enable;
-        EventSystem.instance.PauseDrawing+= PauseDrawing;
+        EventSystem.instance.PauseDrawing += PauseDrawing;
         EventSystem.instance.ContinueDrawing += ContinueDrawing;
-    }
-
-    void Start()
-    {
-        // Assign listeners to buttons
-        UndoButton.onClick.AddListener(OnUndoButtonClicked);
-        SendToAIButton.GetComponent<Button>().onClick.AddListener(OnSendToAI);
-        DeleteAllButton.GetComponent<Button>().onClick.AddListener(EventSystem.instance.DeleteAllLinesEvent);
 
         foreach (Button button in ButtonGroup.GetComponentsInChildren<Button>())
         {
             button.onClick.AddListener(() => OnColorButtonClicked(button));
         }
-
-        LargeButton.GetComponent<Button>().onClick.AddListener(() => OnSizeButtonClicked(0.8f));
-        MediumButton.GetComponent<Button>().onClick.AddListener(() => OnSizeButtonClicked(0.5f));
-        SmallButton.GetComponent<Button>().onClick.AddListener(() => OnSizeButtonClicked(0.2f));
-
     }
-
-        public void OnSizeButtonClicked(float size)
-    {
-        EventSystem.instance.SetLineRendererWidthEvent(size);
-    }
-
 
     void Update()
     {
@@ -86,6 +59,42 @@ public class DrawingScreenController : MonoBehaviour
         }
     }
 
+    // Button functions
+
+    public void OnSizeButtonClicked(float size)
+    {
+        EventSystem.instance.SetLineRendererWidthEvent(size);
+    }
+    public void OnSendToAI()
+    {
+        StartCoroutine(CoroutineScrenshot((bytes) =>
+        {
+            EventSystem.instance.SendImageToAIEvent(bytes);     
+        }));
+    }
+
+    public void OnUndoButtonClicked()
+    {
+        EventSystem.instance.DeleteLastLineEvent();
+    }
+
+    public void OnDeleteButtonClicked()
+    {
+        EventSystem.instance.DeleteAllLinesEvent();
+    }
+
+    public void OnColorButtonClicked(Button button)
+    {
+        foreach (Transform child in ButtonGroup.transform)
+        {
+            child.localScale = new Vector3(StandardButtonWidth, StandardButtonWidth, StandardButtonWidth);
+        }
+        button.transform.localScale = new Vector3(SelectedButtonWidth, SelectedButtonWidth, SelectedButtonWidth);
+        Debug.Log(button.GetComponent<Image>().color);
+        EventSystem.instance.PressColorButtonEvent(button.GetComponent<Image>().color);
+    }
+
+    // Events
     private void Enable()
     {
         if (InstantiatedLineGenerator == null)
@@ -94,7 +103,7 @@ public class DrawingScreenController : MonoBehaviour
             InstantiatedLineGenerator.GetComponent<LineGenerator>().parentCanvas = DrawingCanvas;
             InstantiatedLineGenerator.GetComponent<LineGenerator>().width = LineWidth;
         }
-        
+
         measureTime = true;
         DrawingMode.SetActive(true);
     }
@@ -120,13 +129,16 @@ public class DrawingScreenController : MonoBehaviour
         DrawingMode.SetActive(true);
         EventSystem.instance.ShowLinesEvent();
     }
- 
-    public void OnSendToAI()
+
+    void OnPublishToBook(Sprite sprite, string completion, string description, string continuation, int index, byte[] bytes)
     {
-        StartCoroutine(CoroutineScrenshot((bytes) =>
-        {
-            EventSystem.instance.SendImageToAIEvent(bytes);     
-        }));
+        drawingPage.selected_image = index;
+        drawingPage.time = timer;
+        drawingPage.iterations = currentIteration;
+        Metadata.Instance.storyBook.drawing.drawingPages.Add(Metadata.Instance.currentChapter, drawingPage);
+        timer = 0.0f;
+        Disable();
+        currentIteration = 0;
     }
 
     //Code inspired by https://www.youtube.com/watch?v=d5nENoQN4Tw
@@ -180,32 +192,5 @@ public class DrawingScreenController : MonoBehaviour
         EventSystem.instance.EnableResultScreenEvent();
 
         callback(bytes);
-    }
-
-    void OnPublishToBook(Sprite sprite, string completion, string description, string continuation, int index, byte[] bytes)
-    {
-        drawingPage.selected_image = index;
-        drawingPage.time = timer;
-        drawingPage.iterations = currentIteration;
-        Metadata.Instance.storyBook.drawing.drawingPages.Add(Metadata.Instance.currentChapter, drawingPage);
-        timer = 0.0f;
-        Disable();
-        currentIteration = 0;
-    }
-    
-    void OnUndoButtonClicked()
-    {
-        EventSystem.instance.DeleteLastLineEvent();
-    }
-
-    public void OnColorButtonClicked(Button button)
-    {
-        foreach (Transform child in ButtonGroup.transform)
-        {
-            child.localScale = new Vector3(StandardButtonWidth, StandardButtonWidth, StandardButtonWidth);
-        }
-        button.transform.localScale = new Vector3(SelectedButtonWidth, SelectedButtonWidth, SelectedButtonWidth);
-        Debug.Log(button.GetComponent<Image>().color);
-        EventSystem.instance.PressColorButtonEvent(button.GetComponent<Image>().color);
     }
 }

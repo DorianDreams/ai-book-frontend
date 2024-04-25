@@ -68,7 +68,7 @@ public class Metadata : MonoBehaviour
         currentPrompt = "";
     }
 
-    private void OnPublishMetadata()
+    public void OnPublishMetadata()
     {
         StartCoroutine(PutFinishedStoryBook(() =>
         {

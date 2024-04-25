@@ -4,17 +4,14 @@ namespace echo17.EndlessBook.Demo03
 	using System.Collections.Generic;
 	using UnityEngine;
     using echo17.EndlessBook;
-    using UnityEngine.UI;
     using UnityEngine.Localization;
-    using static System.Net.Mime.MediaTypeNames;
     using TMPro;
     using Image = UnityEngine.UI.Image;
     using UnityEngine.SceneManagement;
-    using System.Runtime.CompilerServices;
-    using System.Linq;
     using UnityEngine.Networking;
     using Newtonsoft.Json;
     using System.Text;
+    using Newtonsoft.Json.Bson;
 
 
 
@@ -248,8 +245,12 @@ namespace echo17.EndlessBook.Demo03
 
             EventSystem.instance.StartStory += OnStartStory;
 			EventSystem.instance.ChangeLocale += OnChangeLocale;
-			EventSystem.instance.PublishToBook += OnPublishToBook;
+			//EventSystem.instance.PublishToBook += OnPublishToBook;
+            EventSystem.instance.SelectImage += OnSelectImage;
 
+
+            EventSystem.instance.SelectText += OnSelectText;
+            EventSystem.instance.PublishNextPrompt += OnPublishNextPrompt;
 
             EventSystem.instance.EnableBookNavigator += OnEnableBookNavigator;
             EventSystem.instance.DisableBookNavigator += OnDisableBookNavigator;
@@ -290,21 +291,26 @@ namespace echo17.EndlessBook.Demo03
             BookNavigator.SetActive(false); 
         }
 
+        
         public void OnRegenerateText(){
             switch (book.CurrentPageNumber)
 			{
                 case 1:
-                    StartCoroutine(GetFullSentences(imageP2bytes, 0.7f,(completed_sentence) =>
-        {
-            StartCoroutine(GetChapterStories(completed_sentence,(story_generation) =>
-            {
-                    textP1.GetComponent<TextMeshProUGUI>().text = completed_sentence;
-                    Metadata.Instance.currentPrompt = story_generation;
+                    //CoroutineWithData cd = new CoroutineWithData(this, Request.GetFullSentences(imageP2bytes, 0.5f));
+                    //yield return cd.coroutine;
+                    //string completed_sentence = (string) cd.result;
+
+                    /*
+                            string comleted_sentence = "penis";
+                    StartCoroutine(GetChapterStories(completed_sentence,(story_generation) =>
+                    {
+                            textP1.GetComponent<TextMeshProUGUI>().text = completed_sentence;
+                            Metadata.Instance.currentPrompt = story_generation;
                     
-                    }));
-            }));
+                            }));*/
+           
         
-        break;
+                break;
                 case 3:
                 StartCoroutine(GetChapterStories(Metadata.Instance.previousPrompt, (story_generation) =>
         {
@@ -368,7 +374,80 @@ namespace echo17.EndlessBook.Demo03
 			SceneManager.LoadScene(SceneManager.GetActiveScene().name, LoadSceneMode.Single);
 		}
 
+        void OnSelectImage(Sprite sprite, int index, byte[] imagebytes)
+        {
+            switch (book.CurrentPageNumber)
+            {
+                case 1:
+                    textP2.SetActive(false);
+                    imageP2bytes = imagebytes;
+                    imageP2.GetComponent<Image>().sprite = sprite;
+                    imageP2.SetActive(true);
+                    break;
+                case 3:
+                    textP4.SetActive(false);
+                    imageP4bytes = imagebytes;
+                    imageP4.GetComponent<Image>().sprite = sprite;
+                    imageP4.SetActive(true);
+                    break;
+                case 5:
+                    textP6.SetActive(false);
+                    imageP6bytes = imagebytes;
+                    imageP6.GetComponent<Image>().sprite = sprite;
+                    imageP6.SetActive(true);
+                    break;
+            }
+        }
 
+        void OnSelectText(string completion)
+        {
+            switch (book.CurrentPageNumber)
+            {
+                case 1:
+                    Metadata.Instance.currentChapter = "ch2";
+                    textP1.GetComponent<TextMeshProUGUI>().text = completion;
+                    break;
+                case 3:
+                    Metadata.Instance.currentChapter = "ch3";
+                    textP3.GetComponent<TextMeshProUGUI>().text = completion;
+                    turnBookPage = true;
+                    nextPageFive = true;
+                    break;
+                case 5:
+                    textP5.GetComponent<TextMeshProUGUI>().text = completion;
+                    turnBookPage = true;
+                    bookFinished = true;
+                    finishBook.SetActive(true);
+                    break;
+            }
+        }
+
+        void OnPublishNextPrompt(string prompt)
+        {
+            switch (book.CurrentPageNumber)
+            {
+                case 1:
+                    Metadata.Instance.currentChapter = "ch2";
+                    textP3.GetComponent<TextMeshProUGUI>().text = prompt;
+                    Metadata.Instance.previousPrompt = Metadata.Instance.startingPrompt;
+                    Metadata.Instance.currentPrompt = prompt;
+                    break;
+                case 3:
+                    Metadata.Instance.currentChapter = "ch3";
+                    textP5.GetComponent<TextMeshProUGUI>().text = prompt;
+                    Metadata.Instance.previousPrompt = Metadata.Instance.currentPrompt;
+                    Metadata.Instance.currentPrompt = prompt;
+                    turnBookPage = true;
+                    nextPageFive = true;
+                    break;
+                case 5:
+                    turnBookPage = true;
+                    bookFinished = true;
+                    finishBook.SetActive(true);
+                    break;
+
+            }
+        }
         void OnPublishToBook(Sprite sprite, string completion, string description, string newprompt, int index ,byte[] imagebytes)
         {
             switch (book.CurrentPageNumber)
@@ -479,173 +558,6 @@ namespace echo17.EndlessBook.Demo03
         }
 
 
-
-
-        /// <summary>
-        /// Fired when the mouse intersects with the collider box while mouse down occurs
-        /// </summary>
-        void OnMouseDown()
-		{
-			Debug.Log("OnMouseDown");
-			if(turnBookPage){
-			
-				if (book.CurrentState == EndlessBook.StateEnum.ClosedFront)
-				{
-					book.SetState(EndlessBook.StateEnum.OpenFront, onCompleted: OnBookOpened);
-					Metadata.Instance.currentTextPage = 0;
-					//EventSystem.instance.OpenBookEvent();
-					return;
-				}
-
-				if(endBook)
-				{
-                    book.SetState(EndlessBook.StateEnum.ClosedBack, onCompleted: OnBookClosed);
-                    return;
-                }
-
-				if (book.CurrentState == EndlessBook.StateEnum.OpenFront)
-				{
-
-					book.SetState(EndlessBook.StateEnum.OpenMiddle);
-					return;
-				}
-
-
-				if (book.IsTurningPages || book.IsDraggingPage || UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
-				{
-					// exit if already turning
-					return;
-				}
-
-				// get the normalized time based on the mouse position
-				var normalizedTime = GetNormalizedTime();
-
-				// calculate the direction of the page turn based on the mouse position
-				var direction = normalizedTime > 0.5f ? Page.TurnDirectionEnum.TurnForward : Page.TurnDirectionEnum.TurnBackward;
-
-				// tell the book to start turning a page manually
-				book.TurnPageDragStart(direction);
-
-				// the mosue is now currently down
-				isMouseDown = true;
-			}
-
-        }
-
-
-		/// <summary>
-	    /// Fired when the mouse intersects with the collider box while dragging
-	    /// </summary>
-		void OnMouseDrag()
-		{
-			if (book.CurrentState == EndlessBook.StateEnum.ClosedFront || book.IsTurningPages || !book.IsDraggingPage || !isMouseDown || UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
-			{
-				// if not turning or the mouse is not down, then exit
-				return;
-			}
-
-			// get the normalized time based on the mouse position
-			var normalizedTime = GetNormalizedTime();
-
-            // tell the book to move the manual page drag to the normalized time
-            book.TurnPageDrag(normalizedTime);
-		}
-
-		/// <summary>
-	    /// Fired when the mouse intersects with the collider and the mouse up event occurs
-	    /// </summary>
-		void OnMouseUp()
-		{
-			if (book.CurrentState == EndlessBook.StateEnum.ClosedFront || book.IsTurningPages || !book.IsDraggingPage || UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
-			{
-				// if not turning then exit
-				return;
-			}
-
-			// tell the book to stop manual turning.
-			// if we have reversePageIfNotMidway on, then we look to see if we have turned past the midway point.
-			// if not, we reverse the page.
-			book.TurnPageDragStop(turnStopSpeed, PageTurnCompleted, reverse: reversePageIfNotMidway ? (book.TurnPageDragNormalizedTime < 0.5f) : false);
-            if (book.TurnPageDragNormalizedTime >= 0.5f)
-			{
-                //pageTurnSound.Play();
-            }
-            
-
-            // mouse is no longer down, so we can turn a new page if the animation is also completed
-            isMouseDown = false;
-			
-        }
-
-		/// Calculates the normalized time based on the mouse position
-		protected virtual float GetNormalizedTime()
-		{
-            // get the ray from the camera to the screen
-            Ray ray;
-            if (Metadata.Instance.testingMode)
-            {
-                ray = sceneCamera.ScreenPointToRay(Input.mousePosition);
-            }
-            else
-            {
-                ray = sceneCamera.ScreenPointToRay(Display.RelativeMouseAt(Input.mousePosition));
-            }
-			RaycastHit hit;
-
-			// cast a ray and see where it hits
-			if (Physics.Raycast(ray, out hit))
-			{
-				// return the position of the ray cast in terms of the normalized position of the collider box
-				return (hit.point.x + (boxCollider.size.x / 2.0f)) / boxCollider.size.x;
-			}
-
-            // if we didn't hit the collider, then check to see if we are on the
-            // left or right side of the screen and calculate the normalized time appropriately#
-
-            Vector3 viewportPoint;
-            if (Metadata.Instance.testingMode)
-			{
-               viewportPoint = sceneCamera.ScreenToViewportPoint((Input.mousePosition));
-            }
-            else
-            {
-                 viewportPoint = sceneCamera.ScreenToViewportPoint(Display.RelativeMouseAt(Input.mousePosition));
-            }
-			return (viewportPoint.x >= 0.5f) ? 1 : 0;
-		}
-
-		/// Called when the page completes its manual turn
-		protected virtual void PageTurnCompleted(int leftPageNumber, int rightPageNumber)
-		{
-            
-			Metadata.Instance.currentTextPage = leftPageNumber;
-			if (!bookFinished) { 
-			switch (book.CurrentPageNumber)
-			{
-					case 3:
-						if (nextBookPage != 5) { 
-
-                    //Metadata.Instance.currentTextPage = 3;
-                    turnBookPage = false;
-                    EventSystem.instance.EnableDrawingScreenEvent();
-					textP3.GetComponent<TextMeshProUGUI>().text = Metadata.Instance.currentPrompt;
-					nextBookPage = 5;}
-					break;
-				
-                case 5:
-                    //Metadata.Instance.currentTextPage = 5;
-					if (nextBookPage == 5) { 
-                    turnBookPage = false;
-                    EventSystem.instance.EnableDrawingScreenEvent();
-                    textP5.GetComponent<TextMeshProUGUI>().text = Metadata.Instance.currentPrompt;
-							nextBookPage = 0;
-                        }
-                        break;
-            }}
-            DebugCurrentState();
-			
-        }
-
         protected virtual void OnBookTurnToPageCompleted(EndlessBook.StateEnum fromState, EndlessBook.StateEnum toState, int currentPageNumber)
         {
             Debug.Log("OnBookTurnToPageCompleted: State set to " + toState + ". Current Page Number = " + currentPageNumber);
@@ -727,43 +639,24 @@ namespace echo17.EndlessBook.Demo03
         
     }
 
-    // Calls Instruct-Blip
-    IEnumerator GetFullSentences(byte[] bytes, float temperature,System.Action<string> callback)
-    {
-        string url = "http://127.0.0.1:8000/api/chat/fullsentences?prompt=" + Metadata.Instance.previousPrompt + "&temperature=" + temperature;
-        WWWForm form = new WWWForm();
-        form.AddBinaryData("image", bytes);
-        form.headers["Content-Type"] = "multipart/form-data";
+        // Calls Instruct-Blip
+        public IEnumerator GetFullSentences(byte[] bytes, float temperature, System.Action<string> callback)
+        {
+            string url = "http://127.0.0.1:8000/api/chat/fullsentences?prompt=" + Metadata.Instance.previousPrompt + "&temperature=" + temperature;
+            WWWForm form = new WWWForm();
+            form.AddBinaryData("image", bytes);
+            form.headers["Content-Type"] = "multipart/form-data";
 
-        UnityWebRequest request = UnityWebRequest.Post(url, form);
-        yield return request.SendWebRequest();
-        if (request.result != UnityWebRequest.Result.Success)
-        {
-            int count = 0;
-            while (request.result != UnityWebRequest.Result.Success)
-            {
-                Debug.Log(request.error);
-                request = UnityWebRequest.Post(url, form);
-                yield return request.SendWebRequest();
-                count++;
-                if (count > 10)
-                {
-                    EventSystem.instance.RestartSceneEvent();
-                }
-            }
+            UnityWebRequest request = UnityWebRequest.Post(url, form);
+            yield return request.SendWebRequest();
+
             Dictionary<string, string> returnVal = JsonConvert.DeserializeObject
                 <Dictionary<string, string>>(request.downloadHandler.text);
             string generated_description = returnVal["generated_description"].ToString();
-            callback(generated_description);
-        }
-        else
-        {
-            Dictionary<string, string> returnVal = JsonConvert.DeserializeObject
-                <Dictionary<string, string>>(request.downloadHandler.text);
-            string generated_description = returnVal["generated_description"].ToString();
-            callback(generated_description);
+            yield return generated_description;
         }
     }
-    }
+
+   
 
 }
