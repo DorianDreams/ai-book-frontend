@@ -428,13 +428,13 @@ namespace echo17.EndlessBook.Demo03
             {
                 case 1:
                     Metadata.Instance.currentChapter = "ch2";
-                    textP3.GetComponent<TextMeshProUGUI>().text = prompt;
+                    textP3.GetComponent<TextMeshProUGUI>().text = prompt + "...";
                     Metadata.Instance.previousPrompt = Metadata.Instance.startingPrompt;
                     Metadata.Instance.currentPrompt = prompt;
                     break;
                 case 3:
                     Metadata.Instance.currentChapter = "ch3";
-                    textP5.GetComponent<TextMeshProUGUI>().text = prompt;
+                    textP5.GetComponent<TextMeshProUGUI>().text = prompt + "...";
                     Metadata.Instance.previousPrompt = Metadata.Instance.currentPrompt;
                     Metadata.Instance.currentPrompt = prompt;
                     turnBookPage = true;
