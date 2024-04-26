@@ -151,7 +151,7 @@ public class ResultScreenController : MonoBehaviour
 
     IEnumerator SentenceCompletions(byte[] genImage, string sentence)
     {
-        float[] tempVals = { 0.8f, 1.2f, 1.6f, 2f };
+        float[] tempVals = { 0.8f, 1.6f, 3.2f, 6.4f };
         int i = 0;
         foreach (var temperature in tempVals) 
         {

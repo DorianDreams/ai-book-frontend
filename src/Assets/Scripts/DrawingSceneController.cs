@@ -39,7 +39,7 @@ public class DrawingScreenController : MonoBehaviour
     {
         DrawingMode.SetActive(false);
         EventSystem.instance.StartStory += Enable;
-        EventSystem.instance.PublishToBook += OnPublishToBook;
+        EventSystem.instance.SelectImage += OnPublishToBook;
         EventSystem.instance.DisableDrawingScreen += Disable;
         EventSystem.instance.EnableDrawingScreen += Enable;
         EventSystem.instance.PauseDrawing += PauseDrawing;
@@ -130,11 +130,11 @@ public class DrawingScreenController : MonoBehaviour
         EventSystem.instance.ShowLinesEvent();
     }
 
-    void OnPublishToBook(Sprite sprite, string completion, string description, string continuation, int index, byte[] bytes)
+    void OnPublishToBook(Sprite sprite, int index, byte[] bytes)
     {
         drawingPage.selected_image = index;
         drawingPage.time = timer;
-        drawingPage.iterations = currentIteration;
+        drawingPage.drawingIterations = currentIteration;
         Metadata.Instance.storyBook.drawing.drawingPages.Add(Metadata.Instance.currentChapter, drawingPage);
         timer = 0.0f;
         Disable();

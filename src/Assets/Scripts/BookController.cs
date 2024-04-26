@@ -182,6 +182,7 @@ namespace echo17.EndlessBook.Demo03
                     if (i!='"')
                         sb2.Append(i);
                 title = sb2.ToString();
+                Metadata.Instance.storyBook.title = title;
                 BookTitle.GetComponent<TextMeshPro>().text = title;
                 BookTitle.SetActive(true);
 

@@ -22,15 +22,16 @@ public class DrawingPage
 {
     public int strokes;
     public int points;
-    public int iterations;
+    public int drawingIterations;
     public float time;
     public int selected_image;
+    public int regenerateText;
 
-    public DrawingPage(int strokes, int points, int iterations, float time)
+    public DrawingPage(int strokes, int points, int drawingIterations, float time)
     {
         this.strokes = strokes;
         this.points = points;
-        this.iterations = iterations;
+        this.drawingIterations = drawingIterations;
         this.time = time;
     }
 }
