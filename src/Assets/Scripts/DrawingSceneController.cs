@@ -23,7 +23,7 @@ public class DrawingScreenController : MonoBehaviour
     private GameObject InstantiatedLineGenerator = null;
 
     [SerializeField]
-    float SelectedButtonWidth = 1.4f;
+    float SelectedButtonWidth = 1.5f;
     [SerializeField]
     float StandardButtonWidth = 1f;
     [SerializeField]

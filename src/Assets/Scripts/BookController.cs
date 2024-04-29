@@ -118,8 +118,17 @@ namespace echo17.EndlessBook.Demo03
             Metadata.Instance.currentTextPage = 1;
 
             //turnBookPage = false;
+        }
 
-
+        void ButtonController(BookState state, int pagenumber){
+            switch(state){
+                case BookState.Chapter1:
+                break;
+                case BookState.Chapter2:
+                break;
+                case BookState.Chapter3:
+                break;
+            }
         }
 
         private StateChangedDelegate StartStory;

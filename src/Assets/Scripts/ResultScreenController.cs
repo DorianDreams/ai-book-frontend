@@ -12,16 +12,7 @@ public class ResultScreenController : MonoBehaviour
 {
     //Resulting Image for Selection
 
-    enum State 
-    {
-        GENERATING, 
-        INPUT,
-        BACK,
-        PUBLISH,
-        SELECTED    
-    }
-
-    private State currentState;
+    private bool _isgenerating;
 
 
     public GameObject ResultScreen;
@@ -58,6 +49,7 @@ public class ResultScreenController : MonoBehaviour
 
     private void Start()
     {
+        ChooseImage.GetComponent<Button>().interactable = false;
         for (int i = 0; i < 4; i++)
         {
             SpinnerArr[i] = Spinners.transform.GetChild(i).gameObject;
@@ -149,6 +141,9 @@ public class ResultScreenController : MonoBehaviour
 
     IEnumerator StableDiffusionInference(byte[] screenshot)
     {
+        ChooseImage.GetComponent<Button>().interactable = false;
+        BacktoDrawing.GetComponent<Button>().interactable = false;
+        ReGenerateImages.GetComponent<Button>().interactable = false;
         _numberOfImages = 0;
         CoroutineWithData cd_caption = new CoroutineWithData(this, Request.GetImageCaption(screenshot));
         yield return cd_caption.coroutine;
@@ -163,6 +158,8 @@ public class ResultScreenController : MonoBehaviour
             showImageSelection(returnVal);
             _numberOfImages++;
         }
+        BacktoDrawing.GetComponent<Button>().interactable = true;
+        ReGenerateImages.GetComponent<Button>().interactable = true;
     }
 
     public void showImageSelection(Dictionary<string, object> returnVal)
@@ -202,7 +199,6 @@ public class ResultScreenController : MonoBehaviour
         imageResults.SetActive(true);
         ReGenerateImages.SetActive(true);
         ChooseImage.SetActive(true);
-        this.currentState = State.GENERATING;
         currentScreenshot = bytes;
         foreach (GameObject spinner in SpinnerArr)
             spinner.SetActive(true);
@@ -221,6 +217,7 @@ public class ResultScreenController : MonoBehaviour
         _currentSelectedImage = ImageResult[i].GetComponent<Image>();
         selectedImageIndex = i;
         _currentSelectedImageBytes = imageByteList[i];
+        ChooseImage.GetComponent<Button>().interactable = true;
     }
 }
 
