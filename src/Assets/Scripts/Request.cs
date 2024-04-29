@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -47,7 +48,8 @@ public class Request : MonoBehaviour
     // Language Model Inference Calls 
     public static IEnumerator GetSentenceCompletion(byte[] bytes, string sentence, float temperature)
     {
-        string url = "http://127.0.0.1:8000/api/chat/chapters?prompt=" + sentence + "&temperature=" + temperature + "&ch_index=" + Metadata.Instance.currentChapter;
+        string url = "http://127.0.0.1:8000/api/chat/chapters?prompt=" + sentence + "&temperature=" + 
+            temperature + "&ch_index=" + Metadata.Instance.currentChapter;
         WWWForm form = new WWWForm();
         form.AddBinaryData("image", bytes);
         form.headers["Content-Type"] = "multipart/form-data";
@@ -73,6 +75,39 @@ public class Request : MonoBehaviour
         string next_prompt = returnVal["next_prompt"].ToString();
         yield return next_prompt;
     }
+
+    // Call Tiny-Llama for Title Creation
+    public static IEnumerator CreateTitle(string alltext)
+    {
+        string json = "{ \"user_input\":" + "\"" + alltext + "\"" + "}";
+
+        using (UnityWebRequest request = UnityWebRequest.Post("http://127.0.0.1:8000/api/chat/titles", json, "application/json"))
+        {
+            yield return request.SendWebRequest();
+            if (request.result != UnityWebRequest.Result.Success)
+            {
+                Debug.Log(request.error);
+            }
+            else
+            {
+                Debug.Log(request.downloadHandler.text);
+                Dictionary<string, object> returnVal = JsonConvert.DeserializeObject
+                    <Dictionary<string, object>>(request.downloadHandler.text);
+
+
+                string title = returnVal["generated_text"].ToString();
+                var sb2 = new StringBuilder(title.Length);
+
+                foreach (char i in title)
+                    if (i != '"')
+                        sb2.Append(i);
+                title = sb2.ToString();
+                yield return title;
+
+            }
+        }
+    }
+
 
 
     // Unused for now

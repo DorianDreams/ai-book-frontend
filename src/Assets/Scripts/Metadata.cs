@@ -23,6 +23,8 @@ public class Metadata : MonoBehaviour
     public string startingPrompt;
     public string previousPrompt;
 
+    public string currentImgID;
+
     public bool testingMode = false;
 
 
