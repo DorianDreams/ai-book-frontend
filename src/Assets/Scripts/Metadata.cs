@@ -23,10 +23,14 @@ public class Metadata : MonoBehaviour
     public string startingPrompt;
     public string previousPrompt;
 
+    public string promptExplanation;
+
     public string currentImgID;
 
     public bool testingMode = false;
 
+
+    public string currentSelectedCharacter;
 
     public enum LLM
     {

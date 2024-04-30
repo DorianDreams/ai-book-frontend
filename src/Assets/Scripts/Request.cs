@@ -28,7 +28,7 @@ public class Request : MonoBehaviour
     public static IEnumerator GetImageGeneration(string caption, float strength, byte[] screenshot)
     {
         string json = "{\"strength" + "\":" + strength + "}";
-        string prompt = Metadata.Instance.currentPrompt + caption;
+        string prompt = Metadata.Instance.currentSelectedCharacter + " " +  Metadata.Instance.currentPrompt + " " + caption;
         string url = "http://127.0.0.1:8000/api/images/" + Metadata.Instance.storyBookId
                                               + "?prompt=" + prompt
                                               + "&parameters=" + json;
@@ -48,6 +48,7 @@ public class Request : MonoBehaviour
     // Language Model Inference Calls 
     public static IEnumerator GetSentenceCompletion(byte[] bytes, string sentence, float temperature)
     {
+        sentence = Metadata.Instance.currentSelectedCharacter + ". " + sentence;
         string url = "http://127.0.0.1:8000/api/chat/chapters?prompt=" + sentence + "&temperature=" + 
             temperature + "&ch_index=" + Metadata.Instance.currentChapter;
         WWWForm form = new WWWForm();
