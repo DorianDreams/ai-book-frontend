@@ -10,7 +10,7 @@ using UnityEngine.UI;
 public class Textboxes : MonoBehaviour
 {
     public GameObject TextBoxPrefab;
-    private int initialPrompts = 11;
+    private int initialPrompts = 3;
     private ArrayList initialPromptList;
     private string[] initialPromptArray;
     private ArrayList instantiatedTextBoxes;

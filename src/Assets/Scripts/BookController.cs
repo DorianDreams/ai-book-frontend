@@ -11,6 +11,7 @@ namespace echo17.EndlessBook.Demo03
     using UnityEngine.Networking;
     using Newtonsoft.Json;
     using System.Text;
+    using UnityEngine.UI;
     using static echo17.EndlessBook.Demo03.BookController;
 
 
@@ -30,6 +31,8 @@ namespace echo17.EndlessBook.Demo03
         }
 
         public BookState bookState = BookState.Start;
+
+
         private string _Chapter1Prompt = null;
         private string _Chapter2Prompt = null;
         private string _Chapter3Prompt = null;
@@ -90,9 +93,10 @@ namespace echo17.EndlessBook.Demo03
         [Header("Book Navigator")]
         public GameObject BookNavigator;
 
-        public GameObject previousPage;
-        public GameObject nextPage;
-        public GameObject regenerateText;
+        public Button previousPage;
+        public Button nextPage;
+        public TextMeshProUGUI nextPageText;
+        public Button regenerateText;
         public GameObject finishBook;
 
 
@@ -109,7 +113,7 @@ namespace echo17.EndlessBook.Demo03
         public float turnTime = 1f;
         public float stateAnimationTime = 1f;
 
-
+        public GameObject Spinner;
 
         void OnStartStory()
         {
@@ -119,6 +123,8 @@ namespace echo17.EndlessBook.Demo03
 
             //turnBookPage = false;
         }
+
+        
 
         void ButtonController(BookState state, int pagenumber){
             switch(state){
@@ -136,16 +142,26 @@ namespace echo17.EndlessBook.Demo03
 
         IEnumerator SentenceCompletions(byte[] genImage, string prompt, GameObject text)
         {
+            nextPage.interactable = false;
+            previousPage.interactable = false;
+            //nextPage.interactable = false;
             CoroutineWithData cd_completion = new CoroutineWithData(this, Request.GetSentenceCompletion(genImage, prompt, _currentTemperature));
             yield return cd_completion.coroutine;
             string completion = (string)cd_completion.result;
             text.GetComponent<TextMeshProUGUI>().text = completion;
             _isGenerating = false;
+            Spinner.SetActive(false);
+            regenerateText.interactable = true;
+            previousPage.interactable = true;
+            nextPage.interactable = true;
+            OnBookPageChanged();
         }
 
         public void OnRegenerateSentence()
         {
             if (!_isGenerating) {
+                Spinner.SetActive(true);
+                regenerateText.interactable = false;
             
             switch (book.CurrentPageNumber)
             {
@@ -228,7 +244,7 @@ namespace echo17.EndlessBook.Demo03
                         onPageTurnEnd: OnPageTurnEnd);
                     if (currentTextGenPage == 3)
                     {
-                        regenerateText.SetActive(true);
+                        
                     }
                     break;
                 case 3:
@@ -240,7 +256,7 @@ namespace echo17.EndlessBook.Demo03
                         onPageTurnEnd: OnPageTurnEnd);
                         if (currentTextGenPage == 5)
                         {
-                            regenerateText.SetActive(true);
+                         
                         }
                     }
                     break;
@@ -255,6 +271,10 @@ namespace echo17.EndlessBook.Demo03
         {
             Metadata.Instance.storyBook.drawing.drawingPages["ch3"].regenerateText = regenerationCount;
             regenerationCount = 0;
+
+
+            StartCoroutine(Request.PostImageDescription(textP5.GetComponent<TextMeshProUGUI>().text, Metadata.Instance.currentImgID));
+
 
             book.SetState(EndlessBook.StateEnum.ClosedFront);
             EventSystem.instance.DisableBookNavigatorEvent();
@@ -278,7 +298,8 @@ namespace echo17.EndlessBook.Demo03
         {
             if (!_isGenerating)
             {
-                book.TurnBackward(turnTime);
+                book.TurnBackward(turnTime, onCompleted: OnBookTurnToPreviousPageCompleted);
+                
             }
 
 
@@ -289,7 +310,7 @@ namespace echo17.EndlessBook.Demo03
         {
             Debug.Log("OnPageTurnStart: front [" + pageNumberFront + "] back [" + pageNumberBack + "] fv [" + pageNumberFirstVisible + "] lv [" + pageNumberLastVisible + "] dir [" + turnDirection + "]");
         }
-
+        
         protected virtual void OnPageTurnEnd(Page page, int pageNumberFront, int pageNumberBack, int pageNumberFirstVisible, int pageNumberLastVisible, Page.TurnDirectionEnum turnDirection)
         {
             Debug.Log("OnPageTurnEnd: front [" + pageNumberFront + "] back [" + pageNumberBack + "] fv [" + pageNumberFirstVisible + "] lv [" + pageNumberLastVisible + "] dir [" + turnDirection + "]");
@@ -313,8 +334,12 @@ namespace echo17.EndlessBook.Demo03
         private StateChangedDelegate OnBookOpened;
         private StateChangedDelegate OnBookClosed;
 
+
+
+
         private void Start()
         {
+            previousPage.interactable = false;
             _currentTemperature = StartingTemperature;
             EventSystem.instance.RestartScene += Reset;
             BookTitle.SetActive(false);
@@ -344,9 +369,13 @@ namespace echo17.EndlessBook.Demo03
                                                 EndlessBook.StateEnum toState,
                                                 int pageNumber) =>
             {
-                textP1.GetComponent<TextMeshProUGUI>().text = Metadata.Instance.currentPrompt;
+
+            
+                textP1.GetComponent<TextMeshProUGUI>().text = Metadata.Instance.currentPrompt + "...";
                 bookState = BookState.Chapter1;
             };
+
+            
 
             OnBookOpened = (EndlessBook.StateEnum fromState,
                              EndlessBook.StateEnum toState,
@@ -399,6 +428,8 @@ namespace echo17.EndlessBook.Demo03
             switch (book.CurrentPageNumber)
             {
                 case 1:
+                    Spinner.SetActive(true);
+                    regenerateText.interactable = false;
                     StartCoroutine(SentenceCompletions(imagebytes, Metadata.Instance.currentPrompt, textP1));
                     textP2.SetActive(false);
                     imageP2bytes = imagebytes;
@@ -406,6 +437,8 @@ namespace echo17.EndlessBook.Demo03
                     imageP2.SetActive(true);
                     break;
                 case 3:
+                    Spinner.SetActive(true);
+                    regenerateText.interactable = false;
                     StartCoroutine(SentenceCompletions(imagebytes, Metadata.Instance.currentPrompt, textP3));
                     textP4.SetActive(false);
                     imageP4bytes = imagebytes;
@@ -413,6 +446,8 @@ namespace echo17.EndlessBook.Demo03
                     imageP4.SetActive(true);
                     break;
                 case 5:
+                    Spinner.SetActive(true);
+                    regenerateText.interactable = false;
                     StartCoroutine(SentenceCompletions(imagebytes, Metadata.Instance.currentPrompt, textP5));
                     textP6.SetActive(false);
                     imageP6bytes = imagebytes;
@@ -467,10 +502,69 @@ namespace echo17.EndlessBook.Demo03
             }
         }
 
+        void OnBookPageChanged() {
+            if (book.CurrentPageNumber == 1) {
+                previousPage.interactable = false;
+            }
+            if (book.CurrentPageNumber == 3) {
+                previousPage.interactable = false;
+                previousPage.interactable = true;
+            }
+            if (book.CurrentPageNumber == 5) {
+                previousPage.interactable = false;
+                previousPage.interactable = true;
+            }
+
+            if (book.CurrentPageNumber == 1 && bookState == BookState.Chapter2) {
+                nextPage.interactable = false;
+               nextPageText.text = "Next Page";
+               nextPage.interactable = true;
+                
+            }
+            if (book.CurrentPageNumber == 3 && bookState == BookState.Chapter2) {
+                nextPage.interactable = false;
+                nextPageText.text = "Create next Drawing";
+                nextPage.interactable = true;
+            }
+            if(book.CurrentPageNumber == 1 && bookState == BookState.Chapter3){
+                nextPage.interactable = false;
+                nextPageText.text = "Next Page";
+                nextPage.interactable = true;
+                
+            }
+            if(book.CurrentPageNumber == 5 && bookState == BookState.Chapter3){
+                nextPage.interactable = true;
+                nextPage.interactable = false;
+
+                
+            }
+            if(book.CurrentPageNumber == 1 && bookState == BookState.Chapter3){
+                regenerateText.interactable = false;
+                nextPage.interactable = false;
+                nextPage.interactable = true;
+                
+            }
+
+            if(book.CurrentPageNumber == 3 && bookState == BookState.Chapter3){
+                nextPageText.text = "Next Page";
+                regenerateText.interactable = false;
+                nextPage.interactable = false;
+                nextPage.interactable = true;
+                
+            }
+            
+
+        }
+        protected virtual void OnBookTurnToPreviousPageCompleted(EndlessBook.StateEnum fromState, 
+            EndlessBook.StateEnum toState, int currentPageNumber)
+            {
+                OnBookPageChanged();
+            }
 
         protected virtual void OnBookTurnToPageCompleted(EndlessBook.StateEnum fromState, 
             EndlessBook.StateEnum toState, int currentPageNumber)
         {
+            OnBookPageChanged();
             Debug.Log("OnBookTurnToPageCompleted: State set to " + toState + ". Current Page Number = " + currentPageNumber);
             if (!bookFinished)
             {

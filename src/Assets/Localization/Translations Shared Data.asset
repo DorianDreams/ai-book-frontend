@@ -35,38 +35,6 @@ MonoBehaviour:
     m_Key: InitialPrompt3
     m_Metadata:
       m_Items: []
-  - m_Id: 1112856619565056
-    m_Key: InitialPrompt4
-    m_Metadata:
-      m_Items: []
-  - m_Id: 1113323609178112
-    m_Key: InitialPrompt5
-    m_Metadata:
-      m_Items: []
-  - m_Id: 1113871548858368
-    m_Key: InitialPrompt6
-    m_Metadata:
-      m_Items: []
-  - m_Id: 1113939555303424
-    m_Key: InitialPrompt7
-    m_Metadata:
-      m_Items: []
-  - m_Id: 1114166207102976
-    m_Key: InitialPrompt8
-    m_Metadata:
-      m_Items: []
-  - m_Id: 1114258666340352
-    m_Key: InitialPrompt9
-    m_Metadata:
-      m_Items: []
-  - m_Id: 1114384575152128
-    m_Key: InitialPrompt10
-    m_Metadata:
-      m_Items: []
-  - m_Id: 1114460261367808
-    m_Key: InitialPrompt11
-    m_Metadata:
-      m_Items: []
   - m_Id: 1879233131364352
     m_Key: DrawPicture
     m_Metadata:
