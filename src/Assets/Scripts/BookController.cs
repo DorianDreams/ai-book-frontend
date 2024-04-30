@@ -340,11 +340,12 @@ namespace echo17.EndlessBook.Demo03
 
             EventSystem.instance.GoToNextPage += GoToNextPage;
             EventSystem.instance.GoPreviousPage += GoToPreviousPage;
+
             StartStory = (EndlessBook.StateEnum fromState,
                                                 EndlessBook.StateEnum toState,
                                                 int pageNumber) =>
             {
-                textP1.GetComponent<TextMeshProUGUI>().text = Metadata.Instance.currentPrompt;
+                textP1.GetComponent<TextMeshProUGUI>().text = Metadata.Instance.currentPrompt + "..." + "\n\n" + Metadata.Instance.promptExplanation;
                 bookState = BookState.Chapter1;
             };
 
