@@ -37,6 +37,79 @@ public class EventSystem : MonoBehaviour
         }
     }
 
+    // --------------- Cube Interaction Events ---------------
+    public event Action CubeOff;
+    public void CubeOffEvent()
+    {
+        if (CubeOff != null)
+        {
+            Debug.Log("Event fired: CubeOffEvent");
+            CubeOff();
+        }
+    }
+
+    public event Action CubeCrossfade;
+    public void CubeCrossfadeEvent()
+    {
+        if (CubeCrossfade != null)
+        {
+            Debug.Log("Event fired: CubeCrossfadeEvent");
+            CubeCrossfade();
+        }
+    }
+
+    public event Action CubeBlink;
+    public void CubeBlinkEvent()
+    {
+        if (CubeBlink != null)
+        {
+            Debug.Log("Event fired: CubeBlinkEvent");
+            CubeBlink();
+        }
+    }
+
+    // Shows color of the cube
+    public event Action<string> CubeShowColor;
+    public void CubeShowColorEvent(string color)
+    {
+        if (CubeShowColor != null)
+        {
+            Debug.Log("Event fired: CubeShowColorEvent");
+            CubeShowColor(color);
+        }
+    }
+
+    public event Action CubeWaveUp;
+    public void CubeWaveUpEvent()
+    {
+        if (CubeWaveUp != null)
+        {
+            Debug.Log("Event fired: CubeWaveUpEvent");
+            CubeWaveUp();
+        }
+    }
+
+    public event Action CubeWaveRight;
+    public void CubeWaveRightEvent()
+    {
+        if (CubeWaveRight != null)
+        {
+            Debug.Log("Event fired: CubeWaveRightEvent");
+            CubeWaveRight();
+        }
+    }
+
+    public event Action CubeWaveLeft;
+    public void CubeWaveLeftEvent()
+    {
+        if (CubeWaveLeft != null)
+        {
+            Debug.Log("Event fired: CubeWaveLeftEvent");
+            CubeWaveLeft();
+        }
+    }
+
+
     // --------------- Start Story Events ---------------
     public event Action ChangeLocale;
     public void ChangeLocaleEvent()

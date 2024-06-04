@@ -18,6 +18,13 @@ public class DrawingScreenController : MonoBehaviour
     public GameObject DrawingMode;
     public Canvas DrawingCanvas;
     public GameObject ButtonGroup;
+    public GameObject RedoButton;
+    public GameObject DeleteButton;
+
+    public GameObject SmallBrush;
+    public GameObject MediumBrush;
+    public GameObject LargeBrush;
+
     public GameObject DrawingBackground;
     public GameObject LineGeneratorPrefab;
     private GameObject InstantiatedLineGenerator = null;
@@ -37,6 +44,7 @@ public class DrawingScreenController : MonoBehaviour
  
     void Start()
     {
+
         DrawingMode.SetActive(false);
         EventSystem.instance.StartStory += Enable;
         EventSystem.instance.SelectImage += OnPublishToBook;
@@ -49,6 +57,9 @@ public class DrawingScreenController : MonoBehaviour
         {
             button.onClick.AddListener(() => OnColorButtonClicked(button));
         }
+        SmallBrush.GetComponent<Button>().onClick.AddListener(() => OnSizeButtonClicked(SmallBrush, 0.1f));
+        MediumBrush.GetComponent<Button>().onClick.AddListener(() => OnSizeButtonClicked(MediumBrush, 0.2f));
+        LargeBrush.GetComponent<Button>().onClick.AddListener(() => OnSizeButtonClicked(LargeBrush, 0.5f));
     }
 
     void Update()
@@ -61,8 +72,12 @@ public class DrawingScreenController : MonoBehaviour
 
     // Button functions
 
-    public void OnSizeButtonClicked(float size)
+    public void OnSizeButtonClicked(GameObject button, float size)
     {
+        SmallBrush.transform.GetChild(0).gameObject.SetActive(false);
+        MediumBrush.transform.GetChild(0).gameObject.SetActive(false);
+        LargeBrush.transform.GetChild(0).gameObject.SetActive(false);
+        button.transform.GetChild(0).gameObject.SetActive(true);
         EventSystem.instance.SetLineRendererWidthEvent(size);
     }
     public void OnSendToAI()
@@ -87,11 +102,32 @@ public class DrawingScreenController : MonoBehaviour
     {
         foreach (Transform child in ButtonGroup.transform)
         {
-            child.localScale = new Vector3(StandardButtonWidth, StandardButtonWidth, StandardButtonWidth);
+            child.GetChild(0).gameObject.SetActive(false);
         }
-        button.transform.localScale = new Vector3(SelectedButtonWidth, SelectedButtonWidth, SelectedButtonWidth);
+        button.transform.GetChild(0).gameObject.SetActive(true);
+        Color color = button.GetComponent<Image>().color;
+        //button.transform.localScale = new Vector3(SelectedButtonWidth, SelectedButtonWidth, SelectedButtonWidth);
+        SmallBrush.GetComponent<Image>().color = color;
+        MediumBrush.GetComponent<Image>().color = color;
+        LargeBrush.GetComponent<Image>().color = color;
+
+        Debug.Log(button.GetComponent<Image>());
         Debug.Log(button.GetComponent<Image>().color);
-        EventSystem.instance.PressColorButtonEvent(button.GetComponent<Image>().color);
+        Debug.Log(ColorUtility.ToHtmlStringRGB(color));
+        String hexcode = "0x" + ColorUtility.ToHtmlStringRGB(color);
+        if (hexcode == "0xFFFFFF")
+        {
+            SmallBrush.transform.GetChild(0).GetComponent<Image>().color = Color.black;
+            MediumBrush.transform.GetChild(0).GetComponent<Image>().color = Color.black;
+            LargeBrush.transform.GetChild(0).GetComponent<Image>().color = Color.black;
+        } else
+        {
+            SmallBrush.transform.GetChild(0).GetComponent<Image>().color = Color.white;
+            MediumBrush.transform.GetChild(0).GetComponent<Image>().color = Color.white;
+            LargeBrush.transform.GetChild(0).GetComponent<Image>().color = Color.white;
+        }
+        EventSystem.instance.CubeShowColorEvent(hexcode);
+        EventSystem.instance.PressColorButtonEvent(color);
     }
 
     // Events
@@ -170,7 +206,7 @@ public class DrawingScreenController : MonoBehaviour
         string operatingSystem = SystemInfo.operatingSystem;
         if (operatingSystem.Contains("Windows"))
         {
-            screenShot.ReadPixels(new Rect(startX, startY - 120, textWidth, textHeight), 0, 0);
+            screenShot.ReadPixels(new Rect(startX, startY+170 , textWidth, textHeight), 0, 0);
 
         }
         else

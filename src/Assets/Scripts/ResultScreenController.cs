@@ -7,6 +7,9 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Text;
 using TMPro;
+using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
+using static UnityEngine.UIElements.UxmlAttributeDescription;
+using System.Xml.Linq;
 
 public class ResultScreenController : MonoBehaviour
 {
@@ -20,9 +23,11 @@ public class ResultScreenController : MonoBehaviour
     [Header("Result Images")]
     public GameObject imageResults;
     public GameObject Spinners;
+    public GameObject imageResultBackgrounds;
 
     private GameObject[] SpinnerArr = new GameObject[4];
     private GameObject[] ImageResult = new GameObject[4];
+    private GameObject[] ImageResultBackground = new GameObject[4];
 
     [Header("Buttons")]
     public GameObject ChooseImage;
@@ -54,6 +59,7 @@ public class ResultScreenController : MonoBehaviour
         {
             SpinnerArr[i] = Spinners.transform.GetChild(i).gameObject;
             ImageResult[i] = imageResults.transform.GetChild(i).gameObject;
+            ImageResultBackground[i] = imageResultBackgrounds.transform.GetChild(i).gameObject;
         }
 
         ResultScreen.SetActive(false);
@@ -134,7 +140,7 @@ public class ResultScreenController : MonoBehaviour
 
             EventSystem.instance.SelectImageEvent(_currentSelectedImage.sprite, selectedImageIndex, bytes);
             EventSystem.instance.DisableResultScreenEvent();
-            EventSystem.instance.EnableBookNavigatorEvent();
+            //EventSystem.instance.EnableBookNavigatorEvent();
         }
     }
 
@@ -160,6 +166,7 @@ public class ResultScreenController : MonoBehaviour
         }
         BacktoDrawing.GetComponent<Button>().interactable = true;
         ReGenerateImages.GetComponent<Button>().interactable = true;
+        EventSystem.instance.CubeOffEvent();
     }
 
     public void showImageSelection(Dictionary<string, object> returnVal)
@@ -170,7 +177,7 @@ public class ResultScreenController : MonoBehaviour
         if (operatingSystem.Contains("Windows"))
         {
             imagePath = imagePath.Replace("/", "\\");
-            fullpath = "E:\\thesis\\backend\\storybookcreator" + imagePath;
+            fullpath = "C:\\Users\\Tonja\\Documents\\GitHub\\storybookcreator" + imagePath;
         }
         else if (operatingSystem.Contains("Mac"))
         {
@@ -195,6 +202,9 @@ public class ResultScreenController : MonoBehaviour
     }
 
     void OnSendImageToAI(byte[] bytes) {
+        foreach (GameObject image in ImageResultBackground)
+            image.SetActive(false);
+        EventSystem.instance.CubeCrossfadeEvent();
 
         imageResults.SetActive(true);
         ReGenerateImages.SetActive(true);
@@ -209,15 +219,21 @@ public class ResultScreenController : MonoBehaviour
         StartCoroutine(StableDiffusionInference(bytes));
         _numberOfImages = 0;
         EnableSelectionButtons();
+
+        
     }
 
     public void OnSelectImage(int i)
     {
+        foreach(GameObject image in ImageResultBackground)
+            image.SetActive(false);
         Debug.Log("Selecting Image");
         _currentSelectedImage = ImageResult[i].GetComponent<Image>();
         selectedImageIndex = i;
         _currentSelectedImageBytes = imageByteList[i];
+        currentScreenshot = _currentSelectedImageBytes;
         ChooseImage.GetComponent<Button>().interactable = true;
+        ImageResultBackground[i].SetActive(true);
     }
 }
 

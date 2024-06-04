@@ -2,6 +2,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using TMPro;
 using UnityEngine;
@@ -10,24 +11,11 @@ using UnityEngine.Networking;
 
 public class Request : MonoBehaviour
 {
-    public static Request Call { get; private set; }
-    private void Awake()
-    {
-        if (Call == null)
-        {
-            Call = this;
-        }
-        else
-        {
-            Destroy(this.gameObject);
-        }
-    }
-
-
     // StableDiffusionXLTurbo Call
     public static IEnumerator GetImageGeneration(string caption, float strength, byte[] screenshot)
     {
-        string json = "{\"strength" + "\":" + strength + "}";
+        string json = "{\"strength" + "\":" + strength.ToString("0.0", CultureInfo.InvariantCulture) + "}";
+        Debug.Log(json);
         string prompt = Metadata.Instance.currentPrompt + caption;
         string url = "http://127.0.0.1:8000/api/images/" + Metadata.Instance.storyBookId
                                               + "?prompt=" + prompt
@@ -40,8 +28,7 @@ public class Request : MonoBehaviour
         UnityWebRequest request = UnityWebRequest.Post(url, form);
 
         yield return request.SendWebRequest();
-        Dictionary<string, object> returnVal = JsonConvert.DeserializeObject
-                <Dictionary<string, object>>(request.downloadHandler.text);
+        Dictionary<string, object> returnVal = JsonConvert.DeserializeObject<Dictionary<string, object>>(request.downloadHandler.text);
         yield return returnVal;
     }
 
@@ -49,16 +36,15 @@ public class Request : MonoBehaviour
     public static IEnumerator GetSentenceCompletion(byte[] bytes, string sentence, float temperature)
     {
         string url = "http://127.0.0.1:8000/api/chat/chapters?prompt=" + sentence + "&temperature=" + 
-            temperature + "&ch_index=" + Metadata.Instance.currentChapter;
+            temperature.ToString("0.0", CultureInfo.InvariantCulture) + "&ch_index=" + Metadata.Instance.currentChapter;
         WWWForm form = new WWWForm();
         form.AddBinaryData("image", bytes);
         form.headers["Content-Type"] = "multipart/form-data";
 
         UnityWebRequest request = UnityWebRequest.Post(url, form);
         yield return request.SendWebRequest();
-        
-        Dictionary<string, string> returnVal = JsonConvert.DeserializeObject
-            <Dictionary<string, string>>(request.downloadHandler.text);
+
+        Dictionary<string, string> returnVal = JsonConvert.DeserializeObject<Dictionary<string, string>>(request.downloadHandler.text);
         string completed_sentence = returnVal["generated_description"].ToString();
         yield return completed_sentence;
     }

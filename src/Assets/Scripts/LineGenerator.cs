@@ -29,10 +29,6 @@ public class LineGenerator : MonoBehaviour
     public float SmoothingLength = 1.5f;
     public int SmoothingSections = 2;
 
-    private BezierCurve[] Curves;
-    //[SerializeField]
-    //float tolerance = .1f;   |  Maybe introduce to make it fancier
-
 
     void Awake()
     {
@@ -193,62 +189,6 @@ public class LineGenerator : MonoBehaviour
 
             if (Input.GetMouseButtonUp(0))
             {
-                    
-                    
-                    //lineRenderer.Simplify(tolerance);
-                    /* (lineRenderer.positionCount == 1)
-                    {
-                        Vector3 mousePos = GetMousePosition();
-                        activeLine.UpdateLine(mousePos);
-                    }*/
-
-                    /*
-                  Curves = new BezierCurve[activeLine.lineRenderer.positionCount -1];
-
-
-                          for (int i = 0; i < Curves.Length; i++)
-                          {
-                              Curves[i] = new BezierCurve();
-                              Vector3 position = activeLine.lineRenderer.GetPosition(i);
-                              Vector3 lastPosition = i == 0 ? activeLine.lineRenderer.GetPosition(0) : activeLine.lineRenderer.GetPosition(i - 1);
-                              Vector3 nextPosition = activeLine.lineRenderer.GetPosition(i + 1);
-
-                              Vector3 lastDirection = (position - lastPosition).normalized;
-                              Vector3 nextDirection = (nextPosition - position).normalized;
-
-                              Vector3 startTangent = (lastDirection + nextDirection) * SmoothingLength;
-                              Vector3 endTangent = (nextDirection + lastDirection) * -1 * SmoothingLength;
-
-                              Handles.color = Color.green;
-                              Handles.DotHandleCap(EditorGUIUtility.GetControlID(FocusType.Passive), position + startTangent, Quaternion.identity, 0.25f, EventType.Repaint);
-
-                              if (i != 0)
-                              {
-                                  Handles.color = Color.blue;
-                                  Handles.DotHandleCap(EditorGUIUtility.GetControlID(FocusType.Passive), nextPosition + endTangent, Quaternion.identity, 0.25f, EventType.Repaint);
-                              }
-
-                              Curves[i].Points[0] = position; // Start Position (P0)
-                              Curves[i].Points[1] = position + startTangent; // Start Tangent (P1)
-                              Curves[i].Points[2] = nextPosition + endTangent; // End Tangent (P2)
-                              Curves[i].Points[3] = nextPosition; // End Position (P3)
-                          }
-
-                          // Apply look-ahead for first curve and retroactively apply the end tangent
-                          {
-                              Vector3 nextDirection = (Curves[1].EndPosition - Curves[1].StartPosition).normalized;
-                              Vector3 lastDirection = (Curves[0].EndPosition - Curves[0].StartPosition).normalized;
-
-                              Curves[0].Points[2] = Curves[0].Points[3] +
-                                  (nextDirection + lastDirection) * -1 * SmoothingLength;
-
-                              Handles.color = Color.blue;
-                              Handles.DotHandleCap(EditorGUIUtility.GetControlID(FocusType.Passive), Curves[0].Points[2], Quaternion.identity, 0.25f, EventType.Repaint);
-                          }
-
-
-                      SmoothPath();
-                      */
                     activeLine = null;
             }
 
@@ -262,22 +202,5 @@ public class LineGenerator : MonoBehaviour
             
             }   
         } }
-    }
-
-    private void SmoothPath()
-    {
-        activeLine.lineRenderer.positionCount = Curves.Length * SmoothingSections;
-        int index = 0;
-        Debug.Log(Curves);
-        for (int i = 0; i < Curves.Length; i++)
-        {
-            Vector3[] segments = Curves[i].GetSegments(SmoothingSections);
-            for (int j = 0; j < segments.Length; j++)
-            {
-                activeLine.lineRenderer.SetPosition(index, segments[j]);
-                index++;
-            }
-        }
-
     }
 }

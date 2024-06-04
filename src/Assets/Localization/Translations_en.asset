@@ -25,7 +25,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 291756725682176
-    m_Localized: How should the story start?
+    m_Localized: Who should your story be about?
     m_Metadata:
       m_Items: []
   - m_Id: 1112092086026240
@@ -55,6 +55,10 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 12243492365320192
     m_Localized: 'AI: I understand your picture as ... '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 45379017830768640
+    m_Localized: Wanda is a witch. She always...
     m_Metadata:
       m_Items: []
   references:
