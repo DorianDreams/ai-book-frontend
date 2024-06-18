@@ -903,9 +903,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   linePrefab: {fileID: 4997085351693442285, guid: e5a825fd5448ee7449958265fd99adec, type: 3}
+  Slider: {fileID: 0}
   parentCanvas: {fileID: 1269510387}
+  selectedColor: black
+  black: {fileID: 0}
+  red: {fileID: 0}
+  green: {fileID: 0}
+  blue: {fileID: 0}
+  orange: {fileID: 0}
   width: 0.1
-  tolerance: 0.1
+  SmoothingLength: 1.5
+  SmoothingSections: 2
 --- !u!4 &171383690
 Transform:
   m_ObjectHideFlags: 0
@@ -2618,12 +2626,12 @@ Light:
   serializedVersion: 10
   m_Type: 1
   m_Shape: 0
-  m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
+  m_Color: {r: 1, g: 0.81960785, b: 0.6156863, a: 1}
   m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
-  m_CookieSize: 10
+  m_CookieSize: 25.15
   m_Shadows:
     m_Type: 2
     m_Resolution: -1
@@ -2658,7 +2666,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 1
+  m_Lightmapping: 4
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
@@ -3055,11 +3063,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa53bc4ad90b3f444bfedae6967fd450, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BookCamera: {fileID: 973135150}
-  UICamera: {fileID: 963194227}
-  Display1: {fileID: 1811915867}
-  Display2: {fileID: 1269510384}
-  ShowDisplay: 1
+  DrawingMode: {fileID: 0}
+  DrawingCanvas: {fileID: 0}
+  ButtonGroup: {fileID: 0}
+  RedoButton: {fileID: 0}
+  DeleteButton: {fileID: 0}
+  SmallBrush: {fileID: 0}
+  MediumBrush: {fileID: 0}
+  LargeBrush: {fileID: 0}
+  DrawingBackground: {fileID: 0}
+  LineGeneratorPrefab: {fileID: 0}
+  SelectedButtonWidth: 1.5
+  StandardButtonWidth: 1
+  LineWidth: 0.2
 --- !u!4 &827576142
 Transform:
   m_ObjectHideFlags: 0
@@ -3087,6 +3103,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ffbd724b1be645ee82f29fcf4dd019a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bookState: 0
   sceneCamera: {fileID: 973135150}
   book: {fileID: 0}
   turnStopSpeed: 0
@@ -3095,6 +3112,60 @@ MonoBehaviour:
   bookCloseSound: {fileID: 0}
   pageTurnSound: {fileID: 0}
   pagesFlippingSound: {fileID: 0}
+  BookTitle: {fileID: 0}
+  StartingTemperature: 1
+  MaxTemperature: 2.5
+  Temperatureincrease: 0.5
+  RenderPages: {fileID: 0}
+  textP0: {fileID: 0}
+  DownArrow: {fileID: 0}
+  textP1: {fileID: 0}
+  textP1Final: {fileID: 0}
+  textP2: {fileID: 0}
+  drawPictureText:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  DownArrow2: {fileID: 0}
+  imageP2: {fileID: 0}
+  textP3: {fileID: 0}
+  textP3Final: {fileID: 0}
+  imageP4: {fileID: 0}
+  DownArrow4: {fileID: 0}
+  textP4: {fileID: 0}
+  textP5: {fileID: 0}
+  TextP5Final: {fileID: 0}
+  imageP6: {fileID: 0}
+  DownArrow6: {fileID: 0}
+  textP6: {fileID: 0}
+  BookNavigator: {fileID: 0}
+  SentenceRegeneration: {fileID: 0}
+  previousPage: {fileID: 0}
+  nextPage: {fileID: 0}
+  proposalText: {fileID: 0}
+  regenerateText: {fileID: 0}
+  finishBook: {fileID: 0}
+  turnTime: 1
+  stateAnimationTime: 1
+  Spinner: {fileID: 0}
+  FirstPageText:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  screenPosition: {x: 0, y: 0, z: 0}
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &827887175
 GameObject:
   m_ObjectHideFlags: 0
