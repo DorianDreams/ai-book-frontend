@@ -17,7 +17,13 @@ public class BookCovers : MonoBehaviour
     public Image Cover;
     public TextMeshProUGUI Text;
     public Texture RenderTexture;
-    
+
+    private void Start()
+    {
+        
+    }
+
+   
 
     void Update()
     {
@@ -25,7 +31,7 @@ public class BookCovers : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.S))
         {
             Debug.Log("S key was pressed.");
-            SaveTextureToFile(RenderTexture, "E:\\thesis\\unity\\AI-Book-Frontend\\src\\Assets\\BookCovers\\" + Metadata.Instance.storyBookId + ".jpg", 1024, 819);
+            SaveTextureToFile(RenderTexture, "E:\\thesis\\unity\\AI-Book-Frontend\\src\\Assets\\Resources\\BookCovers\\" + System.DateTime.Now.Ticks + ".jpg", 1024, 819);
         }
     }
 

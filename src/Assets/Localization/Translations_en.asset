@@ -29,24 +29,19 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1112092086026240
-    m_Localized: I love to stay at grandma's house. She always
+    m_Localized: Edgar, the elephant
     m_Metadata:
       m_Items: []
   - m_Id: 1112245215870976
-    m_Localized: Edgar the elephant loves music. He plays
+    m_Localized: Robert, the robert
     m_Metadata:
       m_Items: []
   - m_Id: 1112733231529984
-    m_Localized: Ratty lives in a dustbin. He dreams of being
+    m_Localized: Still life
     m_Metadata:
       m_Items: []
   - m_Id: 1879233131364352
     m_Localized: To continue the story, draw a picture on the pad below
-    m_Metadata:
-      m_Items: []
-  - m_Id: 11503265866760192
-    m_Localized: Inspiring! Your AI partner works on his own imagination of your
-      work ... please select your favourite picture once it is finished ...
     m_Metadata:
       m_Items: []
   - m_Id: 11607967233130496
@@ -58,7 +53,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 45379017830768640
-    m_Localized: Wanda is a witch. She always...
+    m_Localized: Wanda, the witch
     m_Metadata:
       m_Items: []
   references:

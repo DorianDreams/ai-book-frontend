@@ -39,10 +39,6 @@ MonoBehaviour:
     m_Key: DrawPicture
     m_Metadata:
       m_Items: []
-  - m_Id: 11503265866760192
-    m_Key: WaitForAI
-    m_Metadata:
-      m_Items: []
   - m_Id: 11607967233130496
     m_Key: NotSatisfied
     m_Metadata:
@@ -53,6 +49,10 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 45379017830768640
     m_Key: InitialPrompt4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 52784406493839360
+    m_Key: InfoText
     m_Metadata:
       m_Items: []
   m_Metadata:

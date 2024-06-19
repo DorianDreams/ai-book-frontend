@@ -45,8 +45,9 @@ public class DrawingScreenController : MonoBehaviour
     void Start()
     {
 
-        DrawingMode.SetActive(false);
+        DrawingMode.SetActive(true);
         EventSystem.instance.StartStory += Enable;
+        Enable();
         EventSystem.instance.SelectImage += OnPublishToBook;
         EventSystem.instance.DisableDrawingScreen += Disable;
         EventSystem.instance.EnableDrawingScreen += Enable;

@@ -2,6 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Localization.Settings;
 using UnityEngine.Localization;
+using UnityEngine.SceneManagement;
 
 public class StartSelectionController : MonoBehaviour
 {
@@ -15,12 +16,15 @@ public class StartSelectionController : MonoBehaviour
     public GameObject StartingImages;
     public GameObject InfoBox;
     public GameObject imageResultBackgrounds;
+    public GameObject ButtonGerman;
+    public GameObject ButtonEnglish;
     private GameObject[] ImageResultBackground = new GameObject[4];
 
     [Header("Localized Texts")]
     [SerializeField]
     private LocalizedString StartingText;
 
+    private bool textboxopen = false;
 
     private int _currentSelectedIndex;
 
@@ -52,25 +56,43 @@ public class StartSelectionController : MonoBehaviour
     
     public void OnShowInfoBox()
     {
+        if (!textboxopen) { 
+        textboxopen = true;
         InfoBox.SetActive(true);
         StartingImages.SetActive(false);
         LanguageSelection.SetActive(false);
+            StartingHeadline.SetActive(false);
+        }
+        else
+        {
+            InfoBox.SetActive(false);
+            StartingImages.SetActive(true);
+            StartingHeadline.SetActive(true);
+            textboxopen = false;
+        }
     }
     public void OnCloseInfoBox()
     {
         InfoBox.SetActive(false);
         StartingImages.SetActive(true);
+        StartingHeadline.SetActive(true);
+        textboxopen = false;
     }
     
     public void OnButtonEnglish()
     {
         LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[0];
         EventSystem.instance.ChangeLocaleEvent();
+        ButtonGerman.SetActive(true);
+        ButtonEnglish.SetActive(false);
     }
     public void OnButtonGerman()
     {
-        LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[1];
+        LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[1]; 
         EventSystem.instance.ChangeLocaleEvent();
+        ButtonGerman.SetActive(false);
+        ButtonEnglish.SetActive(true);
+
     }
 
     void ShowDrawingSceneStart()
@@ -107,8 +129,9 @@ public class StartSelectionController : MonoBehaviour
             Metadata.Instance.startingPrompt = random_prompt;
         }
         StartCoroutine(Request.CreateStoryBook());
-        EventSystem.instance.StartStoryEvent();
+        //EventSystem.instance.StartStoryEvent();
         EventSystem.instance.CubeBlinkEvent();
+        SceneManager.LoadScene("Playthrough");
     }
 
 

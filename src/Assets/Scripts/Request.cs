@@ -94,6 +94,32 @@ public class Request : MonoBehaviour
         }
     }
 
+    // Call Seamless for Language Translation
+    public static IEnumerator TranslateSentence(string sentence)
+    {
+        string json = "{ \"tgt_lang\":" + "\"" + "deu" + "\"," + "\"user_input\":" + "\"" + sentence + "\"" + "}";
+
+        using (UnityWebRequest request = UnityWebRequest.Post("http://127.0.0.1:8000/api/chat/translations", json, "application/json"))
+        {
+            yield return request.SendWebRequest();
+            if (request.result != UnityWebRequest.Result.Success)
+            {
+                Debug.Log(request.error);
+            }
+            else
+            {
+                Debug.Log(request.downloadHandler.text);
+                Dictionary<string, object> returnVal = JsonConvert.DeserializeObject
+                    <Dictionary<string, object>>(request.downloadHandler.text);
+
+
+                string translation = returnVal["generated_text"].ToString();
+                yield return translation;
+
+            }
+        }
+    }
+
 
 
     // Unused for now

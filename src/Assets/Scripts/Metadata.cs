@@ -52,6 +52,7 @@ public class Metadata : MonoBehaviour
         bool singleScreenVersion = true;
 
         int currentTextPage = 0;
+        DontDestroyOnLoad(this.gameObject);
 
         if (Instance == null)
         {

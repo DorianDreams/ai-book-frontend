@@ -25,30 +25,24 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 291756725682176
-    m_Localized: Wie soll die Geschichte beginnen?
+    m_Localized: Themenauswahl
     m_Metadata:
       m_Items: []
   - m_Id: 1112092086026240
-    m_Localized: "Opa ger\xE4t immer in Schwierigkeiten, wenn er ..."
+    m_Localized: Edgar, der Elefant
     m_Metadata:
       m_Items: []
   - m_Id: 1112245215870976
-    m_Localized: Edgar, der Elefant, liebt Musik. Er spielt ...
+    m_Localized: Robert, der Roboter
     m_Metadata:
       m_Items: []
   - m_Id: 1112733231529984
-    m_Localized: "Ratty lebt in einer M\xFClltonne. Er tr\xE4umt davon, ein ..."
+    m_Localized: Stillleben
     m_Metadata:
       m_Items: []
   - m_Id: 1879233131364352
     m_Localized: Um die Geschichte fortzusetzen, zeichne ein Bild auf dem unteren
       Bildschirm
-    m_Metadata:
-      m_Items: []
-  - m_Id: 11503265866760192
-    m_Localized: "Inspirierend! Ihr KI-Partner arbeitet an seiner eigenen Vorstellung
-      von Ihrem Werk .... Bitte w\xE4hlen Sie Ihr Lieblingsbild aus, sobald er fertig
-      ist ..."
     m_Metadata:
       m_Items: []
   - m_Id: 11607967233130496
@@ -60,7 +54,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 45379017830768640
-    m_Localized: dudududud
+    m_Localized: Wanda, die Hexe
     m_Metadata:
       m_Items: []
   references:
