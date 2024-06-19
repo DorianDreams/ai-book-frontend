@@ -10407,7 +10407,7 @@ MonoBehaviour:
   bookCloseSound: {fileID: 1033598316}
   pageTurnSound: {fileID: 168224543}
   pagesFlippingSound: {fileID: 1659796222}
-  BookTitle: {fileID: 0}
+  BookTitle: {fileID: 1298790967}
   StartingTemperature: 0.7
   MaxTemperature: 2
   Temperatureincrease: 0.5
@@ -10495,7 +10495,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Picture: {fileID: 1966185078}
-  Cover: {fileID: 0}
+  Cover: {fileID: 2047684433}
   Text: {fileID: 1298790969}
   RenderTexture: {fileID: 8400000, guid: 531788f4879022846b29e6c39f8cbd58, type: 2}
 --- !u!1 &827887175
@@ -15738,7 +15738,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1298790967}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -4}
+  m_LocalPosition: {x: 0, y: 0, z: -107.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -15746,8 +15746,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 248, y: 364}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: 263.2, y: 240.4}
+  m_SizeDelta: {x: 216.34, y: 191.35}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1298790969
 MonoBehaviour:
@@ -17550,6 +17550,8 @@ MonoBehaviour:
   StartingImages: {fileID: 843126910}
   InfoBox: {fileID: 1185090989}
   imageResultBackgrounds: {fileID: 1553585280}
+  ButtonGerman: {fileID: 0}
+  ButtonEnglish: {fileID: 0}
   StartingText:
     m_TableReference:
       m_TableCollectionName: GUID:e16b3b721490e7b459a81e8e4880de90
@@ -22046,7 +22048,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1966185076}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0}
+  m_LocalPosition: {x: 0, y: 0, z: -21.3}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -22054,7 +22056,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 245, y: 176}
+  m_AnchoredPosition: {x: 247.1, y: 149.5}
   m_SizeDelta: {x: 512, y: 512}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1966185078

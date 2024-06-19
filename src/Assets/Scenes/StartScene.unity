@@ -167,7 +167,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93028893e1aac8b0a9d13e7e15366c6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cursorVisible: 1
 --- !u!1 &109453115
 GameObject:
   m_ObjectHideFlags: 0
@@ -751,92 +750,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 387057707}
   m_CullTransparentMesh: 1
---- !u!1 &475673694
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 475673696}
-  - component: {fileID: 475673695}
-  - component: {fileID: 475673697}
-  m_Layer: 0
-  m_Name: LightSystem
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &475673695
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 475673694}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0839e050e8476f442a94fd5a9749c157, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  portName: COM4
-  lightOn: 0
---- !u!4 &475673696
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 475673694}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &475673697
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 475673694}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 69beb381e244f92449b8c4cf954630e9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_TrackedObjects:
-  - rid: 2381801035743625220
-  references:
-    version: 2
-    RefIds:
-    - rid: 2381801035743625220
-      type: {class: TrackedMonoBehaviourObject, ns: UnityEngine.Localization.PropertyVariants.TrackedObjects, asm: Unity.Localization}
-      data:
-        m_Target: {fileID: 475673695}
-        m_TrackedProperties:
-          items:
-          - rid: 2381801035743625221
-        m_UpdateType: 0
-        m_Changed:
-          m_PersistentCalls:
-            m_Calls: []
-    - rid: 2381801035743625221
-      type: {class: StringTrackedProperty, ns: UnityEngine.Localization.PropertyVariants.TrackedProperties, asm: Unity.Localization}
-      data:
-        m_PropertyPath: portName
-        m_VariantData:
-        - localeIdentifier:
-            m_Code: en
-          value: COM4
-        - localeIdentifier:
-            m_Code: de
-          value: COM4
 --- !u!1 &595530850
 GameObject:
   m_ObjectHideFlags: 0
@@ -5561,5 +5474,4 @@ SceneRoots:
   - {fileID: 1077491941}
   - {fileID: 109453117}
   - {fileID: 101240390}
-  - {fileID: 475673696}
   - {fileID: 1853766475}

@@ -120,6 +120,7 @@ namespace echo17.EndlessBook.Demo03
 
         private void Start()
         {
+            OnStartStory();
             previousPage.interactable = false;
             _currentTemperature = StartingTemperature;
             EventSystem.instance.RestartScene += Reset;
@@ -301,6 +302,7 @@ namespace echo17.EndlessBook.Demo03
             }
             
             EventSystem.instance.PublishNextPromptEvent(nextPrompt);
+            //if LocalizationSettings.SelectedLocale TODO
         }
 
        public IEnumerator CreateTitle(string alltext)
@@ -308,7 +310,7 @@ namespace echo17.EndlessBook.Demo03
             CoroutineWithData cd_title = new CoroutineWithData(this, Request.CreateTitle(alltext));
             yield return cd_title.coroutine;
             string title = (string)cd_title.result;
-            BookTitle.GetComponent<TextMeshPro>().text = title;
+            BookTitle.GetComponent<TextMeshProUGUI>().text = title;
             BookTitle.SetActive(true);
             Metadata.Instance.storyBook.title = title;
         }
