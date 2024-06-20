@@ -55,6 +55,58 @@ MonoBehaviour:
     m_Key: InfoText
     m_Metadata:
       m_Items: []
+  - m_Id: 52935889570938880
+    m_Key: RegenText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 52936075542183936
+    m_Key: ContinueText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 52936955683323904
+    m_Key: FinishText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 52938374700253184
+    m_Key: SignText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 52938382895923200
+    m_Key: AIText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 52938737843093504
+    m_Key: ME
+    m_Metadata:
+      m_Items: []
+  - m_Id: 52938821456543744
+    m_Key: SignTex
+    m_Metadata:
+      m_Items: []
+  - m_Id: 52972025836126208
+    m_Key: Yes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 52972051895336960
+    m_Key: No
+    m_Metadata:
+      m_Items: []
+  - m_Id: 52972461271990272
+    m_Key: MEAI
+    m_Metadata:
+      m_Items: []
+  - m_Id: 52979783893434368
+    m_Key: SignText3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 52983840259358720
+    m_Key: CompletionText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 53148306192121856
+    m_Key: InfoBox
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

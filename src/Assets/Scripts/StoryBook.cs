@@ -22,4 +22,13 @@ public class StoryBook
         this.signed_the_book = signed_the_book;
         this.drawing = new Drawing();
     }
+    public StoryBook()
+    {
+        this.title = "to be defined";
+        this.starting_sentence = "to be defined";
+        this.decision_of_authorship = "to be defined";
+        this.finished_playthrough = false;
+        this.signed_the_book = false;
+        this.drawing = new Drawing();
+    }
 }

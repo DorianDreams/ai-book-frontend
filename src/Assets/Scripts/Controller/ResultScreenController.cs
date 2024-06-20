@@ -15,7 +15,7 @@ public class ResultScreenController : MonoBehaviour
 {
     //Resulting Image for Selection
 
-    private bool _isgenerating;
+    private bool _isgenerating = false;
 
 
     public GameObject ResultScreen;
@@ -36,10 +36,9 @@ public class ResultScreenController : MonoBehaviour
 
     [Header("Localized Texts")]
     [SerializeField]
-    private LocalizedString AIUnderstandingSentence;
-    [SerializeField]
-    private LocalizedString NotSatisfiedText;
+    private LocalizedString RegenText;
 
+    public GameObject RegenTextBox;
     //Todo: interaction with book controller?
     string chapter = "chapter_1_prompt";
 
@@ -51,6 +50,8 @@ public class ResultScreenController : MonoBehaviour
     private byte[] currentScreenshot;
     private List<byte[]> imageByteList = new List<byte[]>();
     private List<Dictionary<string, object>> imageReturnVals = new List<Dictionary<string, object>>();
+
+
 
     private void Start()
     {
@@ -72,7 +73,7 @@ public class ResultScreenController : MonoBehaviour
         EventSystem.instance.SendImageToAI += OnSendImageToAI;
         
         DisableSelectionButtons();
-                
+        RegenTextBox.GetComponent<TextMeshProUGUI>().text = RegenText.GetLocalizedString();
         _numberOfImages = 0;
     }
 
@@ -103,6 +104,8 @@ public class ResultScreenController : MonoBehaviour
 
     public void OnRegenerateImages()
     {
+        DisableSelectionButtons();
+        _isgenerating = true;
         for (int i = 0; i < 4; i++)
         {
             ImageResult[i].GetComponent<Image>().sprite = null;
@@ -166,6 +169,8 @@ public class ResultScreenController : MonoBehaviour
         }
         BacktoDrawing.GetComponent<Button>().interactable = true;
         ReGenerateImages.GetComponent<Button>().interactable = true;
+        EnableSelectionButtons();
+        _isgenerating = false;
         EventSystem.instance.CubeOffEvent();
     }
 
@@ -202,6 +207,7 @@ public class ResultScreenController : MonoBehaviour
     }
 
     void OnSendImageToAI(byte[] bytes) {
+        _isgenerating = true;
         foreach (GameObject image in ImageResultBackground)
             image.SetActive(false);
         EventSystem.instance.CubeCrossfadeEvent();
@@ -218,13 +224,14 @@ public class ResultScreenController : MonoBehaviour
         
         StartCoroutine(StableDiffusionInference(bytes));
         _numberOfImages = 0;
-        EnableSelectionButtons();
+        //EnableSelectionButtons();
 
-        
+        //_isgenerating = false;
     }
 
     public void OnSelectImage(int i)
     {
+        if (!_isgenerating) {
         foreach(GameObject image in ImageResultBackground)
             image.SetActive(false);
         Debug.Log("Selecting Image");
@@ -233,7 +240,8 @@ public class ResultScreenController : MonoBehaviour
         _currentSelectedImageBytes = imageByteList[i];
         currentScreenshot = _currentSelectedImageBytes;
         ChooseImage.GetComponent<Button>().interactable = true;
-        ImageResultBackground[i].SetActive(true);
+        ImageResultBackground[i].SetActive(true); 
+        }
     }
 }
 

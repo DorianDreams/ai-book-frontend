@@ -37,6 +37,35 @@ public class EventSystem : MonoBehaviour
         }
     }
 
+    public event Action SaveCurrentCover;
+    public void SaveCurrentCoverEvent()
+    {
+        if (SaveCurrentCover != null)
+        {
+            Debug.Log("Event fired: SaveCurrentCoverEvent");
+            SaveCurrentCover();
+        }
+    }
+
+    public event Action<byte[]> ChooseCoverImage;
+    public void ChooseCoverImageEvent(byte[] image)
+    {
+        if (ChooseCoverImage != null)
+        {
+            Debug.Log("Event fired: ChooseCoverImageEvent");
+            ChooseCoverImage(image);
+        }
+    }
+    public event Action<string> ChooseCoverAuthor;
+    public void ChooseCoverAuthorEvent(string author)
+    {
+        if (ChooseCoverAuthor != null)
+        {
+            Debug.Log("Event fired: ChooseCoverAuthorEvent");
+            ChooseCoverAuthor(author);
+        }
+    }
+
     // --------------- Cube Interaction Events ---------------
     public event Action CubeOff;
     public void CubeOffEvent()

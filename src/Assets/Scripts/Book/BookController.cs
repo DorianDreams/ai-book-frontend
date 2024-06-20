@@ -14,6 +14,7 @@ namespace echo17.EndlessBook.Demo03
     using UnityEngine.UI;
     using static echo17.EndlessBook.Demo03.BookController;
     using System.Security.Policy;
+    using UnityEngine.Localization.Settings;
 
 
     /// <summary>
@@ -100,8 +101,14 @@ namespace echo17.EndlessBook.Demo03
         public Button nextPage;
         public GameObject proposalText;
         public Button regenerateText;
+        public Button publishSentence;
         public GameObject finishBook;
 
+
+        [SerializeField]
+        private LocalizedString RegenerateText;
+
+        public GameObject RegenerateTextBox;
 
 
         private bool bookFinished = false;
@@ -120,7 +127,8 @@ namespace echo17.EndlessBook.Demo03
 
         private void Start()
         {
-            OnStartStory();
+            
+            RegenerateTextBox.GetComponent<TextMeshProUGUI>().text = RegenerateText.GetLocalizedString();
             previousPage.interactable = false;
             _currentTemperature = StartingTemperature;
             EventSystem.instance.RestartScene += Reset;
@@ -180,6 +188,7 @@ namespace echo17.EndlessBook.Demo03
             };
 
             finishBook.SetActive(false);
+            OnStartStory();
         }
 
 
@@ -201,10 +210,21 @@ namespace echo17.EndlessBook.Demo03
             CoroutineWithData cd_completion = new CoroutineWithData(this, Request.GetSentenceCompletion(genImage, prompt, _currentTemperature));
             yield return cd_completion.coroutine;
             string completion = (string)cd_completion.result;
+            Locale currentSelectedLocale = LocalizationSettings.SelectedLocale;
+            ILocalesProvider availableLocales = LocalizationSettings.AvailableLocales;
+            if (currentSelectedLocale == availableLocales.GetLocale("de"))
+            {
+                CoroutineWithData translation = new CoroutineWithData(this, Request.TranslateSentence(completion));
+                yield return translation.coroutine;
+                completion = (string)translation.result;
+            }
+
+            
             proposalText.GetComponent<TextMeshProUGUI>().text = completion;
             _isGenerating = false;
             Spinner.SetActive(false);
             regenerateText.interactable = true;
+            publishSentence.interactable = true;
             previousPage.interactable = true;
             nextPage.interactable = true;
         }
@@ -216,15 +236,22 @@ namespace echo17.EndlessBook.Demo03
                 case 1:
                     textP1.SetActive(false);
                     textP1Final.GetComponent<TextMeshProUGUI>().text = proposalText.GetComponent<TextMeshProUGUI>().text;
-                    
+                    regenerateText.interactable = false;
+                    publishSentence.interactable = false;
+
+
                     break;
                 case 3:
                     textP3.SetActive(false);
                     textP3Final.GetComponent<TextMeshProUGUI>().text = proposalText.GetComponent<TextMeshProUGUI>().text;
+                    regenerateText.interactable = false;
+                    publishSentence.interactable = false;
                     break;
                 case 5:
                     textP5.SetActive(false);
                     TextP5Final.GetComponent<TextMeshProUGUI>().text = proposalText.GetComponent<TextMeshProUGUI>().text;
+                    regenerateText.interactable = false;
+                    publishSentence.interactable = false;
                     break;
             }
             
@@ -237,6 +264,7 @@ namespace echo17.EndlessBook.Demo03
             {
                 Spinner.SetActive(true);
                 regenerateText.interactable = false;
+                publishSentence.interactable = false;
                 _isGenerating = true;
                 switch (book.CurrentPageNumber)
                 {
@@ -266,8 +294,9 @@ namespace echo17.EndlessBook.Demo03
             yield return cd_nextPrompt.coroutine;
             string nextPrompt = (string)cd_nextPrompt.result;
             
-            StartCoroutine(Request.PostImageDescription(completion, Metadata.Instance.currentImgID)); //todo:logging
+            StartCoroutine(Request.PostImageDescription(completion, Metadata.Instance.currentImgID)); 
             _isGenerating = false;
+            /*
             if (Metadata.Instance.currentPrompt == "Edgar the elephant loves music. He plays")
             {
                 nextPrompt = "One day Edgar the elephant plays with a group of joyful musicians in front of";
@@ -300,9 +329,17 @@ namespace echo17.EndlessBook.Demo03
             {
                 nextPrompt = "Wanda the witch triumphs over her foe. To celebrate her victory she";
             }
+            */
+            Locale currentSelectedLocale = LocalizationSettings.SelectedLocale;
+            ILocalesProvider availableLocales = LocalizationSettings.AvailableLocales;
             
+            if (currentSelectedLocale == availableLocales.GetLocale("de"))
+            {
+                CoroutineWithData translation = new CoroutineWithData(this, Request.TranslateSentence(nextPrompt));
+                yield return translation.coroutine;
+                nextPrompt = (string)translation.result;
+            }
             EventSystem.instance.PublishNextPromptEvent(nextPrompt);
-            //if LocalizationSettings.SelectedLocale TODO
         }
 
        public IEnumerator CreateTitle(string alltext)
@@ -366,6 +403,8 @@ namespace echo17.EndlessBook.Demo03
             EventSystem.instance.DisableBookNavigatorEvent();
             EventSystem.instance.EnableOwnershipScreenEvent();
 
+            EventSystem.instance.ChooseCoverImageEvent(imageP2bytes);
+
             string alltext = textP1.GetComponent<TextMeshProUGUI>().text +
                          textP3.GetComponent<TextMeshProUGUI>().text +
                          textP5.GetComponent<TextMeshProUGUI>().text;
@@ -401,6 +440,8 @@ namespace echo17.EndlessBook.Demo03
 
         [SerializeField]
         private LocalizedString FirstPageText;
+        [SerializeField]
+        private LocalizedString ContinueText;
 
         void Awake()
         {
@@ -449,6 +490,7 @@ namespace echo17.EndlessBook.Demo03
             _isGenerating = true;
             Spinner.SetActive(true);
             regenerateText.interactable = false;
+            publishSentence.interactable = false;
             StartCoroutine(SentenceCompletions(imagebytes, Metadata.Instance.currentPrompt));
 
             // Todo: is there a way to get rid of this switch statement? Example: Prefabs for new renderpage content
@@ -514,21 +556,21 @@ namespace echo17.EndlessBook.Demo03
                     DownArrow.SetActive(true);
                     break;
                 case 1:
-                    textP2.GetComponent<TextMeshProUGUI>().text = drawPictureText.GetLocalizedString();
+                    textP2.GetComponent<TextMeshProUGUI>().text = ContinueText.GetLocalizedString();
                     
                     break;
                 case 2:
                     DownArrow2.SetActive(true);
                                         break;
                 case 3:
-                    textP4.GetComponent<TextMeshProUGUI>().text = drawPictureText.GetLocalizedString();
+                    textP4.GetComponent<TextMeshProUGUI>().text = ContinueText.GetLocalizedString();
 
                     break;
                 case 4:
                     DownArrow4.SetActive(true);
                     break;
                 case 5:
-                    textP6.GetComponent<TextMeshProUGUI>().text = drawPictureText.GetLocalizedString();
+                    textP6.GetComponent<TextMeshProUGUI>().text = ContinueText.GetLocalizedString();
                     break;
                 case 6:
                     DownArrow6.SetActive(true);

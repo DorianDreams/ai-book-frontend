@@ -14,7 +14,7 @@ public class Metadata : MonoBehaviour
     // JSON Objects
     public StoryBook storyBook;
 
-    public bool useCaptioning;
+    //public bool useCaptioning;
 
     public static Metadata Instance { get; private set; }
 
@@ -26,6 +26,7 @@ public class Metadata : MonoBehaviour
     public string currentImgID;
 
     public bool testingMode = false;
+
 
 
     public enum LLM
@@ -46,12 +47,16 @@ public class Metadata : MonoBehaviour
 
     private void Awake()
     {
-            int drawingDuration = 0;
-            string storyBookId = "";
-             
-        bool singleScreenVersion = true;
+        storyBookId = "";
+        currentPrompt = "";
+        startingPrompt = "";
+        previousPrompt = "";
+        currentImgID = "";
+        storyBook = new StoryBook();
+        currentChapter = "ch1";
+        currentTextPage = 0;
 
-        int currentTextPage = 0;
+
         DontDestroyOnLoad(this.gameObject);
 
         if (Instance == null)
@@ -69,6 +74,9 @@ public class Metadata : MonoBehaviour
     {
         EventSystem.instance.PublishMetadata += OnPublishMetadata;
         currentPrompt = "";
+        currentChapter = "ch1";
+        currentTextPage = 0;
+
     }
 
     public void OnPublishMetadata()

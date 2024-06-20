@@ -16,7 +16,8 @@ MonoBehaviour:
     m_Code: en
   m_SharedData: {fileID: 11400000, guid: e16b3b721490e7b459a81e8e4880de90, type: 2}
   m_Metadata:
-    m_Items: []
+    m_Items:
+    - rid: 6055920277720662018
   m_TableData:
   - m_Id: 10954825711616
     m_Localized: "Welcome to this collaborative drawing experience. \n\nArtificial
@@ -56,6 +57,67 @@ MonoBehaviour:
     m_Localized: Wanda, the witch
     m_Metadata:
       m_Items: []
+  - m_Id: 52935889570938880
+    m_Localized: REGENERATE
+    m_Metadata:
+      m_Items:
+      - rid: 6055920277720662018
+  - m_Id: 52936075542183936
+    m_Localized: To continue the story, draw a picture on the pad below
+    m_Metadata:
+      m_Items: []
+  - m_Id: 52936955683323904
+    m_Localized: FINISH BOOK
+    m_Metadata:
+      m_Items: []
+  - m_Id: 52938374700253184
+    m_Localized: Who should sign as the author?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 52938382895923200
+    m_Localized: AI
+    m_Metadata:
+      m_Items: []
+  - m_Id: 52938737843093504
+    m_Localized: Me
+    m_Metadata:
+      m_Items: []
+  - m_Id: 52938821456543744
+    m_Localized: Do you want to sign the book?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 52972025836126208
+    m_Localized: Yes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 52972051895336960
+    m_Localized: No
+    m_Metadata:
+      m_Items: []
+  - m_Id: 52972461271990272
+    m_Localized: Me + AI
+    m_Metadata:
+      m_Items: []
+  - m_Id: 52979783893434368
+    m_Localized: Please put down your signature
+    m_Metadata:
+      m_Items: []
+  - m_Id: 52983840259358720
+    m_Localized: 'You completed all the pages of the book. Now take your time to
+      look through your story or press "FINISH BOOK" to finish it and decide who
+      this book belongs to: You or the Ai? '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 53148306192121856
+    m_Localized: Thank you for trying out our prototype. Collaborate with Ai to write
+      and illustrate a  book. The book will be 3 pages long and you will create a
+      story based on your drawings.
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 6055920277720662018
+      type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_Entries: 00c0be3de910bc00

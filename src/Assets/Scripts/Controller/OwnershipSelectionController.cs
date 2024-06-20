@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Localization;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class OwnershipSelectionController : MonoBehaviour
@@ -31,6 +33,29 @@ public class OwnershipSelectionController : MonoBehaviour
 
     private string currentState = "choosing owner";
 
+    [SerializeField]
+    private LocalizedString SignText;
+    [SerializeField]
+    private LocalizedString SignText2;
+    [SerializeField]
+    private LocalizedString SignText3;
+    [SerializeField]
+    private LocalizedString AIText;
+    [SerializeField]
+    private LocalizedString ME;
+    [SerializeField]
+    private LocalizedString Yes;
+    [SerializeField]
+    private LocalizedString No;
+    [SerializeField]
+    private LocalizedString MEAI;
+
+    public GameObject SignTextBox;
+    public GameObject AITextBox;
+    public GameObject METext;
+    public GameObject MEAIText;
+    public GameObject YesText;
+    public GameObject NoText;
     void onButtonPressed(GameObject textBox)
     {
         foreach (GameObject tb in instantiatedTextBoxes)
@@ -40,6 +65,7 @@ public class OwnershipSelectionController : MonoBehaviour
         textBox.transform.GetChild(1).gameObject.SetActive(true);
         //string startingSentence = textBox.GetComponentInChildren<TextMeshProUGUI>().text;
         Metadata.Instance.storyBook.decision_of_authorship = textBox.name;
+        EventSystem.instance.ChooseCoverAuthorEvent(textBox.name);
     }
 
     void onButtonPressedSigning(GameObject textBox)
@@ -71,7 +97,7 @@ public class OwnershipSelectionController : MonoBehaviour
                 tb.SetActive(false);
             }
                 currentState = "signing decision";
-                Headline.GetComponent<TextMeshProUGUI>().text = "Do you want to sign the book?";
+                Headline.GetComponent<TextMeshProUGUI>().text = SignText2.GetLocalizedString();
                 foreach (GameObject tb in instantiatedSigningButtons)
                 {
                     tb.SetActive(true);
@@ -79,7 +105,11 @@ public class OwnershipSelectionController : MonoBehaviour
             } 
             else
             {
-            EventSystem.instance.PublishMetadataEvent();
+                EventSystem.instance.PublishMetadataEvent();
+                EventSystem.instance.SaveCurrentCoverEvent();
+                Metadata.Instance.currentChapter = "ch1";
+                Metadata.Instance.currentTextPage = 0;
+                SceneManager.LoadScene("StartScene");
             } 
 
         } else
@@ -93,7 +123,7 @@ public class OwnershipSelectionController : MonoBehaviour
                     tb.SetActive(false);
                 }
                 currentState = "signing";
-                Headline.GetComponent<TextMeshProUGUI>().text = "Put your signature on the screen";
+                Headline.GetComponent<TextMeshProUGUI>().text = SignText3.GetLocalizedString(); 
                 DrawingBackground.SetActive(true);
                 GameObject InstantiatedLineGenerator = Instantiate(LineGeneratorPrefab);
                 InstantiatedLineGenerator.GetComponent<LineGenerator>().parentCanvas = DrawingCanvas;
@@ -105,11 +135,19 @@ public class OwnershipSelectionController : MonoBehaviour
             else
             {
                 EventSystem.instance.PublishMetadataEvent();
+                EventSystem.instance.SaveCurrentCoverEvent();
+                Metadata.Instance.currentChapter = "ch1";
+                Metadata.Instance.currentTextPage = 0;
+                SceneManager.LoadScene("StartScene");
             }
         } else  
         if (currentState == "signing")
         {
             EventSystem.instance.PublishMetadataEvent();
+            EventSystem.instance.SaveCurrentCoverEvent();
+            Metadata.Instance.currentChapter = "ch1";
+            Metadata.Instance.currentTextPage = 0;
+            SceneManager.LoadScene("StartScene");
         }
         
         
@@ -134,6 +172,13 @@ public class OwnershipSelectionController : MonoBehaviour
         PublishButton.GetComponent<Button>().onClick.AddListener(onPublish);
 
         EventSystem.instance.EnableOwnershipScreen += Enable;
+
+        SignTextBox.GetComponent<TextMeshProUGUI>().text = SignText.GetLocalizedString();
+        AITextBox.GetComponent<TextMeshProUGUI>().text = AIText.GetLocalizedString();
+        METext.GetComponent<TextMeshProUGUI>().text = ME.GetLocalizedString();
+        MEAIText.GetComponent<TextMeshProUGUI>().text = MEAI.GetLocalizedString();
+        YesText.GetComponent<TextMeshProUGUI>().text = Yes.GetLocalizedString();
+        NoText.GetComponent<TextMeshProUGUI>().text = No.GetLocalizedString();
     }
 
     private void Enable()

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using TMPro;
 using Unity.Collections;
+using Unity.PlasticSCM.Editor.WebApi;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -15,25 +16,59 @@ public class BookCovers : MonoBehaviour
 {
     public Image Picture;
     public Image Cover;
+    public Image Spine;
     public TextMeshProUGUI Text;
+    public TextMeshProUGUI AuthorshipText;
     public Texture RenderTexture;
 
-    private void Start()
-    {
-        
-    }
-
-   
-
+    private string[] colors = { "#FFFF00", "#F59C00", "#FF00E9", "#FF0000", "#0000FF", "#743B0A", "#008000", "#5FD2CE" };
     void Update()
     {
-        
+        /*
         if (Input.GetKeyDown(KeyCode.S))
         {
             Debug.Log("S key was pressed.");
             SaveTextureToFile(RenderTexture, "E:\\thesis\\unity\\AI-Book-Frontend\\src\\Assets\\Resources\\BookCovers\\" + System.DateTime.Now.Ticks + ".jpg", 1024, 819);
+        } */
+    }
+
+    void Start()
+    {
+        EventSystem.instance.SaveCurrentCover += OnSaveCurrentCover;
+        EventSystem.instance.ChooseCoverImage += OnChooseCoverImage;
+        EventSystem.instance.ChooseCoverAuthor += OnChooseAuthorship;
+        int xcount = Random.Range(0, 8);
+        string currentColor = colors[xcount];
+        UnityEngine.Color newCol;
+        if (UnityEngine.ColorUtility.TryParseHtmlString(currentColor, out newCol))
+        {
+            Cover.GetComponent<Image>().color = newCol;
+            Spine.GetComponent<Image>().color = newCol;
         }
     }
+
+    void OnChooseAuthorship(string decision)
+    {
+        AuthorshipText.text = "By "+decision;
+    }
+    void OnSaveCurrentCover()
+    {
+        Debug.Log("Save current cover");
+        SaveTextureToFile(RenderTexture, "E:\\thesis\\unity\\AI-Book-Frontend\\src\\Assets\\Resources\\BookCovers\\" + System.DateTime.Now.Ticks + ".jpg", 1024, 819);
+    }
+
+    void OnChooseCoverImage(byte[] newcover)
+    {
+        Texture2D tex = new Texture2D(512, 512);
+        tex.LoadImage(newcover);
+        tex.Apply();
+        Picture.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f));
+    }
+
+
+
+
+
 
     public enum SaveTextureFileFormat
     {
