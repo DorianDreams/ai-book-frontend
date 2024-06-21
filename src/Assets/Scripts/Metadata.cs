@@ -27,6 +27,8 @@ public class Metadata : MonoBehaviour
 
     public bool testingMode = false;
 
+    public string consistencyPrompt;
+
 
 
     public enum LLM

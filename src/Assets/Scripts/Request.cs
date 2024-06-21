@@ -16,7 +16,7 @@ public class Request : MonoBehaviour
     {
         string json = "{\"strength" + "\":" + strength.ToString("0.0", CultureInfo.InvariantCulture) + "}";
         Debug.Log(json);
-        string prompt = Metadata.Instance.currentPrompt + caption;
+        string prompt = Metadata.Instance.consistencyPrompt + Metadata.Instance.currentPrompt + caption;
         string url = "http://127.0.0.1:8000/api/images/" + Metadata.Instance.storyBookId
                                               + "?prompt=" + prompt
                                               + "&parameters=" + json;

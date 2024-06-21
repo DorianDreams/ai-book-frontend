@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using TMPro;
 using Unity.Collections;
-using Unity.PlasticSCM.Editor.WebApi;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -22,15 +21,6 @@ public class BookCovers : MonoBehaviour
     public Texture RenderTexture;
 
     private string[] colors = { "#FFFF00", "#F59C00", "#FF00E9", "#FF0000", "#0000FF", "#743B0A", "#008000", "#5FD2CE" };
-    void Update()
-    {
-        /*
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            Debug.Log("S key was pressed.");
-            SaveTextureToFile(RenderTexture, "E:\\thesis\\unity\\AI-Book-Frontend\\src\\Assets\\Resources\\BookCovers\\" + System.DateTime.Now.Ticks + ".jpg", 1024, 819);
-        } */
-    }
 
     void Start()
     {
