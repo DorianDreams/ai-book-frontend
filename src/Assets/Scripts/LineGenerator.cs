@@ -165,7 +165,7 @@ public class LineGenerator : MonoBehaviour
     void Update()
     {
         //width = Slider.GetComponent<Slider>().value;
-        {
+        
             
             if (!drawOnImage())
             {
@@ -201,6 +201,6 @@ public class LineGenerator : MonoBehaviour
                
             
             }   
-        } }
+        } 
     }
 }

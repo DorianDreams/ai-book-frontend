@@ -104,8 +104,9 @@ public class ResultScreenController : MonoBehaviour
 
     public void OnRegenerateImages()
     {
+        Metadata.Instance.currentImgRegenerations = Metadata.Instance.currentImgRegenerations+1;
         DisableSelectionButtons();
-        _isgenerating = true;
+        _isgenerating = true; 
         for (int i = 0; i < 4; i++)
         {
             ImageResult[i].GetComponent<Image>().sprite = null;
@@ -238,7 +239,7 @@ public class ResultScreenController : MonoBehaviour
         _currentSelectedImage = ImageResult[i].GetComponent<Image>();
         selectedImageIndex = i;
         _currentSelectedImageBytes = imageByteList[i];
-        currentScreenshot = _currentSelectedImageBytes;
+        //currentScreenshot = _currentSelectedImageBytes;
         ChooseImage.GetComponent<Button>().interactable = true;
         ImageResultBackground[i].SetActive(true); 
         }
