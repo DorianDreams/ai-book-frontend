@@ -5,6 +5,13 @@ using UnityEngine;
 using UnityEngine.Localization;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Newtonsoft.Json;
+using System.Collections;
+using System.Collections.Generic;
+using Unity.VisualScripting;
+
+using UnityEngine.Networking;
+using Newtonsoft.Json;
 
 public class OwnershipSelectionController : MonoBehaviour
 {
@@ -66,10 +73,12 @@ public class OwnershipSelectionController : MonoBehaviour
         //string startingSentence = textBox.GetComponentInChildren<TextMeshProUGUI>().text;
         Metadata.Instance.storyBook.decision_of_authorship = textBox.name;
         EventSystem.instance.ChooseCoverAuthorEvent(textBox.name);
+        PublishButton.SetActive(true);
     }
 
     void onButtonPressedSigning(GameObject textBox)
     {
+        PublishButton.SetActive(true);
         foreach (GameObject tb in instantiatedSigningButtons)
         {
             tb.transform.GetChild(1).gameObject.SetActive(false);
@@ -96,6 +105,7 @@ public class OwnershipSelectionController : MonoBehaviour
             {
                 tb.SetActive(false);
             }
+            PublishButton.SetActive(false);
                 currentState = "signing decision";
                 Headline.GetComponent<TextMeshProUGUI>().text = SignText2.GetLocalizedString();
                 foreach (GameObject tb in instantiatedSigningButtons)
@@ -105,11 +115,8 @@ public class OwnershipSelectionController : MonoBehaviour
             } 
             else
             {
-                EventSystem.instance.PublishMetadataEvent();
-                EventSystem.instance.SaveCurrentCoverEvent();
-                Metadata.Instance.currentChapter = "ch1";
-                Metadata.Instance.currentTextPage = 0;
-                SceneManager.LoadScene("StartScene");
+                OnPublishMetadata();
+                
             } 
 
         } else
@@ -130,24 +137,16 @@ public class OwnershipSelectionController : MonoBehaviour
                 InstantiatedLineGenerator.GetComponent<LineGenerator>().width = LineWidth;
                 EventSystem.instance.PressColorButtonEvent(Color.black);
 
-
             }
             else
             {
-                EventSystem.instance.PublishMetadataEvent();
-                EventSystem.instance.SaveCurrentCoverEvent();
-                Metadata.Instance.currentChapter = "ch1";
-                Metadata.Instance.currentTextPage = 0;
-                SceneManager.LoadScene("StartScene");
+                OnPublishMetadata();               
             }
         } else  
         if (currentState == "signing")
         {
-            EventSystem.instance.PublishMetadataEvent();
-            EventSystem.instance.SaveCurrentCoverEvent();
-            Metadata.Instance.currentChapter = "ch1";
-            Metadata.Instance.currentTextPage = 0;
-            SceneManager.LoadScene("StartScene");
+            OnPublishMetadata();
+            
         }
         
         
@@ -156,6 +155,8 @@ public class OwnershipSelectionController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        PublishButton.SetActive(false);
+        currentState = "choosing owner";
         OwnershipSelectionScreen.SetActive(false);
         instantiatedTextBoxes.Add(SelectAIButton);
         SelectAIButton.GetComponentInChildren<Button>().onClick.AddListener(() => onButtonPressed(SelectAIButton));
@@ -187,11 +188,43 @@ public class OwnershipSelectionController : MonoBehaviour
 
     }
 
-    // Update is called once per frame
-    void Update()
+    public void OnPublishMetadata()
     {
-        
+        StartCoroutine(PutFinishedStoryBook(() =>
+        {
+            currentState= "choosing owner";
+                EventSystem.instance.SaveCurrentCoverEvent();
+                Metadata.Instance.currentChapter = "ch1";
+                Metadata.Instance.currentTextPage = 0;
+
+            SceneManager.LoadScene("StartScene");
+
+        }));
     }
+
+    IEnumerator PutFinishedStoryBook(System.Action callback)
+    {
+        Metadata.Instance.storyBook.finished_playthrough = true;
+        //string json = JsonUtility.ToJson(this.storyBook);
+        string json = JsonConvert.SerializeObject(Metadata.Instance.storyBook);
+        Debug.Log("json: " + json);
+        using (UnityWebRequest request = UnityWebRequest.Put("http://127.0.0.1:8000/api/storybooks/"+Metadata.Instance.storyBookId, json))
+        {
+            yield return request.SendWebRequest();
+            if (request.result != UnityWebRequest.Result.Success)
+            {
+                Debug.Log(request.error);
+            }
+            else
+            {
+                //Debug.Log(request.downloadHandler.text);
+                Dictionary<string, object> returnVal = JsonConvert.DeserializeObject
+                    <Dictionary<string, object>>(request.downloadHandler.text);
+            }
+            callback();
+        }
+    }
+
 
 
 }

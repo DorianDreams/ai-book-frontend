@@ -13,7 +13,7 @@ public class AddDisplay : MonoBehaviour
         if (Display.displays.Length > 1)
         {
             Display.displays[0].Activate();
-            Display.displays[0].SetRenderingResolution(1080, 1920);
+            Display.displays[0].SetRenderingResolution(1920, 1080);
 
             Display.displays[1].Activate();
             Display.displays[1].SetRenderingResolution(1920, 1080);

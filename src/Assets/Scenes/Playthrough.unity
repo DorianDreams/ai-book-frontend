@@ -1433,7 +1433,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93028893e1aac8b0a9d13e7e15366c6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cursorVisible: 1
+  cursorVisible: 0
 --- !u!1001 &107187313
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3262,7 +3262,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e0ac478efe265140a3ddee0fb15c6ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  charactersPerSecond: 20
+  charactersPerSecond: 50
   interpunctuationDelay: 0.5
   quickSkip: 1
   skipSpeedup: 5
@@ -4123,7 +4123,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e0ac478efe265140a3ddee0fb15c6ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  charactersPerSecond: 25
+  charactersPerSecond: 70
   interpunctuationDelay: 0.5
   quickSkip: 1
   skipSpeedup: 100
@@ -4598,7 +4598,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e0ac478efe265140a3ddee0fb15c6ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  charactersPerSecond: 20
+  charactersPerSecond: 50
   interpunctuationDelay: 0.5
   quickSkip: 1
   skipSpeedup: 5
@@ -6789,19 +6789,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 499177650}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 827576143}
-        m_TargetAssemblyTypeName: echo17.EndlessBook.Demo03.BookController, Assembly-CSharp
-        m_MethodName: OnFinishBook
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &499177650
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7587,7 +7575,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e0ac478efe265140a3ddee0fb15c6ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  charactersPerSecond: 25
+  charactersPerSecond: 50
   interpunctuationDelay: 0.5
   quickSkip: 1
   skipSpeedup: 10
@@ -13617,7 +13605,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e0ac478efe265140a3ddee0fb15c6ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  charactersPerSecond: 25
+  charactersPerSecond: 50
   interpunctuationDelay: 0.5
   quickSkip: 1
   skipSpeedup: 10
@@ -14100,7 +14088,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e0ac478efe265140a3ddee0fb15c6ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  charactersPerSecond: 25
+  charactersPerSecond: 50
   interpunctuationDelay: 0.5
   quickSkip: 1
   skipSpeedup: 10
@@ -14412,7 +14400,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e0ac478efe265140a3ddee0fb15c6ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  charactersPerSecond: 25
+  charactersPerSecond: 50
   interpunctuationDelay: 0.5
   quickSkip: 1
   skipSpeedup: 10
@@ -16858,7 +16846,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e0ac478efe265140a3ddee0fb15c6ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  charactersPerSecond: 25
+  charactersPerSecond: 50
   interpunctuationDelay: 0.5
   quickSkip: 1
   skipSpeedup: 10
@@ -20491,7 +20479,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e0ac478efe265140a3ddee0fb15c6ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  charactersPerSecond: 20
+  charactersPerSecond: 50
   interpunctuationDelay: 0.5
   quickSkip: 1
   skipSpeedup: 5
@@ -23995,7 +23983,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e0ac478efe265140a3ddee0fb15c6ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  charactersPerSecond: 20
+  charactersPerSecond: 50
   interpunctuationDelay: 0.5
   quickSkip: 1
   skipSpeedup: 5
@@ -25781,8 +25769,8 @@ Transform:
   m_GameObject: {fileID: 6789293285113050109}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 1.051, y: 0, z: -0.4}
+  m_LocalScale: {x: 1, y: 1, z: 0.8}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 643815615}
@@ -28758,7 +28746,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &9200950483669908924
 GameObject:
   m_ObjectHideFlags: 0

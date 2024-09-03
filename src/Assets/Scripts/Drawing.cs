@@ -23,6 +23,7 @@ public class DrawingPage
     public int strokes;
     public int points;
     public int drawingIterations;
+    public int regenerateImages;
     public float time;
     public int selected_image;
     public int regenerateText;
@@ -33,5 +34,6 @@ public class DrawingPage
         this.points = points;
         this.drawingIterations = drawingIterations;
         this.time = time;
+        this.regenerateImages = 0;
     }
 }

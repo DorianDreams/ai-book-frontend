@@ -140,8 +140,8 @@ public class StartSelectionController : MonoBehaviour
                 Metadata.Instance.currentPrompt = "Robert is a Robot. He dreams of being";
                 if (currentSelectedLocale == availableLocales.GetLocale("de"))
                 {
-                    Metadata.Instance.startingPrompt = "Robert ist ein Roboter. Er tr‰umt davon";
-                    Metadata.Instance.currentPrompt = "Robert ist ein Roboter. Er tr‰umt davon";
+                    Metadata.Instance.startingPrompt = "Robert ist ein Roboter. Er tr√§umt davon";
+                    Metadata.Instance.currentPrompt = "Robert ist ein Roboter. Er tr√§umt davon";
                 }
                 Metadata.Instance.consistencyPrompt = "A Robot named Robert";
                 break;
@@ -150,8 +150,8 @@ public class StartSelectionController : MonoBehaviour
                 Metadata.Instance.currentPrompt = "A still life, oil painting, consisting of many";
                 if (currentSelectedLocale == availableLocales.GetLocale("de"))
                 {
-                    Metadata.Instance.startingPrompt = "Ein Stillleben, ÷lgem‰lde, bestehend aus vielen";
-                    Metadata.Instance.currentPrompt = "Ein Stillleben, ÷lgem‰lde, bestehend aus vielen";
+                    Metadata.Instance.startingPrompt = "Ein Stillleben, √ñlgem√§lde, bestehend aus vielen";
+                    Metadata.Instance.currentPrompt = "Ein Stillleben, √ñlgem√§lde, bestehend aus vielen";
                 }
                 Metadata.Instance.consistencyPrompt = "Still life, oil painting";
                 break;
@@ -160,8 +160,8 @@ public class StartSelectionController : MonoBehaviour
                 Metadata.Instance.currentPrompt = "Wanda is a mighty old witch. She always wears";
                 if (currentSelectedLocale == availableLocales.GetLocale("de"))
                 {
-                    Metadata.Instance.startingPrompt = "Wanda ist eine m‰chtige alte Hexe. Sie tr‰gt immer";
-                    Metadata.Instance.currentPrompt = "Wanda ist eine m‰chtige alte Hexe. Sie tr‰gt immer";
+                    Metadata.Instance.startingPrompt = "Wanda ist eine m√§chtige alte Hexe. Sie tr√§gt immer";
+                    Metadata.Instance.currentPrompt = "Wanda ist eine m√§chtige alte Hexe. Sie tr√§gt immer";
                 }
                 Metadata.Instance.consistencyPrompt = "Wanda, old witch";
                 break;

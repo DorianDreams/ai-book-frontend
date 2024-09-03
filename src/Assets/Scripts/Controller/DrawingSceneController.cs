@@ -45,9 +45,9 @@ public class DrawingScreenController : MonoBehaviour
     void Start()
     {
 
-        DrawingMode.SetActive(true);
+        //DrawingMode.SetActive(true);
         EventSystem.instance.StartStory += Enable;
-        Enable();
+        //Enable();
         EventSystem.instance.SelectImage += OnPublishToBook;
         EventSystem.instance.DisableDrawingScreen += Disable;
         EventSystem.instance.EnableDrawingScreen += Enable;
@@ -171,11 +171,13 @@ public class DrawingScreenController : MonoBehaviour
     {
         drawingPage.selected_image = index;
         drawingPage.time = timer;
+        drawingPage.regenerateImages = Metadata.Instance.currentImgRegenerations;
         drawingPage.drawingIterations = currentIteration;
         Metadata.Instance.storyBook.drawing.drawingPages.Add(Metadata.Instance.currentChapter, drawingPage);
         timer = 0.0f;
         Disable();
         currentIteration = 0;
+        Metadata.Instance.currentImgRegenerations = 0;
     }
 
     //Code inspired by https://www.youtube.com/watch?v=d5nENoQN4Tw
@@ -207,13 +209,21 @@ public class DrawingScreenController : MonoBehaviour
         string operatingSystem = SystemInfo.operatingSystem;
         if (operatingSystem.Contains("Windows"))
         {
-            screenShot.ReadPixels(new Rect(startX, startY+170 , textWidth, textHeight), 0, 0);
+            screenShot.ReadPixels(new Rect(startX+170, startY , textWidth, textHeight), 0, 0);
 
         }
         else
         {
-            screenShot.ReadPixels(new Rect(startX, startY-170, textWidth, textHeight), 0, 0);
+            screenShot.ReadPixels(new Rect(startX+170, startY, textWidth, textHeight), 0, 0);
+            //screenShot.ReadPixels(new Rect(startY, startX+170, textHeight, textWidth), 0, 0);
+
         }
+        screenShot = Rotate(screenShot);
+        /*
+        Color32[] pixels = screenShot.GetPixels32();
+        pixels = RotateMatrix(pixels, screenShot.height);
+        screenShot.SetPixels32(pixels);*/
+
         Camera.main.targetTexture = null;
         RenderTexture.active = null;
         Destroy(rt);
@@ -229,5 +239,28 @@ public class DrawingScreenController : MonoBehaviour
         EventSystem.instance.EnableResultScreenEvent();
 
         callback(bytes);
+    }
+
+    static Color32[] RotateMatrix(Color32[] matrix, int n) {
+        Color32[] ret = new Color32[n*n];
+        for (int i =0; i < n ; i++) {
+            for (int j = 0; j < n; ++j) {
+                ret[i*n+j] = matrix[(n-j-1) * n + 1];
+            }
+        }
+        return ret;
+    }
+    private Texture2D Rotate(Texture2D image)
+    {
+        Texture2D Tex2d = new Texture2D(image.height, image.width);
+        for (int y=0; y<image.height;++y)
+        {
+            for (int x= 0; x < image.width; ++x)
+            {
+                Tex2d.SetPixel(y, image.width -1 -x, image.GetPixel(x,y));
+            }
+        }
+        Tex2d.Apply();
+        return Tex2d;
     }
 }

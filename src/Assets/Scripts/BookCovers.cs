@@ -44,7 +44,7 @@ public class BookCovers : MonoBehaviour
     void OnSaveCurrentCover()
     {
         Debug.Log("Save current cover");
-        SaveTextureToFile(RenderTexture, "E:\\thesis\\unity\\AI-Book-Frontend\\src\\Assets\\Resources\\BookCovers\\" + System.DateTime.Now.Ticks + ".jpg", 1024, 819);
+        SaveTextureToFile(RenderTexture, "/home/aidev/Documents/study/src/AI-Book-Frontend/src/Assets/Resources/BookCovers/" + System.DateTime.Now.Ticks + ".jpg", 1024, 819);
     }
 
     void OnChooseCoverImage(byte[] newcover)
