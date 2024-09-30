@@ -13,7 +13,8 @@ public class GameData : MonoBehaviour
     public string secondPrompt;
     public string thirdPrompt;
 
-
+    [SerializeField]
+    public bool test;
 
 
     private void Awake()
