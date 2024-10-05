@@ -47,7 +47,7 @@ public class Metadata : MonoBehaviour
     public int currentTextPage = 0;
     public string currentChapter = "ch1";
 
-    private void Awake()
+    private void Start()
     {
         storyBookId = "";
         currentPrompt = "";
@@ -59,8 +59,6 @@ public class Metadata : MonoBehaviour
         currentTextPage = 0;
 
 
-        DontDestroyOnLoad(this.gameObject);
-
         if (Instance == null)
         {
             Instance = this;
@@ -69,18 +67,13 @@ public class Metadata : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
-        
-    }
-    // Start is called before the first frame update
-    void Start()
-    {
         EventSystem.instance.PublishMetadata += OnPublishMetadata;
         currentPrompt = "";
         currentChapter = "ch1";
         currentTextPage = 0;
 
-    }
 
+    }
     public void OnPublishMetadata()
     {
         StartCoroutine(PutFinishedStoryBook(() =>
