@@ -139,7 +139,7 @@ namespace echo17.EndlessBook.Demo03
         public GameObject pageNumber;
 
         private List<Material> createdBookPages;
-
+        private List<string> bookTextPages;
 
          void OnEnable()
         {
@@ -174,6 +174,7 @@ namespace echo17.EndlessBook.Demo03
         {
             imageBytes = new List<byte[]>();
             createdBookPages = new List<Material>();
+            bookTextPages = new List<string>();
 
             RegenerateTextBox.GetComponent<TextMeshProUGUI>().text = RegenerateText.GetLocalizedString();
             previousPage.interactable = false;
@@ -224,6 +225,7 @@ namespace echo17.EndlessBook.Demo03
 
         public void OnPublishTextToBook()
         {
+            Debug.Log("Publish Text");
             bookPrompt.SetActive(false);
             bookText.GetComponent<TextMeshProUGUI>().text = proposalText.GetComponent<TextMeshProUGUI>().text;
             regenerateText.interactable = false;
@@ -271,9 +273,10 @@ namespace echo17.EndlessBook.Demo03
             bookImage.SetActive(false);
             bookPrompt.GetComponent<TextMeshProUGUI>().text = "";
             bookPrompt2.GetComponent<TextMeshProUGUI>().text = "";
+            bookTextPages.Add(bookText.GetComponent<TextMeshProUGUI>().text);
             bookText.GetComponent<TextMeshProUGUI>().text = "";
 
-    }
+        }
     public void GoToNextChapter()
         {
             SavePage(pageRight);
@@ -637,6 +640,16 @@ namespace echo17.EndlessBook.Demo03
             EndlessBook.StateEnum toState, int currentPageNumber)
         {
             Debug.Log("OnBookTurnToPageCompleted: State set to " + toState + ". Current Page Number = " + currentPageNumber);
+
+            _isGenerating = true;
+            StartCoroutine(CreateNextPrompt(textP1.GetComponent<TextMeshProUGUI>().text, Metadata.Instance.currentImgID));
+            _currentTemperature = StartingTemperature;
+            EventSystem.instance.EnableDrawingScreenEvent();
+            EventSystem.instance.DisableBookNavigatorEvent();
+            Metadata.Instance.storyBook.drawing.drawingPages["ch1"].regenerateText = regenerationCount; // Todo
+            regenerationCount = 0;
+
+            /*
             if (!bookFinished)
             {
                 switch (book.CurrentPageNumber)
@@ -672,7 +685,7 @@ namespace echo17.EndlessBook.Demo03
                         break;
                 }
             }
-            DebugCurrentState();
+            DebugCurrentState();*/
         }
         void DebugCurrentState()
         {
