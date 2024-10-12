@@ -16,6 +16,7 @@ namespace echo17.EndlessBook.Demo03
     using System.Security.Policy;
     using UnityEngine.Localization.Settings;
     using System.Drawing;
+    using System;
 
 
     /// <summary>
@@ -42,19 +43,6 @@ namespace echo17.EndlessBook.Demo03
         // Book and Page Control
         public GameObject sceneCamera;				// The scene camera used for ray casting
         public EndlessBook book;					// The book to control
-        public float turnStopSpeed;					// The speed to play the page turn animation when the mouse is let go
-        public bool reversePageIfNotMidway = true;  // reverse direction if not past midway point of book
-        protected BoxCollider boxCollider;			// The box collider to check for mouse motions
-        protected bool isMouseDown;					// Whether the mouse is currently down
-        protected bool turnBookPage = true;			// Keep track whether or not the book can be turned
-
-        // Audio Sources
-        protected bool audioOn = false;				// =false so that we don't get an open sound at the beginning
-        public AudioSource bookOpenSound;			// The sound to make when the book opens
-        public AudioSource bookCloseSound;			// The sound to make when the book closes
-        public AudioSource pageTurnSound;			// The sounds for each of the page components' turn
-        public AudioSource pagesFlippingSound;		// The sound to make when multiple pages are turning
-
 
         public GameObject BookTitle;
 
@@ -67,34 +55,6 @@ namespace echo17.EndlessBook.Demo03
 
 
         private List<byte[]> imageBytes;
-
-
-        [Header("Page Objects")]
-        public GameObject RenderPages;				
-        public GameObject textP0;
-        public GameObject DownArrow;            // Should be a prefab for each page
-        public GameObject textP1;
-        public GameObject textP1Final;
-        public GameObject textP2;
-        public LocalizedString drawPictureText;
-        public GameObject DownArrow2;
-        public GameObject imageP2;
-        public GameObject textP3;
-        public GameObject textP3Final;
-
-        public GameObject imageP4;
-        public GameObject DownArrow4;
-
-        private byte[] imageP4bytes;
-        public GameObject textP4;
-        public GameObject textP5;
-        public GameObject TextP5Final;
-        public GameObject imageP6;
-        public GameObject DownArrow6;
-
-        private byte[] imageP6bytes;
-        public GameObject textP6;
-
 
         [Header("Book Navigator")]
         public GameObject BookNavigator;
@@ -110,25 +70,21 @@ namespace echo17.EndlessBook.Demo03
 
         [SerializeField]
         private LocalizedString RegenerateText;
-
         public GameObject RegenerateTextBox;
-
-
-        private bool bookFinished = false;
-        private bool nextPageFive = false;
-
-        private int currentTextGenPage = 1;
-
-        private int nextBookPage = 0;
-
         public float turnTime = 1f;
         public float stateAnimationTime = 1f;
-
         public GameObject Spinner;
+        [SerializeField]
+        private LocalizedString FirstPageText;
+        [SerializeField]
+        private LocalizedString ContinueText;
+
+        public Vector3 screenPosition;
 
 
 
-        // Refactoring
+
+        [Header("Book Pages")]
         public RenderTexture pageLeft;
         public RenderTexture pageRight;
         public GameObject arrow;
@@ -136,25 +92,78 @@ namespace echo17.EndlessBook.Demo03
         public GameObject bookPrompt;
         public GameObject bookPrompt2;
         public GameObject bookText;
-        public GameObject pageNumber;
+        public GameObject pageNumberRight;
+        public GameObject pageNumberLeft;
 
         private List<Material> createdBookPages;
         private List<string> bookTextPages;
 
-         void OnEnable()
+
+        //Typewriter in Book
+        [Header("Typewriter Settings")]
+        [SerializeField] private float charactersPerSecond = 20;
+        [SerializeField] private float interpunctuationDelay = 0.5f;
+        [SerializeField][Range(0.1f, 0.5f)] private float sendDoneDelay = 0.25f;
+        public event Action CompleteTextRevealed;
+        public event Action<char> CharacterRevealed;
+        private TMP_Text _textBox;
+        private int _currentVisibleCharacterIndex;
+        private WaitForSeconds _simpleDelay;
+        private WaitForSeconds _interpunctuationDelay;
+        private WaitForSeconds _textboxFullEventDelay;
+
+
+
+        public enum PageFocus
         {
-            bookPrompt.GetComponent<TypewriterEffect>().CompleteTextRevealed += () => OnCompleteTextRevealedLeftPage();
-            bookPrompt2.GetComponent<TypewriterEffect>().CompleteTextRevealed += () => OnCompleteTextRevealedRightPage();
-            bookText.GetComponent<TypewriterEffect>().CompleteTextRevealed += () => GoToNextChapter();
-            StartStory = (EndlessBook.StateEnum fromState,
-                                    EndlessBook.StateEnum toState,
-                                    int pageNumber) =>
-            {
-                bookPrompt.GetComponent<TextMeshProUGUI>().text = Metadata.Instance.currentPrompt + "...";
-                bookState = BookState.Chapter1;
-            };
+            leftPage,
+            rightPage,
+            finishChapter
+        }
+        public PageFocus current = PageFocus.leftPage;
+
+        void OnEnable()
+        {
+            CompleteTextRevealed += () => OnCompleteTextRevealed();
+            StartStory = (EndlessBook.StateEnum fromState,EndlessBook.StateEnum toState, int pageNumber)
+             =>
+                    {
+                        bookPrompt.GetComponent<TextMeshProUGUI>().text = Metadata.Instance.currentPrompt + "...";
+                        bookState = BookState.Chapter1;
+
+                        PrepareForNewText(bookPrompt);
+                    };
             book.SetState(EndlessBook.StateEnum.OpenMiddle, onCompleted: StartStory);
             Debug.Log("Enable Book");
+
+            //Initialize Typewriter
+            _simpleDelay = new WaitForSeconds(1 / charactersPerSecond);
+            _interpunctuationDelay = new WaitForSeconds(interpunctuationDelay);
+            _textboxFullEventDelay = new WaitForSeconds(sendDoneDelay);
+
+        }
+
+        void OnCompleteTextRevealed()
+        {
+            Debug.Log("Complete Text revealed");
+            if (current == PageFocus.leftPage)
+            {
+                bookPrompt2.SetActive(true);
+                bookPrompt2.GetComponent<TextMeshProUGUI>().text = ContinueText.GetLocalizedString();
+                PrepareForNewText(bookPrompt2);
+                current = PageFocus.rightPage;
+            }
+            else if (current == PageFocus.rightPage) 
+            {
+                arrow.SetActive(true);
+                EventSystem.instance.EnableDrawingScreenEvent();
+                current = PageFocus.finishChapter;
+            } else
+            {
+                GoToNextChapter();
+                current = PageFocus.leftPage;
+            }
+        
         }
 
         void OnCompleteTextRevealedLeftPage()
@@ -179,19 +188,6 @@ namespace echo17.EndlessBook.Demo03
             RegenerateTextBox.GetComponent<TextMeshProUGUI>().text = RegenerateText.GetLocalizedString();
             previousPage.interactable = false;
             _currentTemperature = StartingTemperature;
-            EventSystem.instance.RestartScene += Reset;
-
-            //textP0.GetComponent<TypewriterEffect>().CompleteTextRevealed += () => OnCompleteTextRevealed(0);
-            //textP1.GetComponent<TypewriterEffect>().CompleteTextRevealed += () => OnCompleteTextRevealed(1);
-            //textP2.GetComponent<TypewriterEffect>().CompleteTextRevealed += () => OnCompleteTextRevealed(2);
-            //textP3.GetComponent<TypewriterEffect>().CompleteTextRevealed += () => OnCompleteTextRevealed(3);
-            //textP4.GetComponent<TypewriterEffect>().CompleteTextRevealed += () => OnCompleteTextRevealed(4);
-            textP5.GetComponent<TypewriterEffect>().CompleteTextRevealed += () => OnCompleteTextRevealed(5);
-            textP6.GetComponent<TypewriterEffect>().CompleteTextRevealed += () => OnCompleteTextRevealed(6);
-
-            //textP1Final.GetComponent<TypewriterEffect>().CompleteTextRevealed += () => OnCompleteTextRevealed(10);
-            textP3Final.GetComponent<TypewriterEffect>().CompleteTextRevealed += () => OnCompleteTextRevealed(30);
-            TextP5Final.GetComponent<TypewriterEffect>().CompleteTextRevealed += () => OnCompleteTextRevealed(50);
 
 
             EventSystem.instance.StartStory += OnStartStory;
@@ -213,6 +209,51 @@ namespace echo17.EndlessBook.Demo03
 
         }
 
+        private void PrepareForNewText(GameObject obj)
+        {
+            _textBox = obj.GetComponent<TMP_Text>();
+            _textBox.ForceMeshUpdate();
+            _textBox.maxVisibleCharacters = 0;
+            _currentVisibleCharacterIndex = 0;
+            TMP_TextInfo textInfo = _textBox.textInfo;
+            StartCoroutine(Typewriter(_textBox));
+        }
+
+        private IEnumerator Typewriter(TMP_Text _textBox)
+        {
+            TMP_TextInfo textInfo = _textBox.textInfo;
+
+            while (_currentVisibleCharacterIndex < textInfo.characterCount + 1)
+            {
+                var lastCharacterIndex = textInfo.characterCount - 1;
+
+                if (_currentVisibleCharacterIndex >= lastCharacterIndex)
+                {
+                    _textBox.maxVisibleCharacters++;
+                    yield return _textboxFullEventDelay;
+                    CompleteTextRevealed?.Invoke();
+                    yield break;
+                }
+
+                char character = textInfo.characterInfo[_currentVisibleCharacterIndex].character;
+
+                _textBox.maxVisibleCharacters++;
+
+                if (
+                    (character == '?' || character == '.' || character == ',' || character == ':' ||
+                     character == ';' || character == '!' || character == '-'))
+                {
+                    yield return _interpunctuationDelay;
+                }
+                else
+                {
+                    yield return _simpleDelay;
+                }
+
+                CharacterRevealed?.Invoke(character);
+                _currentVisibleCharacterIndex++;
+            }
+        }
 
 
         void OnStartStory()
@@ -228,32 +269,12 @@ namespace echo17.EndlessBook.Demo03
             Debug.Log("Publish Text");
             bookPrompt.SetActive(false);
             bookText.GetComponent<TextMeshProUGUI>().text = proposalText.GetComponent<TextMeshProUGUI>().text;
+            PrepareForNewText(bookText);
+
             regenerateText.interactable = false;
             publishSentence.interactable = false;
             proposalText.GetComponent<TextMeshProUGUI>().text = "";
-            /*
-            switch (book.CurrentPageNumber)
-            {
-                case 1:
-                    textP1.SetActive(false);
-                    textP1Final.GetComponent<TextMeshProUGUI>().text = proposalText.GetComponent<TextMeshProUGUI>().text;
-                    regenerateText.interactable = false;
-                    publishSentence.interactable = false;
 
-                    break;
-                case 3:
-                    textP3.SetActive(false);
-                    textP3Final.GetComponent<TextMeshProUGUI>().text = proposalText.GetComponent<TextMeshProUGUI>().text;
-                    regenerateText.interactable = false;
-                    publishSentence.interactable = false;
-                    break;
-                case 5:
-                    textP5.SetActive(false);
-                    TextP5Final.GetComponent<TextMeshProUGUI>().text = proposalText.GetComponent<TextMeshProUGUI>().text;
-                    regenerateText.interactable = false;
-                    publishSentence.interactable = false;
-                    break;
-            }*/
         }
 
         private void SavePage(RenderTexture render)
@@ -279,9 +300,6 @@ namespace echo17.EndlessBook.Demo03
         }
     public void GoToNextChapter()
         {
-            SavePage(pageRight);
-            SavePage(pageLeft);
-            ClearPages();
 
             SentenceRegeneration.SetActive(false);
             EventSystem.instance.CubeWaveRightEvent();
@@ -292,10 +310,13 @@ namespace echo17.EndlessBook.Demo03
             } 
             else
             {
+                SavePage(pageRight);
+                SavePage(pageLeft);
+                ClearPages();
+                pageNumberRight.GetComponent<TextMeshProUGUI>().text = (book.CurrentPageNumber +3).ToString();
+                pageNumberLeft.GetComponent<TextMeshProUGUI>().text = (book.CurrentPageNumber + 2).ToString();
                 book.TurnForward(turnTime,
-                            onCompleted: OnBookTurnToPageCompleted,
-                            onPageTurnStart: OnPageTurnStart,
-                            onPageTurnEnd: OnPageTurnEnd);
+                            onCompleted: OnBookTurnToPageCompleted);
             }
         }
 
@@ -433,20 +454,16 @@ namespace echo17.EndlessBook.Demo03
         {
             Metadata.Instance.storyBook.drawing.drawingPages["ch3"].regenerateText = regenerationCount;
             regenerationCount = 0;
-
-
-            StartCoroutine(Request.PostImageDescription(textP5.GetComponent<TextMeshProUGUI>().text, Metadata.Instance.currentImgID));
-
-
+            StartCoroutine(Request.PostImageDescription(bookText.GetComponent<TextMeshProUGUI>().text, Metadata.Instance.currentImgID));
+            
             book.SetState(EndlessBook.StateEnum.ClosedFront);
             EventSystem.instance.DisableBookNavigatorEvent();
             EventSystem.instance.EnableOwnershipScreenEvent();
 
             EventSystem.instance.ChooseCoverImageEvent(imageBytes[0]);
 
-            string alltext = textP1.GetComponent<TextMeshProUGUI>().text +
-                         textP3.GetComponent<TextMeshProUGUI>().text +
-                         textP5.GetComponent<TextMeshProUGUI>().text;
+            string alltext = string.Concat(bookTextPages.ToArray());
+
 
             var sb = new StringBuilder(alltext.Length);
 
@@ -466,33 +483,6 @@ namespace echo17.EndlessBook.Demo03
         }
 
 
-        protected virtual void OnPageTurnStart(Page page, int pageNumberFront, int pageNumberBack, int pageNumberFirstVisible, int pageNumberLastVisible, Page.TurnDirectionEnum turnDirection)
-        {
-            Debug.Log("OnPageTurnStart: front [" + pageNumberFront + "] back [" + pageNumberBack + "] fv [" + pageNumberFirstVisible + "] lv [" + pageNumberLastVisible + "] dir [" + turnDirection + "]");
-        }
-        
-        protected virtual void OnPageTurnEnd(Page page, int pageNumberFront, int pageNumberBack, int pageNumberFirstVisible, int pageNumberLastVisible, Page.TurnDirectionEnum turnDirection)
-        {
-            Debug.Log("OnPageTurnEnd: front [" + pageNumberFront + "] back [" + pageNumberBack + "] fv [" + pageNumberFirstVisible + "] lv [" + pageNumberLastVisible + "] dir [" + turnDirection + "]");
-        }
-
-
-        [SerializeField]
-        private LocalizedString FirstPageText;
-        [SerializeField]
-        private LocalizedString ContinueText;
-
-        void Awake()
-        {
-            // cache the box collider for faster referencing
-            boxCollider = gameObject.GetComponent<BoxCollider>();
-            Debug.Log(boxCollider);
-
-        }
-
-        public Vector3 screenPosition;
-
-
 
 
 
@@ -508,18 +498,7 @@ namespace echo17.EndlessBook.Demo03
 
         void OnChangeLocale()
         {
-            textP0.GetComponent<TextMeshProUGUI>().text = FirstPageText.GetLocalizedString();
-        }
-
-        public void Reset()
-        {
-            StartCoroutine(RestartInThree());
-        }
-
-        IEnumerator RestartInThree()
-        {
-            yield return new WaitForSeconds(3);
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name, LoadSceneMode.Single);
+            bookPrompt.GetComponent<TextMeshProUGUI>().text = FirstPageText.GetLocalizedString();
         }
 
         void OnSelectImage(Sprite sprite, int index, byte[] imagebytes)
@@ -539,101 +518,25 @@ namespace echo17.EndlessBook.Demo03
             bookPrompt2.SetActive(false);
             bookImage.GetComponent<Image>().sprite = sprite;
             bookImage.SetActive(true);
-            DownArrow2.SetActive(false);
-
-
-            //Todo: Screenshot aufnehmen -> neues Material und als PageData abspeichern
-            // Todo: is there a way to get rid of this switch statement? Example: Prefabs for new renderpage content
-            // Todo: switch this to work with book state system
-            /*switch (book.CurrentPageNumber)
-            {
-                case 1:           
-                    textP2.SetActive(false);
-                    imageP2bytes = imagebytes;
-                    imageP2.GetComponent<Image>().sprite = sprite;
-                    imageP2.SetActive(true);
-                    DownArrow2.SetActive(false);
-                    break;
-                case 3:
-                    textP4.SetActive(false);
-                    imageP4bytes = imagebytes;
-                    imageP4.GetComponent<Image>().sprite = sprite;
-                    imageP4.SetActive(true);
-                    DownArrow4.SetActive(false);
-                    break;
-                case 5:
-                    textP6.SetActive(false);
-                    imageP6bytes = imagebytes;
-                    imageP6.GetComponent<Image>().sprite = sprite;
-                    imageP6.SetActive(true);
-                    finishBook.SetActive(true);
-                    DownArrow6.SetActive(false);
-                    break;
-            }*/
+            arrow.SetActive(false);
         }
 
 
         void OnPublishNextPrompt(string prompt)
         {
-            switch (book.CurrentPageNumber)
+            if (book.CurrentPageNumber == 3)
             {
-                case 3:
-                    Metadata.Instance.currentChapter = "ch2";
-                    textP3.GetComponent<TextMeshProUGUI>().text = prompt + "...";
-                    Metadata.Instance.previousPrompt = Metadata.Instance.startingPrompt;
-                    Metadata.Instance.currentPrompt = prompt;
-                    turnBookPage = true;
-                    nextPageFive = true;
-                    break;
-                case 5:
-                    Metadata.Instance.currentChapter = "ch3";
-                    textP5.GetComponent<TextMeshProUGUI>().text = prompt + "...";
-                    Metadata.Instance.previousPrompt = Metadata.Instance.currentPrompt;
-                    Metadata.Instance.currentPrompt = prompt;
-                    
-                    break;
-
-            }
-        }
-
-        void OnCompleteTextRevealed(int c)
-        {
-            Debug.Log("OnCompleteTextRevealed");
-            switch (c)
+                Metadata.Instance.currentChapter = "ch2";
+            } else if (book.CurrentPageNumber == 5)
             {
-                case 0:
-                    DownArrow.SetActive(true);
-                    break;
-                case 1:
-                    textP2.GetComponent<TextMeshProUGUI>().text = ContinueText.GetLocalizedString();
-                    
-                    break;
-                case 2:
-                    DownArrow2.SetActive(true);
-                                        break;
-                case 3:
-                    textP4.GetComponent<TextMeshProUGUI>().text = ContinueText.GetLocalizedString();
-
-                    break;
-                case 4:
-                    DownArrow4.SetActive(true);
-                    break;
-                case 5:
-                    textP6.GetComponent<TextMeshProUGUI>().text = ContinueText.GetLocalizedString();
-                    break;
-                case 6:
-                    DownArrow6.SetActive(true);
-                    break;
-                case 10:
-                    GoToNextChapter();
-                    break;
-                case 30:
-                    GoToNextChapter();
-                    break;
-                case 50:
-                    GoToNextChapter();
-                    break;
+                Metadata.Instance.currentChapter = "ch3";
             }
+            bookPrompt.GetComponent<TextMeshProUGUI>().text = prompt + "...";
+            Metadata.Instance.previousPrompt = Metadata.Instance.startingPrompt;
+            Metadata.Instance.currentPrompt = prompt;
+            bookPrompt.SetActive(true);
+            PrepareForNewText(bookPrompt);
+            
         }
 
         protected virtual void OnBookTurnToPageCompleted(EndlessBook.StateEnum fromState, 
@@ -642,51 +545,13 @@ namespace echo17.EndlessBook.Demo03
             Debug.Log("OnBookTurnToPageCompleted: State set to " + toState + ". Current Page Number = " + currentPageNumber);
 
             _isGenerating = true;
-            StartCoroutine(CreateNextPrompt(textP1.GetComponent<TextMeshProUGUI>().text, Metadata.Instance.currentImgID));
+            StartCoroutine(CreateNextPrompt("", Metadata.Instance.currentImgID));
             _currentTemperature = StartingTemperature;
-            EventSystem.instance.EnableDrawingScreenEvent();
             EventSystem.instance.DisableBookNavigatorEvent();
-            Metadata.Instance.storyBook.drawing.drawingPages["ch1"].regenerateText = regenerationCount; // Todo
+            //Metadata.Instance.storyBook.drawing.drawingPages["ch1"].regenerateText = regenerationCount; // Todo
             regenerationCount = 0;
-
-            /*
-            if (!bookFinished)
-            {
-                switch (book.CurrentPageNumber)
-                {
-                    case 3:
-                        if (nextBookPage != 5)
-                        {
-                            bookState = BookState.Chapter2;
-                            _isGenerating = true;
-                            StartCoroutine(CreateNextPrompt(textP1.GetComponent<TextMeshProUGUI>().text, Metadata.Instance.currentImgID));
-                            _currentTemperature = StartingTemperature;
-                            EventSystem.instance.EnableDrawingScreenEvent();
-                            EventSystem.instance.DisableBookNavigatorEvent();
-                            nextBookPage = 5;
-                            Metadata.Instance.storyBook.drawing.drawingPages["ch1"].regenerateText = regenerationCount;
-                            regenerationCount = 0;
-                        }
-                        break;
-
-                    case 5:
-                        if (nextBookPage == 5)
-                        {
-                            bookState = BookState.Chapter3;
-                            _isGenerating = true;
-                            StartCoroutine(CreateNextPrompt(textP3.GetComponent<TextMeshProUGUI>().text, Metadata.Instance.currentImgID));
-                            _currentTemperature = StartingTemperature;
-                            EventSystem.instance.EnableDrawingScreenEvent();
-                            EventSystem.instance.DisableBookNavigatorEvent();
-                            bookFinished = true;
-                            Metadata.Instance.storyBook.drawing.drawingPages["ch2"].regenerateText = regenerationCount;
-                            regenerationCount = 0;
-                        }
-                        break;
-                }
-            }
-            DebugCurrentState();*/
         }
+
         void DebugCurrentState()
         {
             Debug.Log("CurrentState: " + book.CurrentState);

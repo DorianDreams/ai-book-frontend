@@ -28,7 +28,8 @@ public class Main : MonoBehaviour
         EventSystem.instance.EnableDrawingScreen += OnEnableDrawingScreen;
         EventSystem.instance.EnableResultScreen += OnEnableResultScreen;
         EventSystem.instance.DisableResultScreen += OnDisableResultScreen;
-
+        EventSystem.instance.EnableOwnershipScreen += OnEnableOwnsershipScreen;
+        EventSystem.instance.FinishPlaythrough += OnFinishPlaythrough;
         bookCovers.SetActive(true);
         draw.SetActive(false);
         result.SetActive(false);
@@ -37,6 +38,7 @@ public class Main : MonoBehaviour
         ownership.SetActive(false);
         book.SetActive(false);
         overlay.SetActive(false);
+        escapeButton.SetActive(false);
     }
 
     public void OnEnableResultScreen()
@@ -53,11 +55,17 @@ public class Main : MonoBehaviour
     {
         bookCovers.SetActive(false);
         book.SetActive(true);
+        escapeButton.SetActive(true);
     }
 
     public void OnEnableDrawingScreen()
     {
         draw.SetActive(true);
+    }
+
+    public void OnEnableOwnsershipScreen()
+    {
+        ownership.SetActive(true);
     }
 
     public void onEscape()
@@ -83,7 +91,7 @@ public class Main : MonoBehaviour
         SceneManager.LoadScene("Playthrough");
     }
 
-    void Finish()
+    void OnFinishPlaythrough()
     {
         EventSystem.instance.PublishMetadataEvent();
         EventSystem.instance.SaveCurrentCoverEvent();

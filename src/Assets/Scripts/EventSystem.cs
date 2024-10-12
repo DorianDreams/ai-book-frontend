@@ -150,6 +150,26 @@ public class EventSystem : MonoBehaviour
 
 
     // --------------- Gameplay Events ---------------
+    public event Action FinishPlaythrough;
+    public void FinishPlaythroughEvent()
+    {
+        if (FinishPlaythrough != null)
+        {
+            Debug.Log("Event fired: FinishPlaythroughEvent");
+            FinishPlaythrough();
+        }
+    }
+
+    public event Action CleanLineGenerator;
+    public void CleanLineGeneratorEvent()
+    {
+        if (CleanLineGenerator != null)
+        {
+            Debug.Log("Event fired: CleanLineGeneratorEvent");
+            CleanLineGenerator();
+        }
+    }
+
     public event Action<byte[]> ChooseCoverImage;
     public void ChooseCoverImageEvent(byte[] image)    {
         if (ChooseCoverImage != null)

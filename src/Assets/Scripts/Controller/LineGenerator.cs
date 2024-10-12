@@ -18,7 +18,7 @@ public class LineGenerator : MonoBehaviour
 
     private UnityEngine.Color color;
     private Material material;
-    public Material black, red, green, blue, orange;
+   // public Material black, red, green, blue, orange;
 
 
     List<GameObject> Lines = new List<GameObject>();

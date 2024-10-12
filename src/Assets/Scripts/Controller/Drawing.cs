@@ -49,6 +49,7 @@ public class DrawingScreenController : MonoBehaviour
         EventSystem.instance.DisableDrawingScreen += Disable;
         EventSystem.instance.PauseDrawing += PauseDrawing;
         EventSystem.instance.ContinueDrawing += ContinueDrawing;
+        EventSystem.instance.CleanLineGenerator += DestroyLineGenerator;
 
         foreach (Button button in ButtonGroup.GetComponentsInChildren<Button>())
         {
@@ -87,6 +88,10 @@ public class DrawingScreenController : MonoBehaviour
         EventSystem.instance.HideLinesEvent();
     }
 
+    private void DestroyLineGenerator()
+    {
+        Destroy(InstantiatedLineGenerator);
+    }
 
     private void ContinueDrawing()
     {

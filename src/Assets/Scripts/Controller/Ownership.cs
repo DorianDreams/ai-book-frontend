@@ -27,7 +27,7 @@ public class OwnershipSelectionController : MonoBehaviour
     public GameObject DrawingBackground;
 
     [SerializeField]
-    float LineWidth = 1f;
+    float LineWidth = 0.2f;
 
     public Canvas DrawingCanvas;
 
@@ -90,8 +90,6 @@ public class OwnershipSelectionController : MonoBehaviour
     {
         if (currentState== "choosing owner") {
         string authorship = Metadata.Instance.storyBook.decision_of_authorship;
-            if (authorship == "Me" || authorship == "Me+AI")
-            {
             foreach (GameObject tb in instantiatedTextBoxes)
             {
                 tb.SetActive(false);
@@ -102,11 +100,6 @@ public class OwnershipSelectionController : MonoBehaviour
                 {
                     tb.SetActive(true);
                 }
-            } 
-            else
-            {
-                Restart();
-            }
 
         } else
         if (currentState == "signing decision")
@@ -125,7 +118,6 @@ public class OwnershipSelectionController : MonoBehaviour
                 InstantiatedLineGenerator.GetComponent<LineGenerator>().parentCanvas = DrawingCanvas;
                 InstantiatedLineGenerator.GetComponent<LineGenerator>().width = LineWidth;
                 EventSystem.instance.PressColorButtonEvent(Color.black);
-
 
             }
             else
@@ -155,7 +147,7 @@ public class OwnershipSelectionController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        OwnershipSelectionScreen.SetActive(false);
+        EventSystem.instance.CleanLineGeneratorEvent();
         instantiatedTextBoxes.Add(SelectAIButton);
         SelectAIButton.GetComponentInChildren<Button>().onClick.AddListener(() => onButtonPressed(SelectAIButton));
         instantiatedTextBoxes.Add(SelectMeButton);
@@ -169,9 +161,6 @@ public class OwnershipSelectionController : MonoBehaviour
         NoButton.GetComponentInChildren<Button>().onClick.AddListener(() => onButtonPressedSigning(NoButton));
 
         PublishButton.GetComponent<Button>().onClick.AddListener(onPublish);
-
-        EventSystem.instance.EnableOwnershipScreen += Enable;
-
         SignTextBox.GetComponent<TextMeshProUGUI>().text = SignText.GetLocalizedString();
         AITextBox.GetComponent<TextMeshProUGUI>().text = AIText.GetLocalizedString();
         METext.GetComponent<TextMeshProUGUI>().text = ME.GetLocalizedString();
@@ -180,17 +169,6 @@ public class OwnershipSelectionController : MonoBehaviour
         NoText.GetComponent<TextMeshProUGUI>().text = No.GetLocalizedString();
     }
 
-    private void Enable()
-    {
-        OwnershipSelectionScreen.SetActive(true);
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
 
 }
