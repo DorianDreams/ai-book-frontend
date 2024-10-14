@@ -13,17 +13,18 @@ using Image = UnityEngine.UI.Image;
 // Based on ScreenRendering: https://docs.unity3d.com/ScriptReference/Texture2D.ReadPixels.html
 public class BookCovers : MonoBehaviour
 {
-    public Image Picture;
-    public Image Cover;
-    public Image Spine;
-    public TextMeshProUGUI Text;
-    public TextMeshProUGUI AuthorshipText;
-    public Texture RenderTexture;
+    public GameObject picture;
+    public Image cover;
+    public Image spine;
+    public TextMeshProUGUI text;
+    public TextMeshProUGUI authorshipText;
+    public Texture renderTexture;
 
     private string[] colors = { "#FFFF00", "#F59C00", "#FF00E9", "#FF0000", "#0000FF", "#743B0A", "#008000", "#5FD2CE" };
 
     void Start()
     {
+        picture.SetActive(false);
         EventSystem.instance.SaveCurrentCover += OnSaveCurrentCover;
         EventSystem.instance.ChooseCoverImage += OnChooseCoverImage;
         EventSystem.instance.ChooseCoverAuthor += OnChooseAuthorship;
@@ -32,27 +33,29 @@ public class BookCovers : MonoBehaviour
         UnityEngine.Color newCol;
         if (UnityEngine.ColorUtility.TryParseHtmlString(currentColor, out newCol))
         {
-            Cover.GetComponent<Image>().color = newCol;
-            Spine.GetComponent<Image>().color = newCol;
+            cover.GetComponent<Image>().color = newCol;
+            spine.GetComponent<Image>().color = newCol;
         }
     }
 
     void OnChooseAuthorship(string decision)
     {
-        AuthorshipText.text = "By "+decision;
+        authorshipText.text = "By "+decision;
     }
     void OnSaveCurrentCover()
     {
-        Debug.Log("Save current cover");
-        SaveTextureToFile(RenderTexture, "E:\\thesis\\unity\\AI-Book-Frontend\\src\\Assets\\Resources\\BookCovers\\" + System.DateTime.Now.Ticks + ".jpg", 1024, 819);
+        Debug.Log("Save current cover");    
+
+        SaveTextureToFile(renderTexture, "E:\\thesis\\unity\\AI-Book-Frontend\\src\\Assets\\Resources\\BookCovers\\" + System.DateTime.Now.Ticks + ".jpg", 1024, 819);
     }
 
     void OnChooseCoverImage(byte[] newcover)
     {
+        picture.SetActive(true);
         Texture2D tex = new Texture2D(512, 512);
         tex.LoadImage(newcover);
         tex.Apply();
-        Picture.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f));
+        picture.GetComponent<Image>().sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f));
     }
 
 

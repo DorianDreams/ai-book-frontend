@@ -10,9 +10,6 @@ public class StartSelectionController : MonoBehaviour
 {
     private int initialPrompts = 3;
 
-
-
-    public GameObject Textboxes;
     // Starting Sentence Selection Screen GameObjects
     [Header("Starting Screen Objects")]
     public GameObject StartingScreen;
@@ -179,7 +176,6 @@ public class StartSelectionController : MonoBehaviour
                 Metadata.Instance.consistencyPrompt = "Wanda, old witch";
                 break;
         }
-        Metadata.Instance.currentTextPage = 1;
         if (Metadata.Instance.currentPrompt == "")
         {
             Debug.Log("Get Random Prompt");

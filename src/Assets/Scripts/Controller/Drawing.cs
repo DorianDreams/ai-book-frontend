@@ -18,8 +18,6 @@ public class DrawingScreenController : MonoBehaviour
     public GameObject DrawingMode;
     public Canvas DrawingCanvas;
     public GameObject ButtonGroup;
-    public GameObject RedoButton;
-    public GameObject DeleteButton;
 
     public GameObject SmallBrush;
     public GameObject MediumBrush;

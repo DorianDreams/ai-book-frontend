@@ -21,13 +21,13 @@ public class Metadata : MonoBehaviour
     public string storyBookId;
     public string currentPrompt;
     public string startingPrompt;
-    public string previousPrompt;
-
     public string currentImgID;
 
     public bool testingMode = false;
 
     public string consistencyPrompt;
+
+    public string currentChapter = "ch1";
 
 
 
@@ -41,22 +41,14 @@ public class Metadata : MonoBehaviour
     public LLM currentLLM;
 
 
-
-    // Metadata used for State Management: Todo: Move to StateManager
-    public static bool singleScreenVersion = true;
-    public int currentTextPage = 0;
-    public string currentChapter = "ch1";
-
     private void Start()
     {
         storyBookId = "";
         currentPrompt = "";
         startingPrompt = "";
-        previousPrompt = "";
         currentImgID = "";
         storyBook = new StoryBook();
         currentChapter = "ch1";
-        currentTextPage = 0;
 
 
         if (Instance == null)
@@ -70,7 +62,6 @@ public class Metadata : MonoBehaviour
         EventSystem.instance.PublishMetadata += OnPublishMetadata;
         currentPrompt = "";
         currentChapter = "ch1";
-        currentTextPage = 0;
 
 
     }
@@ -78,7 +69,7 @@ public class Metadata : MonoBehaviour
     {
         StartCoroutine(PutFinishedStoryBook(() =>
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            SceneManager.LoadScene("Playthrough");
 
         }));
     }
@@ -106,10 +97,27 @@ public class Metadata : MonoBehaviour
         }
     }
 
-
-    // Update is called once per frame
-    void Update()
+    IEnumerator PutUnFinishedStoryBook(System.Action callback)
     {
-        
+        this.storyBook.finished_playthrough = false;
+        //string json = JsonUtility.ToJson(this.storyBook);
+        string json = JsonConvert.SerializeObject(this.storyBook);
+        Debug.Log("json: " + json);
+        using (UnityWebRequest request = UnityWebRequest.Put("http://127.0.0.1:8000/api/storybooks/" + storyBookId, json))
+        {
+            yield return request.SendWebRequest();
+            if (request.result != UnityWebRequest.Result.Success)
+            {
+                Debug.Log(request.error);
+            }
+            else
+            {
+                //Debug.Log(request.downloadHandler.text);
+                Dictionary<string, object> returnVal = JsonConvert.DeserializeObject
+                    <Dictionary<string, object>>(request.downloadHandler.text);
+            }
+            callback();
+        }
     }
+
 }

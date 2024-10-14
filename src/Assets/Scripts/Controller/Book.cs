@@ -7,24 +7,15 @@ namespace echo17.EndlessBook.Demo03
     using UnityEngine.Localization;
     using TMPro;
     using Image = UnityEngine.UI.Image;
-    using UnityEngine.SceneManagement;
-    using UnityEngine.Networking;
-    using Newtonsoft.Json;
     using System.Text;
     using UnityEngine.UI;
     using static echo17.EndlessBook.Demo03.BookController;
     using System.Security.Policy;
     using UnityEngine.Localization.Settings;
-    using System.Drawing;
     using System;
 
-
-    /// <summary>
-    /// This demo shows one way you could implement manual page dragging in your book
-    /// </summary>
     public class BookController : MonoBehaviour
     {
-
         public enum BookState
         {
             Start,
@@ -40,7 +31,6 @@ namespace echo17.EndlessBook.Demo03
 
         private int regenerationCount = 0;
 
-        // Book and Page Control
         public GameObject sceneCamera;				// The scene camera used for ray casting
         public EndlessBook book;					// The book to control
 
@@ -53,13 +43,11 @@ namespace echo17.EndlessBook.Demo03
         public float Temperatureincrease = 0.5f;
         private float _currentTemperature;
 
-
         private List<byte[]> imageBytes;
 
         [Header("Book Navigator")]
         public GameObject BookNavigator;
         public GameObject SentenceRegeneration;
-
         public Button previousPage;
         public Button nextPage;
         public GameObject proposalText;
@@ -80,10 +68,6 @@ namespace echo17.EndlessBook.Demo03
         private LocalizedString ContinueText;
 
         public Vector3 screenPosition;
-
-
-
-
         [Header("Book Pages")]
         public RenderTexture pageLeft;
         public RenderTexture pageRight;
@@ -98,7 +82,6 @@ namespace echo17.EndlessBook.Demo03
         private List<Material> createdBookPages;
         private List<string> bookTextPages;
 
-
         //Typewriter in Book
         [Header("Typewriter Settings")]
         [SerializeField] private float charactersPerSecond = 20;
@@ -111,8 +94,6 @@ namespace echo17.EndlessBook.Demo03
         private WaitForSeconds _simpleDelay;
         private WaitForSeconds _interpunctuationDelay;
         private WaitForSeconds _textboxFullEventDelay;
-
-
 
         public enum PageFocus
         {
@@ -140,7 +121,6 @@ namespace echo17.EndlessBook.Demo03
             _simpleDelay = new WaitForSeconds(1 / charactersPerSecond);
             _interpunctuationDelay = new WaitForSeconds(interpunctuationDelay);
             _textboxFullEventDelay = new WaitForSeconds(sendDoneDelay);
-
         }
 
         void OnCompleteTextRevealed()
@@ -163,21 +143,7 @@ namespace echo17.EndlessBook.Demo03
                 GoToNextChapter();
                 current = PageFocus.leftPage;
             }
-        
         }
-
-        void OnCompleteTextRevealedLeftPage()
-        {
-            bookPrompt2.GetComponent<TextMeshProUGUI>().text = ContinueText.GetLocalizedString();
-        }
-
-        void OnCompleteTextRevealedRightPage()
-        {
-            arrow.SetActive(true);
-            EventSystem.instance.EnableDrawingScreenEvent();
-
-        }
-
 
         private void Start()
         {
@@ -188,25 +154,15 @@ namespace echo17.EndlessBook.Demo03
             RegenerateTextBox.GetComponent<TextMeshProUGUI>().text = RegenerateText.GetLocalizedString();
             previousPage.interactable = false;
             _currentTemperature = StartingTemperature;
-
-
             EventSystem.instance.StartStory += OnStartStory;
             EventSystem.instance.ChangeLocale += OnChangeLocale;
-            //EventSystem.instance.PublishToBook += OnPublishToBook;
             EventSystem.instance.SelectImage += OnSelectImage;
-
             EventSystem.instance.PublishNextPrompt += OnPublishNextPrompt;
-
             EventSystem.instance.EnableBookNavigator += OnEnableBookNavigator;
             EventSystem.instance.DisableBookNavigator += OnDisableBookNavigator;
-
             EventSystem.instance.GoToNextPage += GoToNextChapter;
             EventSystem.instance.GoPreviousPage += GoToPreviousPage;
-
-
-
             finishBook.SetActive(false);
-
         }
 
         private void PrepareForNewText(GameObject obj)
@@ -260,7 +216,6 @@ namespace echo17.EndlessBook.Demo03
         {
             sceneCamera.SetActive(true);
             book.SetState(EndlessBook.StateEnum.OpenMiddle, onCompleted: StartStory);
-            Metadata.Instance.currentTextPage = 1;
         }
         private StateChangedDelegate StartStory;
 
@@ -306,7 +261,6 @@ namespace echo17.EndlessBook.Demo03
             if (book.CurrentPageNumber == 5) 
             {
                 BookNavigator.SetActive(true);
-            
             } 
             else
             {
@@ -320,12 +274,9 @@ namespace echo17.EndlessBook.Demo03
             }
         }
 
-
-
         IEnumerator SentenceCompletions(byte[] genImage, string prompt)
         {
             SentenceRegeneration.SetActive(true);
-            //nextPage.interactable = false;
             CoroutineWithData cd_completion = new CoroutineWithData(this, Request.GetSentenceCompletion(genImage, prompt, _currentTemperature));
             yield return cd_completion.coroutine;
             string completion = (string)cd_completion.result;
@@ -337,8 +288,6 @@ namespace echo17.EndlessBook.Demo03
                 yield return translation.coroutine;
                 completion = (string)translation.result;
             }
-
-            
             proposalText.GetComponent<TextMeshProUGUI>().text = completion;
             _isGenerating = false;
             Spinner.SetActive(false);
@@ -459,7 +408,6 @@ namespace echo17.EndlessBook.Demo03
             book.SetState(EndlessBook.StateEnum.ClosedFront);
             EventSystem.instance.DisableBookNavigatorEvent();
             EventSystem.instance.EnableOwnershipScreenEvent();
-
             EventSystem.instance.ChooseCoverImageEvent(imageBytes[0]);
 
             string alltext = string.Concat(bookTextPages.ToArray());
@@ -481,11 +429,6 @@ namespace echo17.EndlessBook.Demo03
             EventSystem.instance.CubeWaveLeftEvent();
 
         }
-
-
-
-
-
         void OnEnableBookNavigator()
         {
             BookNavigator.SetActive(true);
@@ -521,7 +464,6 @@ namespace echo17.EndlessBook.Demo03
             arrow.SetActive(false);
         }
 
-
         void OnPublishNextPrompt(string prompt)
         {
             if (book.CurrentPageNumber == 3)
@@ -532,13 +474,12 @@ namespace echo17.EndlessBook.Demo03
                 Metadata.Instance.currentChapter = "ch3";
             }
             bookPrompt.GetComponent<TextMeshProUGUI>().text = prompt + "...";
-            Metadata.Instance.previousPrompt = Metadata.Instance.startingPrompt;
+            //Metadata.Instance.previousPrompt = Metadata.Instance.startingPrompt;
             Metadata.Instance.currentPrompt = prompt;
             bookPrompt.SetActive(true);
             PrepareForNewText(bookPrompt);
             
         }
-
         protected virtual void OnBookTurnToPageCompleted(EndlessBook.StateEnum fromState, 
             EndlessBook.StateEnum toState, int currentPageNumber)
         {
@@ -552,11 +493,6 @@ namespace echo17.EndlessBook.Demo03
             regenerationCount = 0;
         }
 
-        void DebugCurrentState()
-        {
-            Debug.Log("CurrentState: " + book.CurrentState);
-            Debug.Log("CurrentPageNumber: " + book.CurrentPageNumber);
-        }
     }
 
 }

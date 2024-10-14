@@ -221,6 +221,8 @@ public class Request : MonoBehaviour
         if (GameData.Instance.test)
         {
             Metadata.Instance.storyBookId = "testID";
+            StoryBook storyBook = new StoryBook(Metadata.Instance.startingPrompt, false, false);
+            Metadata.Instance.storyBook = storyBook;
             yield return "";
         }
         else

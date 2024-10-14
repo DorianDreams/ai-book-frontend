@@ -39,7 +39,22 @@ public class Main : MonoBehaviour
         book.SetActive(false);
         overlay.SetActive(false);
         escapeButton.SetActive(false);
+
+        //Add global error handling that restarts the scene
+        Application.logMessageReceived += HandleException;
+
     }
+
+    void HandleException(string logString, string stackTrace, LogType type)
+    {
+        if (type == LogType.Exception)
+        {
+            Debug.Log("Global Error Handler: " + logString);
+            Debug.Log("Restarting Scene"); 
+            SceneManager.LoadScene("Playthrough");
+        }
+    }
+
 
     public void OnEnableResultScreen()
     {
@@ -68,7 +83,7 @@ public class Main : MonoBehaviour
         ownership.SetActive(true);
     }
 
-    public void onEscape()
+    public void OnEscape()
     {
         overlay.SetActive(true);
         escapeButton.SetActive(false);
@@ -76,14 +91,14 @@ public class Main : MonoBehaviour
 
     }
 
-    public void onNo()
+    public void OnNo()
     {
         overlay.SetActive(false);
         escapeButton.SetActive(true);
         mainCanvas.SetActive(true);
     }
 
-    public void onYes()
+    public void OnYes()
     {
         overlay.SetActive(false);
         escapeButton.SetActive(true);
@@ -93,11 +108,9 @@ public class Main : MonoBehaviour
 
     void OnFinishPlaythrough()
     {
-        EventSystem.instance.PublishMetadataEvent();
         EventSystem.instance.SaveCurrentCoverEvent();
-        Metadata.Instance.currentChapter = "ch1";
-        Metadata.Instance.currentTextPage = 0;
-        SceneManager.LoadScene("Playthrough");
+        EventSystem.instance.PublishMetadataEvent();
+        //SceneManager.LoadScene("Playthrough");
     }
 
 }
