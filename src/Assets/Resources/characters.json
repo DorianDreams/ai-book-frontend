@@ -1,0 +1,45 @@
+{
+    "Pfiffikus":{
+        "ch1":["Pfiffikus loves being in the forest. His favorite place is surrounded by", "What does this place look like?"],
+        "ch2":["One day, Pfiffikus finds a mysterious object in the forest. It is a", "What object does he find?"],
+        "ch3":["One day, Pfiffikus finds a mysterious object in the forest. It is a", "What object does he find?"],
+        "consistency": "Light Grey Owl"
+    },
+    "Edgar":{
+        "ch1":["Edgar the elephant loves music. He plays", "What instrument does he play?"],
+        "ch2":["Edgar and a group of birds create a new song using", "What are they using?"],
+        "ch3":["Edgar the elephant has great success with his music. One day he wins", "What does he win?"],
+        "consistency": "Edgar, the elephant, joyful"
+    },
+
+    "Grandma":{
+        "ch1":["I love to stay at grandma's house. She always", "What does grandma do?"],
+        "ch2":[
+            "Every morning, Grandma wakes up early to tend to her beautiful garden. She especially enjoys" , "What does her garden look like?"]
+            ,
+        "ch3":["As I leave Grandma's house, she puts a flower in my hand that looks like", "What does the flower look like?"],
+        "consistency": "Grandma, old"
+
+    },
+
+    "Wanda":{
+        "ch1":["Wanda is a mighty old witch. She always wears", "What does she wear?"],
+        "ch2":["In the night, Wanda the witch brews a powerful potion consisting of", "What does the potion look like?"],
+        "ch3":["Wanda the witch's most treasured possession is a magical", "What does the magical object look like?"],
+        "consistency": "Wanda, old witch"
+    },
+    
+    "Blauzahn":{
+        "ch1":["The little bear Blauzahn loves to play in the forest. His favourite place is","What does this place look like?"],
+        "ch2":["The little bear Blauzahn loves to play in the forest. His favourite place is","What does this place look like?"],
+        "ch3":["The little bear Blauzahn loves to play in the forest. His favourite place is","What does this place look like?"],
+        "consistency": "young cute black bear, friendly"
+    },
+    
+    "Datenkrake":{
+        "ch1":["The octopus datenkrake spends a lot of time in the library. He loves to read", "What does he read? What does the library look like?"],
+        "ch2":["The octopus datenkrake spends a lot of time in the library. He loves to read", "What does he read? What does the library look like?"],
+        "ch3":["The octopus datenkrake spends a lot of time in the library. He loves to read", "What does he read? What does the library look like?"],
+        "consistency": "octopus, internet, data"
+    }
+}

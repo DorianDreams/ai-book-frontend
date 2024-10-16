@@ -5,6 +5,8 @@ using TMPro;
 using Unity.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Localization.Settings;
+using UnityEngine.Localization;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
@@ -40,7 +42,15 @@ public class BookCovers : MonoBehaviour
 
     void OnChooseAuthorship(string decision)
     {
-        authorshipText.text = "By "+decision;
+        Locale currentSelectedLocale = LocalizationSettings.SelectedLocale;
+        ILocalesProvider availableLocales = LocalizationSettings.AvailableLocales;
+        if (currentSelectedLocale == availableLocales.GetLocale("de"))
+        { authorshipText.text = "Von " + decision; } 
+        else 
+        {
+            authorshipText.text = "By " + decision;
+        }
+            
     }
     void OnSaveCurrentCover()
     {

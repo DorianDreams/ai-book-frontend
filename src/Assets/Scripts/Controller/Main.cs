@@ -41,7 +41,7 @@ public class Main : MonoBehaviour
         escapeButton.SetActive(false);
 
         //Add global error handling that restarts the scene
-        Application.logMessageReceived += HandleException;
+        //Application.logMessageReceived += HandleException;
 
     }
 
@@ -68,6 +68,7 @@ public class Main : MonoBehaviour
 
     public void OnStartStory() 
     {
+        StartCoroutine(Request.CreateStoryBook());
         bookCovers.SetActive(false);
         book.SetActive(true);
         escapeButton.SetActive(true);

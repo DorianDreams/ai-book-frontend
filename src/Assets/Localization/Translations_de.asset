@@ -25,7 +25,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 291756725682176
-    m_Localized: Themenauswahl
+    m_Localized: Charakterauswahl
     m_Metadata:
       m_Items: []
   - m_Id: 1112092086026240
@@ -62,8 +62,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 52936075542183936
-    m_Localized: Um die Geschichte fortzusetzen, zeichnen Sie ein Bild auf den unteren
-      Bildschirm
+    m_Localized: Um die Geschichte fortzusetzen, zeichne ein Bild auf den unteren
+      Bildschirm.
     m_Metadata:
       m_Items: []
   - m_Id: 52936955683323904
@@ -111,9 +111,13 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 53148306192121856
     m_Localized: Danke, dass Sie unseren Prototyp ausprobieren. Kollaboriere mit
-      einer KI, um ein Buch zu schreiben und zu illustrieren. Das Buch wird 3 Seiten
-      lang sein und Sie werden eine Geschichte auf der Grundlage Ihrer Zeichnungen
+      einer KI, um ein Buch zu schreiben und zu illustrieren. Das Buch wird drei
+      Seiten lang sein und Sie werden eine Geschichte auf der Grundlage Ihrer Zeichnungen
       erstellen.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 95929337181552640
+    m_Localized: Oma
     m_Metadata:
       m_Items: []
   references:

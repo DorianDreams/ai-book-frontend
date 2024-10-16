@@ -21,6 +21,7 @@ public class Metadata : MonoBehaviour
     public string storyBookId;
     public string currentPrompt;
     public string startingPrompt;
+    public string selectedCharacter;
     public string currentImgID;
 
     public bool testingMode = false;
@@ -97,27 +98,5 @@ public class Metadata : MonoBehaviour
         }
     }
 
-    IEnumerator PutUnFinishedStoryBook(System.Action callback)
-    {
-        this.storyBook.finished_playthrough = false;
-        //string json = JsonUtility.ToJson(this.storyBook);
-        string json = JsonConvert.SerializeObject(this.storyBook);
-        Debug.Log("json: " + json);
-        using (UnityWebRequest request = UnityWebRequest.Put("http://127.0.0.1:8000/api/storybooks/" + storyBookId, json))
-        {
-            yield return request.SendWebRequest();
-            if (request.result != UnityWebRequest.Result.Success)
-            {
-                Debug.Log(request.error);
-            }
-            else
-            {
-                //Debug.Log(request.downloadHandler.text);
-                Dictionary<string, object> returnVal = JsonConvert.DeserializeObject
-                    <Dictionary<string, object>>(request.downloadHandler.text);
-            }
-            callback();
-        }
-    }
 
 }

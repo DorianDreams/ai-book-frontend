@@ -248,13 +248,13 @@ public class EventSystem : MonoBehaviour
         }
     }
 
-    public event Action<string> PublishNextPrompt;
-    public void PublishNextPromptEvent(string newprompt)
+    public event Action PublishNextPrompt;
+    public void PublishNextPromptEvent()
     {
         if (PublishNextPrompt != null)
         {
             Debug.Log("Event fired: PublishNextPromptEvent");
-            PublishNextPrompt(newprompt);
+            PublishNextPrompt();
         }
     }
 

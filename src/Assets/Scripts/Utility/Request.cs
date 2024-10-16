@@ -14,9 +14,14 @@ using UnityEngine.Networking;
 public class Request : MonoBehaviour
 {
     // StableDiffusionXLTurbo Call
+
+    void Start()
+    {
+        
+    }
     public static IEnumerator GetImageGeneration(string caption, float strength, byte[] screenshot)
     {
-        if (GameData.Instance.test)
+        if (Metadata.Instance.testingMode)
         {
             ReturnVal testcase = new ReturnVal("id", "storybookid", "/media/test/testomi.jpg");
             Dictionary<string, string> testcaseDict = JsonConvert.DeserializeObject<Dictionary<string, string>>(JsonConvert.SerializeObject(testcase));
@@ -46,7 +51,7 @@ public class Request : MonoBehaviour
     // Language Model Inference Calls 
     public static IEnumerator GetSentenceCompletion(byte[] bytes, string sentence, float temperature)
     {
-        if (GameData.Instance.test)
+        if (Metadata.Instance.testingMode)
         {
             yield return "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, " +
                 "sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, " +
@@ -74,7 +79,7 @@ public class Request : MonoBehaviour
 
     public static IEnumerator GetNextprompt(string previous_story)
     {
-        if (GameData.Instance.test)
+        if (Metadata.Instance.testingMode)
         {
             yield return "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, " +
                 "clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lore";
@@ -98,7 +103,7 @@ public class Request : MonoBehaviour
     {
         string json = "{ \"user_input\":" + "\"" + alltext + "\"" + "}";
 
-        if (GameData.Instance.test)
+        if (Metadata.Instance.testingMode)
         {
             yield return "Lorem ipsum dolor";
         }
@@ -137,7 +142,7 @@ public class Request : MonoBehaviour
     {
         string json = "{ \"tgt_lang\":" + "\"" + "deu" + "\"," + "\"user_input\":" + "\"" + sentence + "\"" + "}";
 
-        if (GameData.Instance.test)
+        if (Metadata.Instance.testingMode)
         {
             yield return "DEUTSCH: " + sentence;
         }
@@ -170,7 +175,7 @@ public class Request : MonoBehaviour
     // BLIP Inference Call
     public static IEnumerator GetImageCaption(byte[] bytes)
     {
-        if (GameData.Instance.test)
+        if (Metadata.Instance.testingMode)
         {
             yield return "Untertitel";
         }
@@ -218,29 +223,33 @@ public class Request : MonoBehaviour
     // CRUD Calls
     public static IEnumerator CreateStoryBook()
     {
-        if (GameData.Instance.test)
+        if (Metadata.Instance.testingMode)
         {
             Metadata.Instance.storyBookId = "testID";
-            StoryBook storyBook = new StoryBook(Metadata.Instance.startingPrompt, false, false);
+            StoryBook storyBook = new StoryBook(Metadata.Instance.selectedCharacter, false, false);
             Metadata.Instance.storyBook = storyBook;
             yield return "";
         }
         else
         {
-            StoryBook storyBook = new StoryBook(Metadata.Instance.startingPrompt, false, false);
+            StoryBook storyBook = new StoryBook(Metadata.Instance.selectedCharacter, false, false);
             Metadata.Instance.storyBook = storyBook;
             string json = JsonUtility.ToJson(storyBook);
             string url = "http://127.0.0.1:8000/api/storybooks";
 
             using (UnityWebRequest request = UnityWebRequest.Post(url, json, "application/json"))
             {
+                Debug.Log("HIEEEEEEEEEEEEEEER");
                 yield return request.SendWebRequest();
+                Debug.Log(request.error);
+                Debug.Log(request.downloadHandler.text);
                 if (request.result != UnityWebRequest.Result.Success)
                 {
                     Debug.Log(request.error);
                 }
                 else
                 {
+                    Debug.Log("HIEEEEEEEEEEEEEEER22222222222222222222");
                     Debug.Log(request.downloadHandler.text);
                     Dictionary<string, object> returnVal = JsonConvert.DeserializeObject
                         <Dictionary<string, object>>(request.downloadHandler.text);
@@ -254,7 +263,7 @@ public class Request : MonoBehaviour
 
     public static IEnumerator PostImageDescription(string description, string image_id)
     {
-        if (GameData.Instance.test)
+        if (Metadata.Instance.testingMode)
         {
             yield return "";
         }

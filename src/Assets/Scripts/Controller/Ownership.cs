@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Localization;
+using UnityEngine.Localization.Settings;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -23,6 +24,8 @@ public class OwnershipSelectionController : MonoBehaviour
 
     public GameObject LineGeneratorPrefab;
     public GameObject DrawingBackground;
+
+    private string currentState = "choosing owner";
 
     [SerializeField]
     float LineWidth = 0.2f;
@@ -55,14 +58,6 @@ public class OwnershipSelectionController : MonoBehaviour
     public GameObject YesText;
     public GameObject NoText;
 
-    private enum CurrentState
-    {
-        ChoosingOwner,
-        SigningDecision,
-        Signing
-    }
-
-    private CurrentState currentState = CurrentState.ChoosingOwner;
     // Start is called before the first frame update
     void Start()
     {
@@ -86,6 +81,8 @@ public class OwnershipSelectionController : MonoBehaviour
         MEAIText.GetComponent<TextMeshProUGUI>().text = MEAI.GetLocalizedString();
         YesText.GetComponent<TextMeshProUGUI>().text = Yes.GetLocalizedString();
         NoText.GetComponent<TextMeshProUGUI>().text = No.GetLocalizedString();
+
+        PublishButton.SetActive(false);
     }
 
     void onButtonPressed(GameObject textBox)
@@ -97,7 +94,28 @@ public class OwnershipSelectionController : MonoBehaviour
         textBox.transform.GetChild(1).gameObject.SetActive(true);
         //string startingSentence = textBox.GetComponentInChildren<TextMeshProUGUI>().text;
         Metadata.Instance.storyBook.decision_of_authorship = textBox.name;
-        EventSystem.instance.ChooseCoverAuthorEvent(textBox.name);
+
+        Locale currentSelectedLocale = LocalizationSettings.SelectedLocale;
+        ILocalesProvider availableLocales = LocalizationSettings.AvailableLocales;
+        string bookAuthor = textBox.name;
+        if (currentSelectedLocale == availableLocales.GetLocale("de"))
+        {
+            switch (bookAuthor)
+            {
+                case "Me+AI":
+                    bookAuthor = "Mir+KI";
+                    break;
+                case "Me":
+                    bookAuthor = "Mir";
+                    break;
+                case "AI":
+                    bookAuthor = "KI";
+                    break;
+            }
+        }
+        PublishButton.SetActive(true);
+
+        EventSystem.instance.ChooseCoverAuthorEvent(bookAuthor);
     }
 
     void onButtonPressedSigning(GameObject textBox)
@@ -116,58 +134,59 @@ public class OwnershipSelectionController : MonoBehaviour
             Metadata.Instance.storyBook.signed_the_book = false;
             
         }
+        PublishButton.SetActive(true);
+
     }
 
     void onPublish()
     {
-        switch (currentState)
+        if (currentState == "choosing owner")
         {
-            case CurrentState.ChoosingOwner:
-                string authorship = Metadata.Instance.storyBook.decision_of_authorship;
-                if (authorship == "AI")
+            string authorship = Metadata.Instance.storyBook.decision_of_authorship;
+            
+                foreach (GameObject tb in instantiatedTextBoxes)
                 {
-                    foreach (GameObject tb in instantiatedTextBoxes)
-                    {
-                        tb.SetActive(false);
-                    }
-                    currentState = CurrentState.SigningDecision;
-                    Headline.GetComponent<TextMeshProUGUI>().text = SignText2.GetLocalizedString();
-                    foreach (GameObject tb in instantiatedSigningButtons)
-                    {
-                        tb.SetActive(true);
-                    }
+                    tb.SetActive(false);
                 }
-                else
+                PublishButton.SetActive(false);
+                currentState = "signing decision";
+                Headline.GetComponent<TextMeshProUGUI>().text = SignText2.GetLocalizedString();
+                foreach (GameObject tb in instantiatedSigningButtons)
                 {
-                    EventSystem.instance.FinishPlaythroughEvent();
+                    tb.SetActive(true);
                 }
-                break;
-            case CurrentState.SigningDecision:
-                bool signed = Metadata.Instance.storyBook.signed_the_book;
-                if (signed)
+            }
+            
+        else if (currentState == "signing decision")
+        {
+            bool signed = Metadata.Instance.storyBook.signed_the_book;
+            if (signed)
+            {
+                foreach (GameObject tb in instantiatedSigningButtons)
                 {
-                    foreach (GameObject tb in instantiatedSigningButtons)
-                    {
-                        tb.SetActive(false);
-                    }
-                    currentState = CurrentState.Signing;
-                    Headline.GetComponent<TextMeshProUGUI>().text = SignText3.GetLocalizedString();
-                    DrawingBackground.SetActive(true);
-                    GameObject InstantiatedLineGenerator = Instantiate(LineGeneratorPrefab);
-                    InstantiatedLineGenerator.GetComponent<LineGenerator>().parentCanvas = DrawingCanvas;
-                    InstantiatedLineGenerator.GetComponent<LineGenerator>().width = LineWidth;
-                    EventSystem.instance.PressColorButtonEvent(Color.black);
+                    tb.SetActive(false);
+                }
+                currentState = "signing";
+                Headline.GetComponent<TextMeshProUGUI>().text = SignText3.GetLocalizedString();
+                DrawingBackground.SetActive(true);
+                GameObject InstantiatedLineGenerator = Instantiate(LineGeneratorPrefab);
+                InstantiatedLineGenerator.GetComponent<LineGenerator>().parentCanvas = DrawingCanvas;
+                InstantiatedLineGenerator.GetComponent<LineGenerator>().width = LineWidth;
+                EventSystem.instance.PressColorButtonEvent(Color.black);
 
-                }
-                else
-                {
-                    EventSystem.instance.FinishPlaythroughEvent();
-                }
-                break;
-            case CurrentState.Signing:
+            }
+            else
+            {
                 EventSystem.instance.FinishPlaythroughEvent();
-                break;
+            }
         }
+        else
+        if (currentState == "signing")
+        {
+            EventSystem.instance.FinishPlaythroughEvent();
+
+        }
+
     }
 
 

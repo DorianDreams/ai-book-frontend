@@ -1,0 +1,69 @@
+{
+    "Pfiffikus":{
+        "ch1":"Pfiffikus ",
+        "ch2":[],
+        "ch3":[],
+        "consistency": "bla"
+    },
+    "Edgar":{
+        "ch1":"Edgar the elephant loves music. He plays",
+        "ch2":["Edgar the elephant is given a magical drum that changes its sound based on his mood. When he starts to play it",
+                "One night, Edgar hears a mysterious tune coming from",
+                "Edgar and a group of birds create a new song using",
+                "Edgar decides to compose a song about",
+                "Edgar’s trumpet sound accidentally wakes up"],
+        "ch3":["Edgar the elephant has great success with his music. One day he wins",
+                "During a thunderstorm, Edgar's music calms",
+                "Edgar plays a song that makes everyone in the forest",
+                "Edgar’s music is so beautiful that it makes the flowers",
+                "At the zoo, Edgar’s music attracts a crowd of"],
+        "consistency": "Edgar, the elephant, joyful"
+    },
+
+    "Grandma":{
+        "ch1":"I love to stay at grandma's house. She always",
+        "ch2":[
+            "Every morning, Grandma wakes up early to tend to her beautiful garden. She especially enjoys",
+            "Every night, Grandma reads me a bedtime story about",
+            "Grandma has a secret recipe for the most delicious cookies. The secret ingredient is",
+            "When it’s sunny, Grandma and I go outside to",
+            "Grandma has a special talent for"
+        ],
+        "ch3":[
+            "Grandma gives me a small gift to remember our special time together. It’s",
+            "Grandma tells me a secret about the world that only she knows. It’s",
+            "Grandma wraps a cozy blanket around me before I",
+            "As I leave Grandma's house, she puts a flower in my hand and",
+            "Before I go, Grandma tells me one last story about"
+        ],
+        "consistency": "Grandma, old, wise, loving"
+
+    },
+
+    "Wanda":{
+        "ch1":"Wanda is a mighty old witch. She always wears",
+        "ch2":["One day Wanda the witch encounters one of her greatest enemies. A fearsome",
+                "Wanda the witch lives in an ancient forest. Her favorite place to relax is",
+                "Wanda the witch has a magical garden where she grows",
+                "Wanda the witch has a secret potion that looks",
+                "In the night, Wanda the witch brews a powerful potion consisting of"],
+        "ch3":["Wanda the witch's most treasured possession is a magical",
+                ""],
+        "consistency": "Wanda, old witch"
+
+    },
+    
+    "Blauzahn":{
+        "ch1":"starting prompt",
+        "ch2":[],
+        "ch3":[],
+        "consistency": "young cute black bear named beartooth, friendly"
+    },
+    
+    "Datenkrake":{
+        "ch1":"starting prompt",
+        "ch2":[],
+        "ch3":[],
+        "consistency": "young cute black bear named beartooth, friendly"
+    }
+}

@@ -26,7 +26,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 291756725682176
-    m_Localized: Choose a topic
+    m_Localized: Choose a character
     m_Metadata:
       m_Items: []
   - m_Id: 1112092086026240
@@ -112,6 +112,10 @@ MonoBehaviour:
     m_Localized: Thank you for trying out our prototype. Collaborate with Ai to write
       and illustrate a  book. The book will be 3 pages long and you will create a
       story based on your drawings.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 95929337181552640
+    m_Localized: Grandma
     m_Metadata:
       m_Items: []
   references:

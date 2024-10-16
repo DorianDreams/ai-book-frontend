@@ -13,6 +13,12 @@ namespace echo17.EndlessBook.Demo03
     using System.Security.Policy;
     using UnityEngine.Localization.Settings;
     using System;
+    using UnityEngine.TextCore.Text;
+    using TextAsset = UnityEngine.TextAsset;
+    using System.Xml;
+    using Newtonsoft.Json;
+    using System.Diagnostics;
+    using Debug = UnityEngine.Debug;
 
     public class BookController : MonoBehaviour
     {
@@ -103,13 +109,18 @@ namespace echo17.EndlessBook.Demo03
         }
         public PageFocus current = PageFocus.leftPage;
 
+        private Dictionary<string, CharacterStory> storyDict = new Dictionary<string, CharacterStory>();
+
         void OnEnable()
         {
+            LoadJson();
             CompleteTextRevealed += () => OnCompleteTextRevealed();
             StartStory = (EndlessBook.StateEnum fromState,EndlessBook.StateEnum toState, int pageNumber)
              =>
                     {
-                        bookPrompt.GetComponent<TextMeshProUGUI>().text = Metadata.Instance.currentPrompt + "...";
+                        List<string> selectedPrompt = SelectPrompt(Metadata.Instance.selectedCharacter, Metadata.Instance.currentChapter);
+                        bookPrompt.GetComponent<TextMeshProUGUI>().text = selectedPrompt[0] + "..." + "\n\n" + selectedPrompt[1];
+                        Metadata.Instance.currentPrompt = selectedPrompt[0];
                         bookState = BookState.Chapter1;
 
                         PrepareForNewText(bookPrompt);
@@ -121,6 +132,45 @@ namespace echo17.EndlessBook.Demo03
             _simpleDelay = new WaitForSeconds(1 / charactersPerSecond);
             _interpunctuationDelay = new WaitForSeconds(interpunctuationDelay);
             _textboxFullEventDelay = new WaitForSeconds(sendDoneDelay);
+            
+        }
+
+        List<string> SelectPrompt(string character, string chapter)
+        {
+                CharacterStory story = null;
+            List<string> defaultList = null;
+            
+
+            if (storyDict.TryGetValue(character, out story))
+            {
+                switch (chapter)
+                {
+                    case "ch1":
+                        return story.ch1;                    
+                        
+
+                    case "ch2":
+                        //get random story
+                        return story.ch2;
+                        
+
+                    case "ch3":
+                        return story.ch3;
+                    
+                    default:
+                        
+                        return defaultList;
+                }
+
+            } else { return defaultList; }
+            
+        }
+
+        void LoadJson()
+        {
+            // Load the JSON file from the Resources folder
+            TextAsset jsonFile = Resources.Load<TextAsset>("characters");
+            storyDict = JsonConvert.DeserializeObject<Dictionary<string, CharacterStory>>(jsonFile.text);
         }
 
         void OnCompleteTextRevealed()
@@ -328,60 +378,6 @@ namespace echo17.EndlessBook.Demo03
             }
         }
 
-        public IEnumerator CreateNextPrompt(string completion, string imgID)
-        {
-            CoroutineWithData cd_nextPrompt = new CoroutineWithData(this, Request.GetNextprompt(completion));
-            yield return cd_nextPrompt.coroutine;
-            string nextPrompt = (string)cd_nextPrompt.result;
-            
-            StartCoroutine(Request.PostImageDescription(completion, Metadata.Instance.currentImgID)); 
-            _isGenerating = false;
-            /*
-            if (Metadata.Instance.currentPrompt == "Edgar the elephant loves music. He plays")
-            {
-                nextPrompt = "One day Edgar the elephant plays with a group of joyful musicians in front of";
-            }
-            else if (Metadata.Instance.currentPrompt == "One day Edgar the elephant plays with a group of joyful musicians in front of")
-            {
-                nextPrompt = "Edgar the elephant has great success with his music. One day he wins";
-            }
-            else if (Metadata.Instance.currentPrompt == "Ratty lives in a dustbin. He dreams of being")
-            {
-                nextPrompt = "Ratty the rat is rather poor. But one day he finds";
-            }
-            else if (Metadata.Instance.currentPrompt == "Ratty the rat is rather poor. But one day he finds")
-            {
-                nextPrompt = "Ratty the rat lived happily ever after, in his new home inside a";
-            }
-            else if (Metadata.Instance.currentPrompt == "I love to stay at grandma's house. She always")
-            {
-                nextPrompt = "Today Grandma cooks my all time favourite meal. She cooks";
-            }
-            else if (Metadata.Instance.currentPrompt == "Today Grandma cooks my all time favourite meal. She cooks")
-            {
-                nextPrompt = "I am very happy about my granny. May she always";
-            }
-            else if (Metadata.Instance.currentPrompt == "Wanda is a witch. She always")
-            {
-                nextPrompt = "One day Wanda the witch encounters one of her greatest enemies. A fearsome";
-            }
-            else if (Metadata.Instance.currentPrompt == "One day Wanda the witch encounters one of her greatest enemies. A fearsome")
-            {
-                nextPrompt = "Wanda the witch triumphs over her foe. To celebrate her victory she";
-            }
-            */
-            Locale currentSelectedLocale = LocalizationSettings.SelectedLocale;
-            ILocalesProvider availableLocales = LocalizationSettings.AvailableLocales;
-            
-            if (currentSelectedLocale == availableLocales.GetLocale("de"))
-            {
-                CoroutineWithData translation = new CoroutineWithData(this, Request.TranslateSentence(nextPrompt));
-                yield return translation.coroutine;
-                nextPrompt = (string)translation.result;
-            }
-            EventSystem.instance.PublishNextPromptEvent(nextPrompt);
-        }
-
        public IEnumerator CreateTitle(string alltext)
         {
             CoroutineWithData cd_title = new CoroutineWithData(this, Request.CreateTitle(alltext));
@@ -464,18 +460,21 @@ namespace echo17.EndlessBook.Demo03
             arrow.SetActive(false);
         }
 
-        void OnPublishNextPrompt(string prompt)
+        void OnPublishNextPrompt()
         {
             if (book.CurrentPageNumber == 3)
             {
                 Metadata.Instance.currentChapter = "ch2";
+
+
             } else if (book.CurrentPageNumber == 5)
             {
                 Metadata.Instance.currentChapter = "ch3";
             }
-            bookPrompt.GetComponent<TextMeshProUGUI>().text = prompt + "...";
-            //Metadata.Instance.previousPrompt = Metadata.Instance.startingPrompt;
-            Metadata.Instance.currentPrompt = prompt;
+            List<string> selectedPrompt = SelectPrompt(Metadata.Instance.selectedCharacter, Metadata.Instance.currentChapter);
+            bookPrompt.GetComponent<TextMeshProUGUI>().text = selectedPrompt[0] + "..." + "\n\n" + selectedPrompt[1];
+
+            Metadata.Instance.currentPrompt = selectedPrompt[0];
             bookPrompt.SetActive(true);
             PrepareForNewText(bookPrompt);
             
@@ -485,11 +484,12 @@ namespace echo17.EndlessBook.Demo03
         {
             Debug.Log("OnBookTurnToPageCompleted: State set to " + toState + ". Current Page Number = " + currentPageNumber);
 
+            Metadata.Instance.storyBook.drawing.drawingPages[Metadata.Instance.currentChapter].regenerateText = regenerationCount;
             _isGenerating = true;
-            StartCoroutine(CreateNextPrompt("", Metadata.Instance.currentImgID));
+            EventSystem.instance.PublishNextPromptEvent();
             _currentTemperature = StartingTemperature;
             EventSystem.instance.DisableBookNavigatorEvent();
-            //Metadata.Instance.storyBook.drawing.drawingPages["ch1"].regenerateText = regenerationCount; // Todo
+
             regenerationCount = 0;
         }
 
