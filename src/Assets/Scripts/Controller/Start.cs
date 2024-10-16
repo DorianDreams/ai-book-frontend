@@ -192,7 +192,7 @@ public class StartSelectionController : MonoBehaviour
             Metadata.Instance.currentPrompt = random_prompt;
             Metadata.Instance.startingPrompt = random_prompt;
         }
-        StartCoroutine(Request.CreateStoryBook());
+        
         EventSystem.instance.StartStoryEvent();
     }
 
