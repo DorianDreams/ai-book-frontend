@@ -2012,6 +2012,7 @@ GameObject:
   m_Component:
   - component: {fileID: 109453117}
   - component: {fileID: 109453116}
+  - component: {fileID: 109453118}
   m_Layer: 0
   m_Name: Metadata
   m_TagString: Untagged
@@ -2061,6 +2062,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &109453118
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 109453115}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86fcec63fd015ce499e9a6a79cf0f8bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &122920140
 GameObject:
   m_ObjectHideFlags: 0
@@ -11827,7 +11840,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1030693376}
   - component: {fileID: 1030693377}
-  - component: {fileID: 1030693378}
   m_Layer: 0
   m_Name: Controller
   m_TagString: Untagged
@@ -11873,18 +11885,6 @@ MonoBehaviour:
   overlay: {fileID: 1089048758}
   escapeButton: {fileID: 2039737642}
   mainCanvas: {fileID: 3434347314912608047}
---- !u!114 &1030693378
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1030693375}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 86fcec63fd015ce499e9a6a79cf0f8bd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1033598315
 GameObject:
   m_ObjectHideFlags: 0
