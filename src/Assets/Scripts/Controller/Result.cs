@@ -185,7 +185,7 @@ public class ResultScreenController : MonoBehaviour
         if (operatingSystem.Contains("Windows"))
         {
             imagePath = imagePath.Replace("/", "\\");
-            fullpath = "E:\\thesis\\backend\\storybookcreator" + imagePath;
+            fullpath = "..\\..\\storybookcreator" + imagePath;
         }
         else if (operatingSystem.Contains("Mac"))
         {
@@ -195,7 +195,7 @@ public class ResultScreenController : MonoBehaviour
         {
             imagePath = imagePath.Replace("\\", "/");
 
-            fullpath = "/home/aidev/Documents/back-end/storybookcreator" + imagePath;
+            fullpath = "../../storybookcreator" + imagePath;
         }
 
         // Display image on screen

@@ -1,0 +1,43 @@
+{
+    "Pfiffikus":{
+        "ch1":["Pfiffikus loves being in the forest. You can see", "What does this place look like?"],
+        "ch2":["One day, Pfiffikus finds a mysterious object in the forest. You can see", "What object does he find?"],
+        "ch3":["Using the object, Pfiffikus gets teleported to the entrance of a big building he’s never seen before. You can see", "What does the building look like?"],
+        "consistency": "Light Grey Owl"
+    },
+    "Edgar":{
+        "ch1":["Edgar the elephant loves music. When you visit him you see", "What instrument does he play?"],
+        "ch2":["Edgar and a group of birds create a new song. You see", "What are they using?"],
+        "ch3":["Edgar the elephant has great success with his music. One day he wins an important award. You see", "What does he win?"],
+        "consistency": "Edgar, the elephant, joyful"
+    },
+
+    "Grandma":{
+        "ch1":["I love to stay at grandma's house. She always", "What does grandma do?"],
+        "ch2":["Every morning, Grandma wakes up early to tend to her beautiful garden. You see" , "What does her garden look like?"],
+        "ch3":["As I leave Grandma's house, she puts a flower in my hand. You see", "What does the flower look like?"],
+        "consistency": "Grandma, old"
+
+    },
+
+    "Wanda":{
+        "ch1":["Wanda is a mighty old witch. She always wears", "What does she wear?"],
+        "ch2":["In the night, Wanda the witch brews a powerful potion. You see", "What does the potion look like?"],
+        "ch3":["Wanda the witch's most treasured possession is a magical item. You see", "What does the magical object look like?"],
+        "consistency": "Wanda, old witch"
+    },
+    
+    "Blauzahn":{
+        "ch1":["The little bear Blauzahn loves to play in the forest. You see","What does this place look like?"],
+        "ch2":["Blauzahn has many toys. His favourite toy is","What does his favourite toy look like?"],
+        "ch3":["Blauzahn is deeply interested in technology. His favourite technology is","What does his favourite technology look like?"],
+        "consistency": "young cute black bear, friendly"
+    },
+    
+    "Datenkrake":{
+        "ch1":["The octopus Datenkrake spends a lot of time in the library. You can see", "What does he read? What does the library look like?"],
+        "ch2":["The octopus Datenkrake works a lot of time working on the computer. You can see", "What does he look like when he works?"],
+        "ch3":["The octopus Datenkrake loves museums where he discoveres new technologies. You can see", "What new technologies does he discover?"],
+        "consistency": "octopus, internet, data"
+    }
+}

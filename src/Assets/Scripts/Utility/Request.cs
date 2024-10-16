@@ -239,18 +239,13 @@ public class Request : MonoBehaviour
 
             using (UnityWebRequest request = UnityWebRequest.Post(url, json, "application/json"))
             {
-                Debug.Log("HIEEEEEEEEEEEEEEER");
                 yield return request.SendWebRequest();
-                Debug.Log(request.error);
-                Debug.Log(request.downloadHandler.text);
                 if (request.result != UnityWebRequest.Result.Success)
                 {
                     Debug.Log(request.error);
                 }
                 else
                 {
-                    Debug.Log("HIEEEEEEEEEEEEEEER22222222222222222222");
-                    Debug.Log(request.downloadHandler.text);
                     Dictionary<string, object> returnVal = JsonConvert.DeserializeObject
                         <Dictionary<string, object>>(request.downloadHandler.text);
 

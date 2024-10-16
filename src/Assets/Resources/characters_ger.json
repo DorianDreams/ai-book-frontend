@@ -1,0 +1,43 @@
+{
+    "Pfiffikus":{
+        "ch1":["Pfiffikus liebt es, im Wald zu sein. Du siehst", "Wie sieht der Wald aus?"],
+        "ch2":["Eines Tages findet Pfiffikus einen geheimnisvollen Gegenstand im Wald. Du siehst", "Welchen Gegenstand findet er?"],
+        "ch3":["Mit Hilfe des Gegenstandes wird Pfiffikus zum Eingang eines großen Gebäudes teleportiert, das er noch nie zuvor gesehen hat. Du siehsts", "Wie sieht das Gebäude aus?"],
+        "consistency": "Light Grey Owl"
+    },
+    "Edgar":{
+        "ch1":["Edgar, der Elefant, liebt Musik. Wenn du ihn besuchen kommst, siehst du", "Welches Instrument spielt er?"],
+        "ch2":["Edgar und eine Gruppe von Vögeln singen ein neues Lied. Du siehst", "Wie sehen sie aus?"],
+        "ch3":["Edgar, der Elefant, hat großen Erfolg mit seiner Musik. Eines Tages gewinnt er einen wichtigen Preis. Du siehst", "Wie sieht der Preis aus?"],
+        "consistency": "Edgar, the elephant, joyful, music"
+    },
+
+    "Grandma":{
+        "ch1":["Ich liebe es, bei meiner Oma zu sein. Sie macht immer", "Was macht Oma?"],
+        "ch2":["Jeden Morgen steht Oma früh auf, um ihren schönen Garten zu pflegen. Du siehst" , "Wie sieht ihr Garten aus?"],
+        "ch3":["Als ich das Haus der Großmutter verlasse, drückt sie mir eine Blume in die Hand. Du siehst", "Wie sieht die Blume aus?"],
+        "consistency": "Grandma, old"
+
+    },
+
+    "Wanda":{
+        "ch1":["Wanda ist eine mächtige alte Hexe. Sie trägt immer", "Was trägt sie?"],
+        "ch2":["In der Nacht braut Wanda, die Hexe, einen starken Trank. Du siehst", "Wie sieht der Trank aus?"],
+        "ch3":["Der wertvollste Besitz von Wanda, der Hexe, ist ein magischer Gegenstand. Du siehst", "Wie sieht der magische Gegenstand aus?"],
+        "consistency": "Wanda, old witch"
+    },
+    
+    "Blauzahn":{
+        "ch1":["Der kleine Bär Blauzahn liebt es, im Wald zu spielen. Du siehst","Wie sieht der Wald aus?"],
+        "ch2":["Blauzahn hat viele Spielsachen. Du siehst","Wie sieht sein Lieblingsspielzeug aus?"],
+        "ch3":["Blauzahn interessiert sich sehr für Technik. Du siehst","Wie sieht seine Lieblingstechnologie aus?"],
+        "consistency": "young cute black bear, friendly"
+    },
+    
+    "Datenkrake":{
+        "ch1":["Der Oktopus Datenkrake verbringt viel Zeit in der Bibliothek. Du kannst sehen", "Was liest er? Wie sieht die Bibliothek aus?"],
+        "ch2":["Die Oktopus Datenkrake arbeitet viel Zeit am Computer. Du kannst sehen", "Wie sieht er aus, wenn er arbeitet?"],
+        "ch3":["Der Oktopus Datenkrake liebt Museen, in denen er neue Technologien entdeckt. Du kannst sehen", "Welche neuen Technologien entdeckt er?"],
+        "consistency": "octopus, internet, data"
+    }
+}
