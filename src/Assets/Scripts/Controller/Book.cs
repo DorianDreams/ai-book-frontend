@@ -109,7 +109,9 @@ namespace echo17.EndlessBook.Demo03
         }
         public PageFocus current = PageFocus.leftPage;
 
-        private Dictionary<string, CharacterStory> storyDict = new Dictionary<string, CharacterStory>();
+        private Dictionary<string, CharacterStory> storyDictEn = new Dictionary<string, CharacterStory>();
+        private Dictionary<string, CharacterStory> storyDictGer = new Dictionary<string, CharacterStory>();
+
 
         void OnEnable()
         {
@@ -118,10 +120,8 @@ namespace echo17.EndlessBook.Demo03
             StartStory = (EndlessBook.StateEnum fromState,EndlessBook.StateEnum toState, int pageNumber)
              =>
                     {
-                        List<string> selectedPrompt = SelectPrompt(Metadata.Instance.selectedCharacter, Metadata.Instance.currentChapter);
-                        bookPrompt.GetComponent<TextMeshProUGUI>().text = selectedPrompt[0] + "..." + "\n\n" + selectedPrompt[1];
-                        Metadata.Instance.currentPrompt = selectedPrompt[0];
-                        bookState = BookState.Chapter1;
+                        SelectConsistencyPrompt(Metadata.Instance.selectedCharacter);
+                        WritePromptInBook();
 
                         PrepareForNewText(bookPrompt);
                     };
@@ -135,7 +135,27 @@ namespace echo17.EndlessBook.Demo03
             
         }
 
-        List<string> SelectPrompt(string character, string chapter)
+        void WritePromptInBook()
+        {
+            List<string> selectedPrompt = SelectPrompt(storyDictEn, Metadata.Instance.selectedCharacter, Metadata.Instance.currentChapter);
+            Metadata.Instance.currentPrompt = selectedPrompt[0];
+
+            Locale currentSelectedLocale = LocalizationSettings.SelectedLocale;
+            ILocalesProvider availableLocales = LocalizationSettings.AvailableLocales;
+            if (currentSelectedLocale == availableLocales.GetLocale("de"))
+            {
+                List<string> selectedPromptGer = SelectPrompt(storyDictGer, Metadata.Instance.selectedCharacter, Metadata.Instance.currentChapter);
+                bookPrompt.GetComponent<TextMeshProUGUI>().text = selectedPromptGer[0] + "..." + "\n\n" + selectedPromptGer[1];
+
+
+            }
+            else
+            {
+                bookPrompt.GetComponent<TextMeshProUGUI>().text = selectedPrompt[0] + "..." + "\n\n" + selectedPrompt[1];
+            }
+        }
+
+        List<string> SelectPrompt(Dictionary<string, CharacterStory> storyDict, string character, string chapter)
         {
                 CharacterStory story = null;
             List<string> defaultList = null;
@@ -150,7 +170,6 @@ namespace echo17.EndlessBook.Demo03
                         
 
                     case "ch2":
-                        //get random story
                         return story.ch2;
                         
 
@@ -163,14 +182,30 @@ namespace echo17.EndlessBook.Demo03
                 }
 
             } else { return defaultList; }
-            
+        }
+
+        void SelectConsistencyPrompt(string character)
+        {
+            CharacterStory story = null;
+            if (storyDictEn.TryGetValue(character, out story))
+            {
+                Metadata.Instance.consistencyPrompt = story.consistency;
+            }
+            else
+            {
+                Metadata.Instance.consistencyPrompt = "children book, cartoon";
+            }
         }
 
         void LoadJson()
         {
             // Load the JSON file from the Resources folder
-            TextAsset jsonFile = Resources.Load<TextAsset>("characters");
-            storyDict = JsonConvert.DeserializeObject<Dictionary<string, CharacterStory>>(jsonFile.text);
+            TextAsset jsonFileEn = Resources.Load<TextAsset>("characters_en");
+            TextAsset jsonFileGer = Resources.Load<TextAsset>("characters_ger");
+
+            storyDictEn = JsonConvert.DeserializeObject<Dictionary<string, CharacterStory>>(jsonFileEn.text);
+            storyDictGer = JsonConvert.DeserializeObject<Dictionary<string, CharacterStory>>(jsonFileGer.text);
+
         }
 
         void OnCompleteTextRevealed()
@@ -471,10 +506,7 @@ namespace echo17.EndlessBook.Demo03
             {
                 Metadata.Instance.currentChapter = "ch3";
             }
-            List<string> selectedPrompt = SelectPrompt(Metadata.Instance.selectedCharacter, Metadata.Instance.currentChapter);
-            bookPrompt.GetComponent<TextMeshProUGUI>().text = selectedPrompt[0] + "..." + "\n\n" + selectedPrompt[1];
-
-            Metadata.Instance.currentPrompt = selectedPrompt[0];
+            WritePromptInBook();
             bookPrompt.SetActive(true);
             PrepareForNewText(bookPrompt);
             

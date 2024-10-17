@@ -135,48 +135,17 @@ public class StartSelectionController : MonoBehaviour
         {
             case 0:
                 Metadata.Instance.selectedCharacter = "Datenkrake";
-                Metadata.Instance.currentPrompt = "Edgar the elephant loves music. He plays";
-
-                if (currentSelectedLocale == availableLocales.GetLocale("de"))
-                {
-                    Metadata.Instance.startingPrompt = "Edgar, der Elefant, liebt Musik. Er spielt";
-                    Metadata.Instance.currentPrompt = "Edgar, der Elefant, liebt Musik. Er spielt";
-                }
-                Metadata.Instance.consistencyPrompt = "Edgar, the elephant, joyful";
                 break;
             case 1:
                 Metadata.Instance.selectedCharacter = "Grandma";
-                Metadata.Instance.startingPrompt = "Robert is a Robot. He dreams of being";
-                Metadata.Instance.currentPrompt = "Robert is a Robot. He dreams of being";
-                if (currentSelectedLocale == availableLocales.GetLocale("de"))
-                {
-                    Metadata.Instance.startingPrompt = "Robert ist ein Roboter. Er träumt davon";
-                    Metadata.Instance.currentPrompt = "Robert ist ein Roboter. Er träumt davon";
-                }
-                Metadata.Instance.consistencyPrompt = "A Robot named Robert";
                 break;
             case 2:
                 Metadata.Instance.selectedCharacter = "Pfiffikus";
 
-                Metadata.Instance.startingPrompt = "A still life, oil painting, consisting of many";
-                Metadata.Instance.currentPrompt = "A still life, oil painting, consisting of many";
-                if (currentSelectedLocale == availableLocales.GetLocale("de"))
-                {
-                    Metadata.Instance.startingPrompt = "Ein Stillleben, Ölgemälde, bestehend aus vielen";
-                    Metadata.Instance.currentPrompt = "Ein Stillleben, Ölgemälde, bestehend aus vielen";
-                }
-                Metadata.Instance.consistencyPrompt = "Still life, oil painting";
                 break;
             case 3:
                 Metadata.Instance.selectedCharacter = "Edgar";
-                Metadata.Instance.startingPrompt = "Wanda is a mighty old witch. She always wears";
-                Metadata.Instance.currentPrompt = "Wanda is a mighty old witch. She always wears";
-                if (currentSelectedLocale == availableLocales.GetLocale("de"))
-                {
-                    Metadata.Instance.startingPrompt = "Wanda ist eine mächtige alte Hexe. Sie trägt immer";
-                    Metadata.Instance.currentPrompt = "Wanda ist eine mächtige alte Hexe. Sie trägt immer";
-                }
-                Metadata.Instance.consistencyPrompt = "Wanda, old witch";
+                
                 break;
             case 4:
                 Metadata.Instance.selectedCharacter = "Blauzahn";

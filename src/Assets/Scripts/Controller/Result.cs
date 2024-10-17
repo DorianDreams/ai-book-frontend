@@ -186,6 +186,7 @@ public class ResultScreenController : MonoBehaviour
         {
             imagePath = imagePath.Replace("/", "\\");
             fullpath = "..\\..\\storybookcreator" + imagePath;
+
         }
         else if (operatingSystem.Contains("Mac"))
         {

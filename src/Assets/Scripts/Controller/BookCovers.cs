@@ -18,7 +18,6 @@ public class BookCovers : MonoBehaviour
     public GameObject picture;
     public Image cover;
     public Image spine;
-    public TextMeshProUGUI text;
     public TextMeshProUGUI authorshipText;
     public Texture renderTexture;
 
@@ -56,7 +55,8 @@ public class BookCovers : MonoBehaviour
     {
         Debug.Log("Save current cover");    
 
-        SaveTextureToFile(renderTexture, "E:\\thesis\\unity\\AI-Book-Frontend\\src\\Assets\\Resources\\BookCovers\\" + System.DateTime.Now.Ticks + ".jpg", 1024, 819);
+        SaveTextureToFile(renderTexture, "C:\\Users\\Tonja\\Documents\\GitHub\\AI-Book-Frontend\\src\\Assets\\Resources\\BookCovers\\" + System.DateTime.Now.Ticks + ".jpg", 1024, 819);
+    
     }
 
     void OnChooseCoverImage(byte[] newcover)
@@ -94,6 +94,7 @@ public class BookCovers : MonoBehaviour
         if (!(source is Texture2D || source is RenderTexture))
         {
             done?.Invoke(false);
+            Debug.Log("Save current cover abonded");
             return;
         }
 
@@ -111,9 +112,11 @@ public class BookCovers : MonoBehaviour
         // create a native array to receive data from the GPU:
         var narray = new NativeArray<byte>(width * height * 4, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
 
+        Debug.Log("Request from GPU");
         // request the texture data back from the GPU:
         var request = AsyncGPUReadback.RequestIntoNativeArray(ref narray, resizeRT, 0, (AsyncGPUReadbackRequest request) =>
         {
+            Debug.Log("Readback was succesful");
             // if the readback was successful, encode and write the results to disk
             if (!request.hasError)
             {
@@ -135,6 +138,7 @@ public class BookCovers : MonoBehaviour
                         break;
                 }
 
+                Debug.Log("Write bytes to disk");
                 System.IO.File.WriteAllBytes(filePath, encoded.ToArray());
                 encoded.Dispose();
             }
