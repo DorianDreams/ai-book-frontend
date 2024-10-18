@@ -55,7 +55,7 @@ public class BookCovers : MonoBehaviour
     {
         Debug.Log("Save current cover");    
 
-        SaveTextureToFile(renderTexture, "C:\\Users\\Tonja\\Documents\\GitHub\\AI-Book-Frontend\\src\\Assets\\Resources\\BookCovers\\" + System.DateTime.Now.Ticks + ".jpg", 1024, 819);
+        SaveTextureToFile(renderTexture, "./Assets/Resources/BookCovers/" + System.DateTime.Now.Ticks + ".jpg", 1024, 819);
     
     }
 

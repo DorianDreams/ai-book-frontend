@@ -31,6 +31,7 @@ public class Main : MonoBehaviour
         EventSystem.instance.EnableOwnershipScreen += OnEnableOwnsershipScreen;
         EventSystem.instance.FinishPlaythrough += OnFinishPlaythrough;
         bookCovers.SetActive(true);
+        start.SetActive(true);
         draw.SetActive(false);
         result.SetActive(false);
         sentence.SetActive(false);
