@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//Test
 public class EventManager : MonoBehaviour
 {
     private Dictionary<string, Action<EventParam>> eventDictionary;
