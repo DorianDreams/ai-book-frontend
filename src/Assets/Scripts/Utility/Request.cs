@@ -19,6 +19,8 @@ public class Request : MonoBehaviour
     {
         
     }
+
+    
     public static IEnumerator GetImageGeneration(string caption, float strength, byte[] screenshot)
     {
         if (Metadata.Instance.testingMode)
@@ -30,7 +32,6 @@ public class Request : MonoBehaviour
         else
         {
 
-        
         string json = "{\"strength" + "\":" + strength.ToString("0.0", CultureInfo.InvariantCulture) + "}";
         string prompt = Metadata.Instance.consistencyPrompt + Metadata.Instance.currentPrompt + caption;
         string url = "http://127.0.0.1:8000/api/images/" + Metadata.Instance.storyBookId
