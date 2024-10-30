@@ -3849,7 +3849,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -204, y: 166}
+  m_AnchoredPosition: {x: -75.25, y: 166}
   m_SizeDelta: {x: 212.2, y: 314.11}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &242416858
@@ -11649,8 +11649,8 @@ MonoBehaviour:
   bookText: {fileID: 8902872392068904645}
   pageNumberRight: {fileID: 8711862845865431411}
   pageNumberLeft: {fileID: 5039642603702990375}
-  charactersPerSecond: 500
-  interpunctuationDelay: 0
+  charactersPerSecond: 25
+  interpunctuationDelay: 0.3
   sendDoneDelay: 0.25
   current: 0
   references:
