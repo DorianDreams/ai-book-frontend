@@ -42,7 +42,7 @@ public class Main : MonoBehaviour
         escapeButton.SetActive(false);
 
         //Add global error handling that restarts the scene
-        //Application.logMessageReceived += HandleException;
+        Application.logMessageReceived += HandleException;
 
     }
 
