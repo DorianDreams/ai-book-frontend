@@ -215,7 +215,7 @@ public class DrawingScreenController : MonoBehaviour
         }
         else
         {
-            screenShot.ReadPixels(new Rect(startX, startY+80, textWidth, textHeight), 0, 0);
+            screenShot.ReadPixels(new Rect(startX, startY+44, textWidth, textHeight), 0, 0);
         }
         Camera.main.targetTexture = null;
         RenderTexture.active = null;

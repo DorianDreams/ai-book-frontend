@@ -456,7 +456,7 @@ namespace echo17.EndlessBook.Demo03
         IEnumerator CreateCover(string story)
         {
 
-            CoroutineWithData cd_cover = new CoroutineWithData(this, Request.GetImageGeneration(story, 1f,null));
+            CoroutineWithData cd_cover = new CoroutineWithData(this, Request.GetImageGeneration(story, 1f,imageBytes[0]));
             yield return cd_cover.coroutine;
             Dictionary<string, string> returnVal = (Dictionary<string, string>)cd_cover.result;
             string imagePath = returnVal["image"].ToString();

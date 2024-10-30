@@ -1948,7 +1948,7 @@ MonoBehaviour:
   startingPrompt: 
   selectedCharacter: 
   currentImgID: 
-  testingMode: 1
+  testingMode: 0
   consistencyPrompt: 
   currentChapter: ch1
   currentLLM: 0
@@ -2335,7 +2335,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 180}
+  m_AnchoredPosition: {x: 0, y: 159}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &148555753
@@ -3849,7 +3849,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -204, y: 173}
+  m_AnchoredPosition: {x: -204, y: 166}
   m_SizeDelta: {x: 212.2, y: 314.11}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &242416858
@@ -3872,7 +3872,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Start new story?
+  m_text: Neustart?
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e241c0e608301b3409f635f546799090, type: 2}
   m_sharedMaterial: {fileID: 4951218935090670569, guid: e241c0e608301b3409f635f546799090, type: 2}
@@ -5609,7 +5609,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Ai
+  m_text: AI
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e241c0e608301b3409f635f546799090, type: 2}
   m_sharedMaterial: {fileID: 4951218935090670569, guid: e241c0e608301b3409f635f546799090, type: 2}
@@ -7888,7 +7888,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 595763809}
-  - component: {fileID: 595763810}
   m_Layer: 5
   m_Name: Controls
   m_TagString: Untagged
@@ -7919,89 +7918,6 @@ RectTransform:
   m_AnchoredPosition: {x: 167, y: 92}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &595763810
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 595763808}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 69beb381e244f92449b8c4cf954630e9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_TrackedObjects:
-  - rid: 7856925789660381275
-  references:
-    version: 2
-    RefIds:
-    - rid: 7856925789660381275
-      type: {class: TrackedRectTransform, ns: UnityEngine.Localization.PropertyVariants.TrackedObjects, asm: Unity.Localization}
-      data:
-        m_Target: {fileID: 595763809}
-        m_TrackedProperties:
-          items:
-          - rid: 7856925789660381276
-          - rid: 7856925789660381277
-          - rid: 7856925789660381278
-          - rid: 7856925789660381279
-          - rid: 7856925789660381280
-    - rid: 7856925789660381276
-      type: {class: BoolTrackedProperty, ns: UnityEngine.Localization.PropertyVariants.TrackedProperties, asm: Unity.Localization}
-      data:
-        m_PropertyPath: m_ConstrainProportionsScale
-        m_VariantData:
-        - localeIdentifier:
-            m_Code: en
-          value: 0
-        - localeIdentifier:
-            m_Code: de
-          value: 1
-    - rid: 7856925789660381277
-      type: {class: FloatTrackedProperty, ns: UnityEngine.Localization.PropertyVariants.TrackedProperties, asm: Unity.Localization}
-      data:
-        m_PropertyPath: m_LocalScale.x
-        m_VariantData:
-        - localeIdentifier:
-            m_Code: en
-          value: 1
-        - localeIdentifier:
-            m_Code: de
-          value: 2
-    - rid: 7856925789660381278
-      type: {class: FloatTrackedProperty, ns: UnityEngine.Localization.PropertyVariants.TrackedProperties, asm: Unity.Localization}
-      data:
-        m_PropertyPath: m_LocalScale.y
-        m_VariantData:
-        - localeIdentifier:
-            m_Code: en
-          value: 1
-        - localeIdentifier:
-            m_Code: de
-          value: 2
-    - rid: 7856925789660381279
-      type: {class: FloatTrackedProperty, ns: UnityEngine.Localization.PropertyVariants.TrackedProperties, asm: Unity.Localization}
-      data:
-        m_PropertyPath: m_LocalScale.z
-        m_VariantData:
-        - localeIdentifier:
-            m_Code: en
-          value: 1
-        - localeIdentifier:
-            m_Code: de
-          value: 2
-    - rid: 7856925789660381280
-      type: {class: FloatTrackedProperty, ns: UnityEngine.Localization.PropertyVariants.TrackedProperties, asm: Unity.Localization}
-      data:
-        m_PropertyPath: m_AnchoredPosition.y
-        m_VariantData:
-        - localeIdentifier:
-            m_Code: en
-          value: 92
-        - localeIdentifier:
-            m_Code: de
-          value: 960
 --- !u!1 &604944102
 GameObject:
   m_ObjectHideFlags: 0
@@ -8630,15 +8546,15 @@ RectTransform:
   m_GameObject: {fileID: 674555483}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.3321483, y: 1.3321483, z: 1.3321483}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 690305097}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 154.66702, y: -59}
-  m_SizeDelta: {x: 800, y: 800}
+  m_AnchoredPosition: {x: 159, y: -85}
+  m_SizeDelta: {x: 1024, y: 990}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &674555485
 MonoBehaviour:
@@ -18178,7 +18094,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 0.15686275, g: 0.15686275, b: 0.15686275, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -22771,7 +22687,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -21}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!20 &2516747984797180911
@@ -23557,7 +23473,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 80}
+  m_AnchoredPosition: {x: 0, y: 44}
   m_SizeDelta: {x: 800, y: 800}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3588440566125528809
