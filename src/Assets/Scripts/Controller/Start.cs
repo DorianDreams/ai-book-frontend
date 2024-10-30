@@ -148,7 +148,7 @@ public class StartSelectionController : MonoBehaviour
                 
                 break;
             case 4:
-                Metadata.Instance.selectedCharacter = "Blauzahn";
+                Metadata.Instance.selectedCharacter = "Wissenschaf";
                 break;
             case 5:
                 Metadata.Instance.selectedCharacter = "Wanda";
