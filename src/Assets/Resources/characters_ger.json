@@ -28,10 +28,10 @@
     },
     
     "Wissenschaf":{
-        "ch1":["Der kleine Bär Blauzahn liebt es, im Wald zu spielen. Du siehst","Wie sieht der Wald aus?"],
-        "ch2":["Blauzahn hat viele Spielsachen. Du siehst","Wie sieht sein Lieblingsspielzeug aus?"],
-        "ch3":["Blauzahn interessiert sich sehr für Technik. Du siehst","Wie sieht seine Lieblingstechnologie aus?"],
-        "consistency": "young cute black bear, friendly"
+        "ch1":["Das Wissenschaf liebt es auf einer Wiese zu spielen. Du siehst","Wie sieht die Wiese aus?"],
+        "ch2":["Das Wissenschaf hat viele wissenschaftliche Apparate. Du siehst","Wie sieht das Wissenschaf bei der Arbeit aus?"],
+        "ch3":["Das Wissenschaf arbeitet im Museum. Du siehst","Wie sieht das Museum aus?"],
+        "consistency": "scientist sheep"
     },
     
     "Datenkrake":{

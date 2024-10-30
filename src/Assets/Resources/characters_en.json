@@ -28,10 +28,10 @@
     },
     
     "Wissenschaf":{
-        "ch1":["The little bear Blauzahn loves to play in the forest. You see","What does the forest look like?"],
-        "ch2":["Blauzahn has many toys. You see","What does his favourite toy look like?"],
-        "ch3":["Blauzahn is deeply interested in technology. You see","What does his favourite technology look like?"],
-        "consistency": "young cute black bear, friendly"
+        "ch1":["The sheep 'Wissenschaf' loves to play in a meadow. You see.","What does the meadow look like?"],
+        "ch2":["The sheep 'Wissenschaf' has many scientific apparatuses. You see","How does the Wissenschaf look like at work?"],
+        "ch3":["The sheep 'Wissenschaf' works in the museum. You see","What does the museum look like?"],
+        "consistency": "scientist sheep"
     },
     
     "Datenkrake":{
