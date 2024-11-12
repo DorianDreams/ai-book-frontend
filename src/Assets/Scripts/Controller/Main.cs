@@ -39,9 +39,10 @@ public class Main : MonoBehaviour
         book.SetActive(false);
         overlay.SetActive(false);
         escapeButton.SetActive(false);
+        start.SetActive(true);
 
         //Add global error handling that restarts the scene
-        //Application.logMessageReceived += HandleException;
+        Application.logMessageReceived += HandleException;
 
     }
 

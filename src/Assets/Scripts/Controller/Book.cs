@@ -439,7 +439,6 @@ namespace echo17.EndlessBook.Demo03
             book.SetState(EndlessBook.StateEnum.ClosedFront);
             EventSystem.instance.DisableBookNavigatorEvent();
             EventSystem.instance.EnableOwnershipScreenEvent();
-            EventSystem.instance.ChooseCoverImageEvent(imageBytes[0]);
 
             string alltext = string.Concat(bookTextPages.ToArray());
 
@@ -451,8 +450,23 @@ namespace echo17.EndlessBook.Demo03
                     sb.Append(i);
 
             alltext = sb.ToString();
+
+            StartCoroutine(CreateCover(alltext));
             StartCoroutine(CreateTitle(alltext));
         }
+
+        IEnumerator CreateCover(string story)
+        {
+            CoroutineWithData cd_cover = new CoroutineWithData(this, Request.GetImageGeneration(story, 1f, imageBytes[0]));
+            yield return cd_cover.coroutine;
+            Dictionary<string, string> returnVal = (Dictionary<string, string>)cd_cover.result;
+            string imagePath = returnVal["image"].ToString();
+            string fullpath = "../../storybookcreator" + imagePath;
+            byte[] cover = System.IO.File.ReadAllBytes(fullpath);
+            EventSystem.instance.ChooseCoverImageEvent(cover);
+        }
+
+
 
         public void GoToPreviousPage()
         {

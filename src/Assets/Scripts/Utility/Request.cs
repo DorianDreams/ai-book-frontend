@@ -156,6 +156,7 @@ public class Request : MonoBehaviour
                 if (request.result != UnityWebRequest.Result.Success)
                 {
                     Debug.Log(request.error);
+                    yield return "Die Übersetzung ist fehlgeschlagen. Versuchen Sie es bitte erneut oder starten Sie einen neuen Spieldurchlauf.";
                 }
                 else
                 {

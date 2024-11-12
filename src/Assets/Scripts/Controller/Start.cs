@@ -26,18 +26,15 @@ public class StartSelectionController : MonoBehaviour
     [Header("Localized Texts")]
     [SerializeField]
     private LocalizedString StartingText;
-    [SerializeField]
-    private LocalizedString GrandmaText;
 
     [SerializeField]
     private LocalizedString InfoBoxText;
 
-    public GameObject GrandmaTextBox;
     public GameObject InfoText;
 
     private bool textboxopen = false;
 
-    private int _currentSelectedIndex;
+    private int? _currentSelectedIndex = null;
 
     // Start is called before the first frame update
     void Start()
@@ -131,6 +128,13 @@ public class StartSelectionController : MonoBehaviour
     {
         Locale currentSelectedLocale = LocalizationSettings.SelectedLocale;
         ILocalesProvider availableLocales = LocalizationSettings.AvailableLocales;
+
+
+        if (_currentSelectedIndex == null)
+        {
+            _currentSelectedIndex = Random.Range(0, 6);
+        }
+
         switch (_currentSelectedIndex)
         {
             case 0:
@@ -153,13 +157,6 @@ public class StartSelectionController : MonoBehaviour
             case 5:
                 Metadata.Instance.selectedCharacter = "Wanda";
                 break;
-        }
-        if (Metadata.Instance.selectedCharacter == "")
-        {
-            Debug.Log("Get Random Prompt");
-            string random_prompt = getInitialPrompts();
-            Metadata.Instance.currentPrompt = random_prompt;
-            Metadata.Instance.startingPrompt = random_prompt;
         }
         
         EventSystem.instance.StartStoryEvent();
@@ -197,7 +194,6 @@ public class StartSelectionController : MonoBehaviour
     void OnChangeLocale()
     {
         StartingHeadline.GetComponent<TextMeshProUGUI>().text = StartingText.GetLocalizedString();
-        GrandmaTextBox.GetComponent<TextMeshProUGUI>().text = GrandmaText.GetLocalizedString();
         InfoText.GetComponent<TextMeshProUGUI>().text = InfoBoxText.GetLocalizedString();
     }
 
