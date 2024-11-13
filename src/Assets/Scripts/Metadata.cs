@@ -6,7 +6,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
-using Newtonsoft.Json;
+
 
 public class Metadata : MonoBehaviour
 {

@@ -1,9 +1,9 @@
 {
     "Pfiffikus":{
-        "ch1":["Pfiffikus loves being in the forest. You see", "What does the forest look like?"],
-        "ch2":["One day, Pfiffikus finds a mysterious object in the forest. You see", "What object does he find?"],
-        "ch3":["Pfiffikus gets teleported to the entrance of a big building he’s never seen before. You see", "What does the building look like?"],
-        "consistency": "Light Grey Owl, Pfiffikus"
+        "ch1":["a painting by rachel ruysch, still life, many flowers","What do the flowers look like?"],
+        "ch2":["a painting by rachel ruysch",""],
+        "ch3":["a painting by rachel ruysch",""],
+        "consistency": "a painting by rachel ruysch"
     },
     "Edgar":{
         "ch1":["Edgar the elephant loves music. When you visit him, you see", "What instrument does he play?"],

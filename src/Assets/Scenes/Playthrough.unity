@@ -2043,7 +2043,7 @@ MonoBehaviour:
   startingPrompt: 
   selectedCharacter: 
   currentImgID: 
-  testingMode: 1
+  testingMode: 0
   consistencyPrompt: 
   currentChapter: ch1
   currentLLM: 0
@@ -6595,7 +6595,6 @@ GameObject:
   m_Component:
   - component: {fileID: 475673696}
   - component: {fileID: 475673695}
-  - component: {fileID: 475673697}
   m_Layer: 0
   m_Name: LightSystem
   m_TagString: Untagged
@@ -6632,45 +6631,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &475673697
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 475673694}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 69beb381e244f92449b8c4cf954630e9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_TrackedObjects:
-  - rid: 2381801035743625220
-  references:
-    version: 2
-    RefIds:
-    - rid: 2381801035743625220
-      type: {class: TrackedMonoBehaviourObject, ns: UnityEngine.Localization.PropertyVariants.TrackedObjects, asm: Unity.Localization}
-      data:
-        m_Target: {fileID: 475673695}
-        m_TrackedProperties:
-          items:
-          - rid: 2381801035743625221
-        m_UpdateType: 0
-        m_Changed:
-          m_PersistentCalls:
-            m_Calls: []
-    - rid: 2381801035743625221
-      type: {class: StringTrackedProperty, ns: UnityEngine.Localization.PropertyVariants.TrackedProperties, asm: Unity.Localization}
-      data:
-        m_PropertyPath: portName
-        m_VariantData:
-        - localeIdentifier:
-            m_Code: en
-          value: COM4
-        - localeIdentifier:
-            m_Code: de
-          value: COM4
 --- !u!1 &499163278
 GameObject:
   m_ObjectHideFlags: 0
@@ -18417,7 +18377,6 @@ GameObject:
   - component: {fileID: 1972890442}
   - component: {fileID: 1972890441}
   - component: {fileID: 1972890443}
-  - component: {fileID: 1972890444}
   m_Layer: 9
   m_Name: CurrentCover
   m_TagString: Untagged
@@ -18474,47 +18433,6 @@ MonoBehaviour:
   spine: {fileID: 324925777}
   authorshipText: {fileID: 719997897}
   renderTexture: {fileID: 0}
---- !u!114 &1972890444
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1972890440}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 69beb381e244f92449b8c4cf954630e9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_TrackedObjects:
-  - rid: 6472121657764085766
-  references:
-    version: 2
-    RefIds:
-    - rid: 6472121657764085766
-      type: {class: TrackedMonoBehaviourObject, ns: UnityEngine.Localization.PropertyVariants.TrackedObjects, asm: Unity.Localization}
-      data:
-        m_Target: {fileID: 1972890443}
-        m_TrackedProperties:
-          items:
-          - rid: 6472121657764085767
-        m_UpdateType: 0
-        m_Changed:
-          m_PersistentCalls:
-            m_Calls: []
-    - rid: 6472121657764085767
-      type: {class: UnityObjectProperty, ns: UnityEngine.Localization.PropertyVariants.TrackedProperties, asm: Unity.Localization}
-      data:
-        m_PropertyPath: renderTexture
-        m_TypeString: UnityEngine.Texture, UnityEngine.CoreModule, Version=0.0.0.0,
-          Culture=neutral, PublicKeyToken=null
-        m_VariantData:
-        - localeIdentifier:
-            m_Code: en
-          value: {fileID: 0}
-        - localeIdentifier:
-            m_Code: de
-          value: {fileID: 8400000, guid: 531788f4879022846b29e6c39f8cbd58, type: 2}
 --- !u!1 &1975360665
 GameObject:
   m_ObjectHideFlags: 0
