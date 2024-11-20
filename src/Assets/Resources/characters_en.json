@@ -1,43 +1,29 @@
 {
-    "Pfiffikus":{
-        "ch1":["Pfiffikus loves being in the forest. You see", "What does the forest look like?"],
-        "ch2":["One day, Pfiffikus finds a mysterious object in the forest. You see", "What object does he find?"],
-        "ch3":["Pfiffikus gets teleported to the entrance of a big building he’s never seen before. You see", "What does the building look like?"],
-        "consistency": "Light Grey Owl, Pfiffikus"
+    "Rachel":{
+        "ch1":["Rachel Ruysch is known as one of the most talented still life painters. In your drawing", "Create your own still life paintings with flowers."],
+        "ch2":["Roses, tulips, poppies, and many other flowers can be found in her paintings. In your drawing", "Draw your favourite flowers."],
+        "ch3":["Lizards and butterflies can also be found in her paintings. In your drawing", "Draw your favourite animals and insects."],
+        "consistency": "still life, flowers, Painting by Rachel Ryusch"
     },
-    "Edgar":{
-        "ch1":["Edgar the elephant loves music. When you visit him, you see", "What instrument does he play?"],
-        "ch2":["Edgar the elephant and a group of birds sing a song. You see", "What do the birds look like?"],
-        "ch3":["Edgar the elephant has great success with his music. One day he wins an important award. You see", "What does he win?"],
-        "consistency": "Edgar, the elephant, joyful, music"
-    },
-
-    "Grandma":{
-        "ch1":["I like it when grandma bakes for me. You see", "What does grandma bake?"],
-        "ch2":["Every morning, Grandma wakes up early to tend to her beautiful garden. You see" , "What does her garden look like?"],
-        "ch3":["As I leave Grandma's house, she puts a flower in my hand. You see", "What does the flower look like?"],
-        "consistency": "Grandma, old"
-
+    "Frederik":{
+        "ch1":["Frederik Ruysch is known as a botanist and anatomist. In your drawing", "Create your own collection of botany artworks."],
+        "ch2":["Ruyschia are climbing shrubs or lianas and were named in honor of Frederick Ruysch. In your drawing", "Create your own drawing of Ruyschia."],
+        "ch3":["Lizards and butterflies where also of great interest to him. In your drawing", "Create your own drawing with butterflies or lizards."],
+        "consistency": "Botany, plants"
     },
 
-    "Wanda":{
-        "ch1":["Wanda is a mighty old witch. You see", "What does Wanda look like?"],
-        "ch2":["In the night, Wanda the witch brews a powerful potion. You see", "What does the potion look like?"],
-        "ch3":["Wanda the witch's most treasured possession is a magical item. You see", "What does the magical item look like?"],
-        "consistency": "Wanda, old witch"
+    "Butterfly":{
+        "ch1":["Butterflies can be found in Rachel Ruysch paintings. In your drawing", "Create your own drawing with butterflies."],
+        "ch2":["Butterflies live in nearly all types of habitat. In your drawing" , "Where do your butterflies live?"],
+        "ch3":["Butterflies are often found on flowers. In your drawing", "What do the flowers look like?"],
+        "consistency": "Butterfly, still life, Painting by Rachel Ryusch"
+
     },
-    
-    "Blauzahn":{
-        "ch1":["The little bear Blauzahn loves to play in the forest. You see","What does the forest look like?"],
-        "ch2":["Blauzahn has many toys. You see","What does his favourite toy look like?"],
-        "ch3":["Blauzahn is deeply interested in technology. You see","What does his favourite technology look like?"],
-        "consistency": "young cute black bear, friendly"
-    },
-    
-    "Datenkrake":{
-        "ch1":["The octopus Datenkrake spends a lot of time in the library. You see", "What does the library look like?"],
-        "ch2":["The octopus Datenkrake works a lot of time on the computer. You see", "What does he look like when he works?"],
-        "ch3":["The octopus Datenkrake loves museums where he discoveres new technologies. You see", "What new technologies does he discover?"],
-        "consistency": "octopus, internet, data"
+
+    "Lizard":{
+        "ch1":["Lizards can be found in Rachel Ruysch paintings. In your drawing", "Create your own book about a lizard. What does the lizard look like?"],
+        "ch2":["Lizards live in tropical forests, among other places. In your drawing", "Where does your lizard live?"],
+        "ch3":["In paintings the lizard is sorrounded by beautiful flowers. In your drawing", "What do the flowers look like?"],
+        "consistency": "Lizard, drawing"
     }
 }

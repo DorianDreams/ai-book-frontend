@@ -20,7 +20,7 @@ public class StartSelectionController : MonoBehaviour
     public GameObject imageResultBackgrounds;
     public GameObject ButtonGerman;
     public GameObject ButtonEnglish;
-    private GameObject[] ImageResultBackground = new GameObject[6];
+    private GameObject[] ImageResultBackground = new GameObject[4];
 
 
     [Header("Localized Texts")]
@@ -132,31 +132,26 @@ public class StartSelectionController : MonoBehaviour
 
         if (_currentSelectedIndex == null)
         {
-            _currentSelectedIndex = Random.Range(0, 6);
+            _currentSelectedIndex = Random.Range(0, 4);
         }
 
         switch (_currentSelectedIndex)
         {
             case 0:
-                Metadata.Instance.selectedCharacter = "Datenkrake";
+                Metadata.Instance.selectedCharacter = "Rachel";
                 break;
             case 1:
-                Metadata.Instance.selectedCharacter = "Grandma";
+                Metadata.Instance.selectedCharacter = "Frederik";
                 break;
             case 2:
-                Metadata.Instance.selectedCharacter = "Pfiffikus";
+                Metadata.Instance.selectedCharacter = "Butterfly";
 
                 break;
             case 3:
-                Metadata.Instance.selectedCharacter = "Edgar";
+                Metadata.Instance.selectedCharacter = "Lizard";
                 
                 break;
-            case 4:
-                Metadata.Instance.selectedCharacter = "Blauzahn";
-                break;
-            case 5:
-                Metadata.Instance.selectedCharacter = "Wanda";
-                break;
+
         }
         
         EventSystem.instance.StartStoryEvent();

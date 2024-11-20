@@ -1,43 +1,30 @@
 {
-    "Pfiffikus":{
-        "ch1":["Pfiffikus liebt es, im Wald zu sein. Du siehst", "Wie sieht der Wald aus?"],
-        "ch2":["Eines Tages findet Pfiffikus einen geheimnisvollen Gegenstand im Wald. Du siehst", "Wie sieht der Gegenstand aus?"],
-        "ch3":["Pfiffikus wird zum Eingang eines großen Gebäudes teleportiert, das er noch nie zuvor gesehen hat. Du siehst", "Wie sieht das Gebäude aus?"],
-        "consistency": "Light Grey Owl"
+    "Rachel":{
+        "ch1":["Rachel Ruysch ist als eine der talentiertesten Stilllebenmalerinnen bekannt. In deiner Zeichnung", "Gestalte dein eigenes Stillleben mit Blumen."],
+        "ch2":["Rosen, Tulpen, Mohnblumen und viele andere Blumen sind in ihren Gemälden zu finden. In deiner Zeichnung", "Zeichne deine Lieblingsblumen."],
+        "ch3":["Auch Eidechsen und Schmetterlinge sind in ihren Bildern zu finden. In deiner Zeichnung", "Zeichne deine Lieblingstiere und -insekten."],
+        "consistency": "Flowers, Painting by Rachel Ryusch, still life, flowers"
     },
-    "Edgar":{
-        "ch1":["Edgar, der Elefant, liebt Musik. Wenn du ihn besuchen kommst, siehst du", "Welches Instrument spielt er?"],
-        "ch2":["Edgar und eine Gruppe von Vögel singen ein Lied. Du siehst", "Wie sehen sie die Vögel aus?"],
-        "ch3":["Edgar, der Elefant, hat großen Erfolg mit seiner Musik. Eines Tages gewinnt er einen wichtigen Preis. Du siehst", "Wie sieht der Preis aus?"],
-        "consistency": "Edgar, the elephant, joyful, music"
+    "Frederik":{
+        "ch1":["Frederik Ruysch ist als Botaniker und Anatom bekannt. In deiner Zeichnung", "Erstelle deine eigene Sammlung von Botanik-Kunstwerken."],
+        "ch2":["Ruyschia sind kletternde Sträucher oder Lianen und wurden zu Ehren Frederick Ruysch so benannt", "Erstelle deine eigene Zeichnung von Ruyschia."],
+        "ch3":["Auch Eidechsen und Schmetterlinge waren für ihn von großem Interesse. In deiner Zeichnung", "Erstellen deine eigene Zeichnung mit Schmetterlingen oder Eidechsen."],
+        "consistency": "Botany, plants"
     },
 
-    "Grandma":{
-        "ch1":["Ich liebe es, wenn Oma für mich backt. Du siehst", "Was backt Oma?"],
-        "ch2":["Jeden Morgen steht Oma früh auf, um ihren Garten zu pflegen. Du siehst" , "Wie sieht ihr Garten aus?"],
-        "ch3":["Als ich Omas Haus verlasse, drückt sie mir eine Blume in die Hand. Du siehst", "Wie sieht die Blume aus?"],
+    "Butterfly":{
+        "ch1":["Schmetterlinge sind in Rachel Ruyschs Gemälden zu finden. In deiner Zeichnung", "Erstellen deine eigene Zeichnung mit Schmetterlingen."],
+        "ch2":["Schmetterlinge leben in fast allen Arten von Lebensräumen. In deiner Zeichnung" , "Wo leben deine gezeichneten Schmetterlinge?"],
+        "ch3":["Schmetterlinge sind oft auf Blumen zu finden. In deiner Zeichnung" , "Wie sehen die Blumen aus?"],
         "consistency": "Grandma, old"
 
     },
 
-    "Wanda":{
-        "ch1":["Wanda ist eine mächtige alte Hexe. Du siehst", "Wie sieht Wanda aus?"],
-        "ch2":["In der Nacht braut Wanda, die Hexe, einen starken Trank. Du siehst", "Wie sieht der Trank aus?"],
-        "ch3":["Der wertvollste Besitz von Wanda, der Hexe, ist ein magischer Gegenstand. Du siehst", "Wie sieht der magische Gegenstand aus?"],
-        "consistency": "Wanda, old witch"
-    },
-    
-    "Blauzahn":{
-        "ch1":["Der kleine Bär Blauzahn liebt es, im Wald zu spielen. Du siehst","Wie sieht der Wald aus?"],
-        "ch2":["Blauzahn hat viele Spielsachen. Du siehst","Wie sieht sein Lieblingsspielzeug aus?"],
-        "ch3":["Blauzahn interessiert sich sehr für Technik. Du siehst","Wie sieht seine Lieblingstechnologie aus?"],
-        "consistency": "young cute black bear, friendly"
-    },
-    
-    "Datenkrake":{
-        "ch1":["Der Oktopus Datenkrake verbringt viel Zeit in der Bibliothek. Du siehst", "Wie sieht die Bibliothek aus?"],
-        "ch2":["Die Oktopus Datenkrake arbeitet viel Zeit am Computer. Du siehst", "Wie sieht er aus, wenn er arbeitet?"],
-        "ch3":["Der Oktopus Datenkrake liebt Museen, in denen er neue Technologien entdeckt. Du siehst", "Welche neuen Technologien entdeckt er?"],
-        "consistency": "octopus, internet, data"
+    "Lizard":{
+        "ch1":["Eidechsen sind in den Gemälden von Rachel Ruysch zu finden. In deiner Zeichnung", "Erstellen deine eigene Zeichnung einer Eidechse."],
+        "ch2":["Eidechsen leben unter anderem in tropischen Wäldern. In deiner Zeichnung", "Wo lebt deine Eidechse?"],
+        "ch3":["Auf den Bildern ist die Eidechse von schönen Blumen umgeben. In deiner Zeichnung", "Wie sehen die Blumen aus?"],
+        "consistency": "Lizard, drawing"
     }
+    
 }
