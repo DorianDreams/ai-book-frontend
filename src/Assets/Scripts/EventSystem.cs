@@ -148,7 +148,6 @@ public class EventSystem : MonoBehaviour
     }
 
 
-
     // --------------- Gameplay Events ---------------
     public event Action FinishPlaythrough;
     public void FinishPlaythroughEvent()
