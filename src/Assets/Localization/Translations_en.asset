@@ -67,7 +67,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 52936955683323904
-    m_Localized: FINISH BOOK
+    m_Localized: FINISH
     m_Metadata:
       m_Items: []
   - m_Id: 52938374700253184
@@ -116,6 +116,44 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 95929337181552640
     m_Localized: Grandma
+    m_Metadata:
+      m_Items: []
+  - m_Id: 111282517401657344
+    m_Localized: REGENERATE
+    m_Metadata:
+      m_Items: []
+  - m_Id: 111292231770431488
+    m_Localized: SELECT
+    m_Metadata:
+      m_Items: []
+  - m_Id: 111793169014710272
+    m_Localized: Create a children's book with AI and decide who the author is.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 111793445746499584
+    m_Localized: The book will be three pages long, so take a few minutes to read
+      it.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 111794138419027968
+    m_Localized: ' '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 111794197864898560
+    m_Localized: Have fun with our prototype!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 111797384072126464
+    m_Localized: The book is completed!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 111798488931491840
+    m_Localized: 'You completed the book creation.
+
+
+      Now take your time to
+      look through the book by pressing the arrow buttons or finish the playthrough
+      by pressing "finish".'
     m_Metadata:
       m_Items: []
   references:
