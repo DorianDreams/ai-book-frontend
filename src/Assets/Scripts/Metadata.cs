@@ -70,7 +70,6 @@ public class Metadata : MonoBehaviour
     {
         StartCoroutine(PutFinishedStoryBook(() =>
         {
-            SceneManager.LoadScene("Playthrough");
 
         }));
     }
