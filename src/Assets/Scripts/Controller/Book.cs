@@ -52,6 +52,11 @@ namespace echo17.EndlessBook.Demo03
         private List<byte[]> imageBytes;
 
         [Header("Book Navigator")]
+        [SerializeField]
+        private LocalizedString FinishBookText;
+
+        public GameObject FinishBookTextBox;
+
         public GameObject BookNavigator;
         public GameObject SentenceRegeneration;
         public Button previousPage;
@@ -61,6 +66,9 @@ namespace echo17.EndlessBook.Demo03
         public Button publishSentence;
         public GameObject finishBook;
 
+        public GameObject AiTextBox;
+        [SerializeField]
+        private LocalizedString AiText;
 
         [SerializeField]
         private LocalizedString RegenerateText;
@@ -72,6 +80,10 @@ namespace echo17.EndlessBook.Demo03
         private LocalizedString FirstPageText;
         [SerializeField]
         private LocalizedString ContinueText;
+
+        [SerializeField]
+        private LocalizedString FinishedTheBook;
+        public GameObject FinishedTheBookTextBox;
 
         public Vector3 screenPosition;
         [Header("Book Pages")]
@@ -115,6 +127,13 @@ namespace echo17.EndlessBook.Demo03
 
         void OnEnable()
         {
+            if (Metadata.Instance.testingMode)
+            {
+                charactersPerSecond = 300;
+                interpunctuationDelay = 0f;
+
+            }
+
             LoadJson();
             CompleteTextRevealed += () => OnCompleteTextRevealed();
             StartStory = (EndlessBook.StateEnum fromState,EndlessBook.StateEnum toState, int pageNumber)
@@ -223,6 +242,7 @@ namespace echo17.EndlessBook.Demo03
                 arrow.SetActive(true);
                 EventSystem.instance.EnableDrawingScreenEvent();
                 current = PageFocus.finishChapter;
+                EventSystem.instance.EnableRestartButtonEvent();
             } else
             {
                 GoToNextChapter();
@@ -237,6 +257,11 @@ namespace echo17.EndlessBook.Demo03
             bookTextPages = new List<string>();
 
             RegenerateTextBox.GetComponent<TextMeshProUGUI>().text = RegenerateText.GetLocalizedString();
+            FinishBookTextBox.GetComponent<TextMeshProUGUI>().text = FinishBookText.GetLocalizedString();
+            AiTextBox.GetComponent<TextMeshProUGUI>().text = AiText.GetLocalizedString();
+            FinishedTheBookTextBox.GetComponent<TextMeshProUGUI>().text = FinishedTheBook.GetLocalizedString();
+
+
             previousPage.interactable = false;
             _currentTemperature = StartingTemperature;
             EventSystem.instance.StartStory += OnStartStory;
@@ -306,8 +331,12 @@ namespace echo17.EndlessBook.Demo03
 
         public void OnPublishTextToBook()
         {
+            EventSystem.instance.DisableRestartButtonEvent();
+
             Debug.Log("Publish Text");
             bookPrompt.SetActive(false);
+            bookTextPages.Add(proposalText.GetComponent<TextMeshProUGUI>().text);
+
             bookText.GetComponent<TextMeshProUGUI>().text = proposalText.GetComponent<TextMeshProUGUI>().text;
             PrepareForNewText(bookText);
 
@@ -334,7 +363,6 @@ namespace echo17.EndlessBook.Demo03
             bookImage.SetActive(false);
             bookPrompt.GetComponent<TextMeshProUGUI>().text = "";
             bookPrompt2.GetComponent<TextMeshProUGUI>().text = "";
-            bookTextPages.Add(bookText.GetComponent<TextMeshProUGUI>().text);
             bookText.GetComponent<TextMeshProUGUI>().text = "";
 
         }
@@ -345,8 +373,11 @@ namespace echo17.EndlessBook.Demo03
             EventSystem.instance.CubeWaveRightEvent();
             if (book.CurrentPageNumber == 5) 
             {
-                BookNavigator.SetActive(true);
-            } 
+                //BookNavigator.SetActive(true); Todo
+                OnFinishBook();
+                EventSystem.instance.EnableOwnershipScreenEvent();
+
+            }
             else
             {
                 SavePage(pageRight);
@@ -361,6 +392,8 @@ namespace echo17.EndlessBook.Demo03
 
         IEnumerator SentenceCompletions(byte[] genImage, string prompt)
         {
+            EventSystem.instance.DisableRestartButtonEvent();
+
             SentenceRegeneration.SetActive(true);
             CoroutineWithData cd_completion = new CoroutineWithData(this, Request.GetSentenceCompletion(genImage, prompt, _currentTemperature));
             yield return cd_completion.coroutine;
@@ -380,6 +413,8 @@ namespace echo17.EndlessBook.Demo03
             publishSentence.interactable = true;
             previousPage.interactable = true;
             nextPage.interactable = true;
+            EventSystem.instance.EnableRestartButtonEvent();
+
         }
 
 
@@ -417,7 +452,20 @@ namespace echo17.EndlessBook.Demo03
         {
             CoroutineWithData cd_title = new CoroutineWithData(this, Request.CreateTitle(alltext));
             yield return cd_title.coroutine;
+            Locale currentSelectedLocale = LocalizationSettings.SelectedLocale;
+            ILocalesProvider availableLocales = LocalizationSettings.AvailableLocales;
             string title = (string)cd_title.result;
+
+
+            if (currentSelectedLocale == availableLocales.GetLocale("de"))
+            {
+                CoroutineWithData cd_translation= new CoroutineWithData(this, Request.TranslateSentence(title));
+                yield return cd_translation.coroutine;
+
+
+            }
+
+
             BookTitle.GetComponent<TextMeshProUGUI>().text = title;
             BookTitle.SetActive(true);
             Metadata.Instance.storyBook.title = title;
@@ -425,8 +473,17 @@ namespace echo17.EndlessBook.Demo03
 
         public void OnNextPage()
         {
-            book.TurnForward(turnTime);
-            EventSystem.instance.CubeWaveRightEvent();
+            if (book.CurrentState == EndlessBook.StateEnum.ClosedFront)
+            {
+                book.SetState(EndlessBook.StateEnum.OpenMiddle);
+                book.SetPageNumber(1);
+            } else
+            {
+
+                book.TurnForward(turnTime);
+                EventSystem.instance.CubeWaveRightEvent();
+
+            }
         }
 
         //Todo: implement title generation
@@ -453,6 +510,11 @@ namespace echo17.EndlessBook.Demo03
             StartCoroutine(CreateTitle(alltext));
         }
 
+        public void OnFinishPlaythrough()
+        {
+            EventSystem.instance.FinishPlaythroughEvent();
+        }
+
         IEnumerator CreateCover(string story)
         {
 
@@ -469,7 +531,16 @@ namespace echo17.EndlessBook.Demo03
 
         public void GoToPreviousPage()
         {
+            if(book.CurrentPageNumber == 1)
+            {
+                book.SetState(EndlessBook.StateEnum.ClosedFront);
+
+            }
+            else
+            {
                 book.TurnBackward(turnTime);
+
+            }
             EventSystem.instance.CubeWaveLeftEvent();
 
         }
