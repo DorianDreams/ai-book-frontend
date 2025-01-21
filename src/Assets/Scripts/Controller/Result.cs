@@ -151,6 +151,9 @@ public class ResultScreenController : MonoBehaviour
 
     IEnumerator StableDiffusionInference(byte[] screenshot)
     {
+        CoroutineWithData load = new CoroutineWithData(this, Request.LoadSDXL());
+        yield return load.coroutine;
+        string delete = (string)load.result;
         ChooseImage.GetComponent<Button>().interactable = false;
         BacktoDrawing.GetComponent<Button>().interactable = false;
         ReGenerateImages.GetComponent<Button>().interactable = false;
@@ -174,6 +177,8 @@ public class ResultScreenController : MonoBehaviour
         EnableSelectionButtons();
         _isgenerating = false;
         EventSystem.instance.CubeOffEvent();
+        CoroutineWithData unload = new CoroutineWithData(this, Request.UnLoadSDXL());
+        yield return unload.coroutine;
     }
 
 

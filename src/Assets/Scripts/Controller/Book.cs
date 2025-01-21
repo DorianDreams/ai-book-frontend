@@ -144,7 +144,10 @@ namespace echo17.EndlessBook.Demo03
             ILocalesProvider availableLocales = LocalizationSettings.AvailableLocales;
             if (currentSelectedLocale == availableLocales.GetLocale("de"))
             {
+                //selectedPrompt = SelectPrompt(storyDictGer, Metadata.Instance.selectedCharacter, Metadata.Instance.currentChapter);
+            	Metadata.Instance.currentPrompt = selectedPrompt[0];
                 List<string> selectedPromptGer = SelectPrompt(storyDictGer, Metadata.Instance.selectedCharacter, Metadata.Instance.currentChapter);
+                Metadata.Instance.currentPrompt = selectedPromptGer[0];
                 bookPrompt.GetComponent<TextMeshProUGUI>().text = selectedPromptGer[0] + "..." + "\n\n" + selectedPromptGer[1];
 
 

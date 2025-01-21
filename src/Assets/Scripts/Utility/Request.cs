@@ -15,10 +15,58 @@ public class Request : MonoBehaviour
 {
     // StableDiffusionXLTurbo Call
 
-    void Start()
+
+    
+    public static IEnumerator LoadSDXL()
     {
-        
+        if (Metadata.Instance.testingMode)
+        {
+
+        }
+        else
+        {
+
+
+        string url = "http://127.0.0.1:8000/api/sdxl/loadSDXL";
+
+
+        WWWForm form = new WWWForm();
+        //form.AddBinaryData("image", screenshot);
+        //form.headers["Content-Type"] = "multipart/form-data";
+
+        UnityWebRequest request = UnityWebRequest.Get(url);
+
+        yield return request.SendWebRequest();
+        String returnval = request.downloadHandler.text;
+        yield return returnval;
+
+        }
     }
+    
+        public static IEnumerator UnLoadSDXL()
+    {
+        if (Metadata.Instance.testingMode)
+        {
+
+        }
+        else
+        {
+
+
+        string url = "http://127.0.0.1:8000/api/sdxl/unloadSDXL";
+
+
+        WWWForm form = new WWWForm();
+        //form.AddBinaryData("image", screenshot);
+        //form.headers["Content-Type"] = "multipart/form-data";
+
+        UnityWebRequest request = UnityWebRequest.Get(url);
+
+        yield return request.SendWebRequest();
+
+        }
+    }
+
 
     
     public static IEnumerator GetImageGeneration(string caption, float strength, byte[] screenshot)
