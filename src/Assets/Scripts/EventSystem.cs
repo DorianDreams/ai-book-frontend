@@ -147,6 +147,26 @@ public class EventSystem : MonoBehaviour
         }
     }
 
+    public event Action DisableRestartButton;
+    public void DisableRestartButtonEvent()
+    {
+        if (DisableRestartButton != null)
+        {
+            Debug.Log("Event fired: DisableRestartButtonEvent");
+            DisableRestartButton();
+        }
+    }
+
+    public event Action EnableRestartButton;
+    public void EnableRestartButtonEvent()
+    {
+        if (EnableRestartButton != null)
+        {
+            Debug.Log("Event fired: EnableRestartButtonEvent");
+            EnableRestartButton();
+        }
+    }
+
 
 
     // --------------- Gameplay Events ---------------

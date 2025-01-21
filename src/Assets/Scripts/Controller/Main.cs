@@ -29,7 +29,12 @@ public class Main : MonoBehaviour
         EventSystem.instance.EnableResultScreen += OnEnableResultScreen;
         EventSystem.instance.DisableResultScreen += OnDisableResultScreen;
         EventSystem.instance.EnableOwnershipScreen += OnEnableOwnsershipScreen;
+        EventSystem.instance.DisableOwnershipScreen += OnDisableOwnsershipScreen;
+
         EventSystem.instance.FinishPlaythrough += OnFinishPlaythrough;
+        EventSystem.instance.EnableRestartButton += OnEnableRestartButton;
+        EventSystem.instance.DisableRestartButton += OnDisableRestartButton;
+
         bookCovers.SetActive(true);
         start.SetActive(true);
         draw.SetActive(false);
@@ -42,7 +47,7 @@ public class Main : MonoBehaviour
         escapeButton.SetActive(false);
 
         //Add global error handling that restarts the scene
-        Application.logMessageReceived += HandleException;
+       // Application.logMessageReceived += HandleException;
 
     }
 
@@ -56,6 +61,15 @@ public class Main : MonoBehaviour
         }
     }
 
+    void OnEnableRestartButton()
+    {
+        escapeButton.SetActive(true);
+    }
+
+    void OnDisableRestartButton()
+    {
+        escapeButton.SetActive(false);
+    }
 
     public void OnEnableResultScreen()
     {
@@ -72,7 +86,6 @@ public class Main : MonoBehaviour
         StartCoroutine(Request.CreateStoryBook());
         bookCovers.SetActive(false);
         book.SetActive(true);
-        escapeButton.SetActive(true);
     }
 
     public void OnEnableDrawingScreen()
@@ -84,6 +97,9 @@ public class Main : MonoBehaviour
     {
         ownership.SetActive(true);
     }
+
+    public void OnDisableOwnsershipScreen()
+    { ownership.SetActive(false); }
 
     public void OnEscape()
     {
@@ -111,8 +127,9 @@ public class Main : MonoBehaviour
     void OnFinishPlaythrough()
     {
         EventSystem.instance.SaveCurrentCoverEvent();
-        EventSystem.instance.PublishMetadataEvent();
-        //SceneManager.LoadScene("Playthrough");
+        SceneManager.LoadScene("Playthrough");
+
+
     }
 
 }

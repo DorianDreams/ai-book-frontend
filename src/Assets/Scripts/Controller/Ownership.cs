@@ -49,7 +49,11 @@ public class OwnershipSelectionController : MonoBehaviour
     private LocalizedString No;
     [SerializeField]
     private LocalizedString MEAI;
+    [SerializeField]
+    private LocalizedString Select;
 
+    [SerializeField]
+    private LocalizedString CompletedText;
 
     public GameObject SignTextBox;
     public GameObject AITextBox;
@@ -57,6 +61,9 @@ public class OwnershipSelectionController : MonoBehaviour
     public GameObject MEAIText;
     public GameObject YesText;
     public GameObject NoText;
+    public GameObject SelectTextBox;
+
+    public GameObject CompletedTextBox;
 
     // Start is called before the first frame update
     void Start()
@@ -81,6 +88,10 @@ public class OwnershipSelectionController : MonoBehaviour
         MEAIText.GetComponent<TextMeshProUGUI>().text = MEAI.GetLocalizedString();
         YesText.GetComponent<TextMeshProUGUI>().text = Yes.GetLocalizedString();
         NoText.GetComponent<TextMeshProUGUI>().text = No.GetLocalizedString();
+        SelectTextBox.GetComponent<TextMeshProUGUI>().text = Select.GetLocalizedString();
+
+        CompletedTextBox.GetComponent<TextMeshProUGUI>().text = CompletedText.GetLocalizedString();
+
 
         PublishButton.SetActive(false);
     }
@@ -177,13 +188,21 @@ public class OwnershipSelectionController : MonoBehaviour
             }
             else
             {
-                EventSystem.instance.FinishPlaythroughEvent();
+                EventSystem.instance.EnableBookNavigatorEvent();
+                EventSystem.instance.PublishMetadataEvent();
+                EventSystem.instance.DisableOwnershipScreenEvent();
+                //EventSystem.instance.FinishPlaythroughEvent();
             }
         }
         else
         if (currentState == "signing")
         {
-            EventSystem.instance.FinishPlaythroughEvent();
+            EventSystem.instance.EnableBookNavigatorEvent();
+            EventSystem.instance.PublishMetadataEvent();
+            EventSystem.instance.DisableOwnershipScreenEvent();
+
+
+            //EventSystem.instance.FinishPlaythroughEvent();
 
         }
 

@@ -111,6 +111,38 @@ MonoBehaviour:
     m_Key: GrandmaText
     m_Metadata:
       m_Items: []
+  - m_Id: 111282517401657344
+    m_Key: RegenImage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 111292231770431488
+    m_Key: Select
+    m_Metadata:
+      m_Items: []
+  - m_Id: 111793169014710272
+    m_Key: CreateBook
+    m_Metadata:
+      m_Items: []
+  - m_Id: 111793445746499584
+    m_Key: CreateBook2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 111794138419027968
+    m_Key: CreateBookWarning
+    m_Metadata:
+      m_Items: []
+  - m_Id: 111794197864898560
+    m_Key: CreateBookFun
+    m_Metadata:
+      m_Items: []
+  - m_Id: 111797384072126464
+    m_Key: CompletedText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 111798488931491840
+    m_Key: LookThroughTheBook
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

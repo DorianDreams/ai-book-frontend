@@ -35,6 +35,24 @@ public class StartSelectionController : MonoBehaviour
     public GameObject GrandmaTextBox;
     public GameObject InfoText;
 
+
+    [SerializeField]
+    private LocalizedString CreateBook1Text;
+    [SerializeField]
+    private LocalizedString CreateBook2Text;
+    [SerializeField]
+    private LocalizedString CreateBookWarningText;
+    [SerializeField]
+    private LocalizedString CreateBookFunText;
+
+    public GameObject CreateBook1TextBox;
+    public GameObject CreateBook2TextBox;
+    public GameObject CreateBookWarningTextBox;
+    public GameObject CreateBookFunTextBox;
+
+
+
+
     private bool textboxopen = false;
 
     private int? _currentSelectedIndex = null;
@@ -201,6 +219,12 @@ public class StartSelectionController : MonoBehaviour
         StartingHeadline.GetComponent<TextMeshProUGUI>().text = StartingText.GetLocalizedString();
         GrandmaTextBox.GetComponent<TextMeshProUGUI>().text = GrandmaText.GetLocalizedString();
         InfoText.GetComponent<TextMeshProUGUI>().text = InfoBoxText.GetLocalizedString();
+
+        CreateBook1TextBox.GetComponent<TextMeshProUGUI>().text = CreateBook1Text.GetLocalizedString();
+        CreateBook2TextBox.GetComponent<TextMeshProUGUI>().text = CreateBook2Text.GetLocalizedString();
+        CreateBookWarningTextBox.GetComponent<TextMeshProUGUI>().text = CreateBookWarningText.GetLocalizedString();
+        CreateBookFunTextBox.GetComponent<TextMeshProUGUI>().text = CreateBookFunText.GetLocalizedString();
+
     }
 
     public void OnSelectImage(int i)

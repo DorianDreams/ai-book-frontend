@@ -25,7 +25,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 291756725682176
-    m_Localized: Charakterauswahl
+    m_Localized: "W\xE4hle eine Figur aus"
     m_Metadata:
       m_Items: []
   - m_Id: 1112092086026240
@@ -58,7 +58,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 52935889570938880
-    m_Localized: REGENERIERE
+    m_Localized: ANDERER TEXT
     m_Metadata:
       m_Items: []
   - m_Id: 52936075542183936
@@ -67,7 +67,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 52936955683323904
-    m_Localized: FERTIGSTELLEN
+    m_Localized: BEENDEN
     m_Metadata:
       m_Items: []
   - m_Id: 52938374700253184
@@ -118,6 +118,43 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 95929337181552640
     m_Localized: Oma
+    m_Metadata:
+      m_Items: []
+  - m_Id: 111282517401657344
+    m_Localized: ANDERES BILD
+    m_Metadata:
+      m_Items: []
+  - m_Id: 111292231770431488
+    m_Localized: AUSWAHL
+    m_Metadata:
+      m_Items: []
+  - m_Id: 111793169014710272
+    m_Localized: Erstelle ein Kinderbuch mit KI und entscheide, wer die Autorin oder
+      der Autor ist.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 111793445746499584
+    m_Localized: 'Das Buch wird drei Seiten lang sein, also nimm Dir ein paar Minuten
+      Zeit. '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 111794138419027968
+    m_Localized: "Bemerkung zur deutschen Version: Da die KI alle Texte aus dem Englischen
+      ins Deutsche r\xFCck\xFCbersetzt, kommt es manchmal zu komischen Formulierungen."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 111794197864898560
+    m_Localized: "Viel Spa\xDF mit unserem Prototypen!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 111797384072126464
+    m_Localized: Das Buch ist fertiggestellt!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 111798488931491840
+    m_Localized: "Das Buch wurde erfolgreich erstellt.\n\nSchau dir das Buch in Ruhe
+      an, indem du die Pfeiltasten dr\xFCckst, oder dr\xFCcke \"beenden\", um ein
+      neues Buch zu erstellen."
     m_Metadata:
       m_Items: []
   references:
