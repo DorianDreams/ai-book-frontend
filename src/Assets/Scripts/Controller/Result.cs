@@ -138,12 +138,11 @@ public class ResultScreenController : MonoBehaviour
         ReGenerateImages.SetActive(false);
 
         Metadata.Instance.currentImgID = imageReturnVals[selectedImageIndex]["id"].ToString();
-            imageByteList.Clear();
-            imageReturnVals.Clear();
-
-
-            EventSystem.instance.SelectImageEvent(_currentSelectedImage.sprite, selectedImageIndex, bytes);
-            EventSystem.instance.DisableResultScreenEvent();
+        imageByteList.Clear();
+        imageReturnVals.Clear();
+        
+        EventSystem.instance.SelectImageEvent(_currentSelectedImage.sprite, selectedImageIndex, bytes);
+        EventSystem.instance.DisableResultScreenEvent();
             //EventSystem.instance.EnableBookNavigatorEvent();
         }
     }
@@ -151,12 +150,13 @@ public class ResultScreenController : MonoBehaviour
 
     IEnumerator StableDiffusionInference(byte[] screenshot)
     {
-        CoroutineWithData load = new CoroutineWithData(this, Request.LoadSDXL());
-        yield return load.coroutine;
-        string delete = (string)load.result;
-        ChooseImage.GetComponent<Button>().interactable = false;
+
+        EventSystem.instance.DisableRestartButtonEvent();
+                ChooseImage.GetComponent<Button>().interactable = false;
         BacktoDrawing.GetComponent<Button>().interactable = false;
         ReGenerateImages.GetComponent<Button>().interactable = false;
+
+
 
         _numberOfImages = 0;
         CoroutineWithData cd_caption = new CoroutineWithData(this, Request.GetImageCaption(screenshot));
@@ -177,8 +177,7 @@ public class ResultScreenController : MonoBehaviour
         EnableSelectionButtons();
         _isgenerating = false;
         EventSystem.instance.CubeOffEvent();
-        CoroutineWithData unload = new CoroutineWithData(this, Request.UnLoadSDXL());
-        yield return unload.coroutine;
+
     }
 
 

@@ -69,6 +69,8 @@ public class StartSelectionController : MonoBehaviour
         EventSystem.instance.StartStory += ShowDrawingSceneStart;
         StartingHeadline.GetComponent<TextMeshProUGUI>().text = StartingText.GetLocalizedString();
         InfoText.GetComponent<TextMeshProUGUI>().text = InfoBoxText.GetLocalizedString();
+        
+
     }
 
     private void OnEnable()
@@ -179,6 +181,10 @@ public class StartSelectionController : MonoBehaviour
                 Metadata.Instance.selectedCharacter = "Wanda";
                 break;
         }
+        
+        StartCoroutine(Request.LoadSDXL());
+
+
 
 
         

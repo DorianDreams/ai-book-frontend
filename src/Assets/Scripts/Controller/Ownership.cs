@@ -200,6 +200,7 @@ public class OwnershipSelectionController : MonoBehaviour
             EventSystem.instance.EnableBookNavigatorEvent();
             EventSystem.instance.PublishMetadataEvent();
             EventSystem.instance.DisableOwnershipScreenEvent();
+            EventSystem.instance.CleanLineGeneratorEvent();
 
 
             //EventSystem.instance.FinishPlaythroughEvent();

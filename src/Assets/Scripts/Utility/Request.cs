@@ -98,7 +98,7 @@ public class Request : MonoBehaviour
     }
 
     // Language Model Inference Calls 
-    public static IEnumerator GetSentenceCompletion(byte[] bytes, string sentence, float temperature)
+    public static IEnumerator GetSentenceCompletion(byte[] bytes, string sentence, float temperature, string language)
     {
         if (Metadata.Instance.testingMode)
         {
@@ -112,7 +112,7 @@ public class Request : MonoBehaviour
 
         
         string url = "http://127.0.0.1:8000/api/chat/chapters?prompt=" + sentence + "&temperature=" + 
-            temperature.ToString("0.0", CultureInfo.InvariantCulture) + "&ch_index=" + Metadata.Instance.currentChapter;
+            temperature.ToString("0.0", CultureInfo.InvariantCulture) + "&ch_index=" + Metadata.Instance.currentChapter + "&language=" + language;
         WWWForm form = new WWWForm();
         form.AddBinaryData("image", bytes);
         form.headers["Content-Type"] = "multipart/form-data";
@@ -148,9 +148,10 @@ public class Request : MonoBehaviour
     }
 
     // Call Tiny-Llama for Title Creation
-    public static IEnumerator CreateTitle(string alltext)
+    public static IEnumerator CreateTitle(string alltext, string language)
     {
-        string json = "{ \"user_input\":" + "\"" + alltext + "\"" + "}";
+        string json = "{ \"user_input\":" + "\"" + alltext + "\"" + ",\"language\":" + "\"" + language + "\""+"}";
+        Debug.Log(json);
 
         if (Metadata.Instance.testingMode)
         {
@@ -197,8 +198,6 @@ public class Request : MonoBehaviour
         }
         else
         {
-
-
             using (UnityWebRequest request = UnityWebRequest.Post("http://127.0.0.1:8000/api/chat/translations", json, "application/json"))
             {
                 yield return request.SendWebRequest();

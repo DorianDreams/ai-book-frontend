@@ -395,20 +395,30 @@ namespace echo17.EndlessBook.Demo03
 
         IEnumerator SentenceCompletions(byte[] genImage, string prompt)
         {
+                CoroutineWithData cd_unload = new CoroutineWithData(this, Request.UnLoadSDXL());
+                yield return cd_unload.coroutine;
+
             EventSystem.instance.DisableRestartButtonEvent();
 
             SentenceRegeneration.SetActive(true);
-            CoroutineWithData cd_completion = new CoroutineWithData(this, Request.GetSentenceCompletion(genImage, prompt, _currentTemperature));
-            yield return cd_completion.coroutine;
-            string completion = (string)cd_completion.result;
+            //todo: check locale
+            string completion = "";
             Locale currentSelectedLocale = LocalizationSettings.SelectedLocale;
             ILocalesProvider availableLocales = LocalizationSettings.AvailableLocales;
+
             if (currentSelectedLocale == availableLocales.GetLocale("de"))
             {
-                CoroutineWithData translation = new CoroutineWithData(this, Request.TranslateSentence(completion));
-                yield return translation.coroutine;
-                completion = (string)translation.result;
+                CoroutineWithData cd_completion = new CoroutineWithData(this, Request.GetSentenceCompletion(genImage, prompt, _currentTemperature, "ger"));
+                yield return cd_completion.coroutine;
+                completion = (string)cd_completion.result;
             }
+            else {
+                CoroutineWithData cd_completion = new CoroutineWithData(this, Request.GetSentenceCompletion(genImage, prompt, _currentTemperature, "en"));
+                yield return cd_completion.coroutine;
+                completion = (string)cd_completion.result;
+            }
+
+
             proposalText.GetComponent<TextMeshProUGUI>().text = completion;
             _isGenerating = false;
             Spinner.SetActive(false);
@@ -453,19 +463,24 @@ namespace echo17.EndlessBook.Demo03
 
        public IEnumerator CreateTitle(string alltext)
         {
-            CoroutineWithData cd_title = new CoroutineWithData(this, Request.CreateTitle(alltext));
-            yield return cd_title.coroutine;
-            Locale currentSelectedLocale = LocalizationSettings.SelectedLocale;
+                            CoroutineWithData cd_unload = new CoroutineWithData(this, Request.UnLoadSDXL());
+                yield return cd_unload.coroutine;
+
+                        Locale currentSelectedLocale = LocalizationSettings.SelectedLocale;
             ILocalesProvider availableLocales = LocalizationSettings.AvailableLocales;
-            string title = (string)cd_title.result;
+            string title = "";
 
-
+            
             if (currentSelectedLocale == availableLocales.GetLocale("de"))
             {
-                CoroutineWithData cd_translation= new CoroutineWithData(this, Request.TranslateSentence(title));
-                yield return cd_translation.coroutine;
-
-
+            CoroutineWithData cd_title = new CoroutineWithData(this, Request.CreateTitle(alltext,"ger"));
+            yield return cd_title.coroutine;
+                title = (string)cd_title.result;
+            }
+            else {
+            CoroutineWithData cd_title = new CoroutineWithData(this, Request.CreateTitle(alltext, "en"));
+            yield return cd_title.coroutine;
+                title = (string)cd_title.result;
             }
 
 
@@ -509,7 +524,7 @@ namespace echo17.EndlessBook.Demo03
             alltext = sb.ToString();
 
 
-            StartCoroutine(CreateCover(alltext));
+            //StartCoroutine(CreateCover(Metadata.Instance.startingPrompt));
             StartCoroutine(CreateTitle(alltext));
         }
 
@@ -520,6 +535,8 @@ namespace echo17.EndlessBook.Demo03
 
         IEnumerator CreateCover(string story)
         {
+            CoroutineWithData load = new CoroutineWithData(this, Request.LoadSDXL());
+            yield return load.coroutine;
 
             CoroutineWithData cd_cover = new CoroutineWithData(this, Request.GetImageGeneration(story, 1f,imageBytes[0]));
             yield return cd_cover.coroutine;
@@ -530,6 +547,9 @@ namespace echo17.EndlessBook.Demo03
             byte[] cover = System.IO.File.ReadAllBytes(fullpath);
 
             EventSystem.instance.ChooseCoverImageEvent(cover);
+            CoroutineWithData unload = new CoroutineWithData(this, Request.UnLoadSDXL());
+            yield return unload.coroutine;
+
         }
 
         public void GoToPreviousPage()
@@ -584,6 +604,7 @@ namespace echo17.EndlessBook.Demo03
 
         void OnPublishNextPrompt()
         {
+            StartCoroutine(Request.LoadSDXL());            
             if (book.CurrentPageNumber == 3)
             {
                 Metadata.Instance.currentChapter = "ch2";
