@@ -1,21 +1,21 @@
 {
     "Pfiffikus":{
-        "ch1":["Pfiffikus liebt es, im Wald zu sein. Du siehst", "Wie sieht der Wald aus?"],
-        "ch2":["Eines Tages findet Pfiffikus einen geheimnisvollen Gegenstand im Wald. Du siehst", "Wie sieht der Gegenstand aus?"],
-        "ch3":["Pfiffikus wird zum Eingang eines großen Gebäudes teleportiert, das er noch nie zuvor gesehen hat. Du siehst", "Wie sieht das Gebäude aus?"],
-        "consistency": "Light Grey Owl"
+        "ch1":["Eines Morgens wacht Pfiffikus im Museum auf, umgeben von blinkenden Lichtern und einem Roboter", "Wie sehen die beiden aus?"],
+        "ch2":["Am Mittag essen Pfiffikus und der Roboter gemeinsam zu Mittag. Sie", "Was essen sie?"],
+        "ch3":["Am Abend besuchen Pfiffikus und der Roboter das Planetarium, wo die Decke mit Sternen gefüllt ist, die aussehen wie", "Wie sehen die Sterne aus?"],
+        "consistency": "Light Grey Owl, robot"
     },
     "Edgar":{
-        "ch1":["Edgar, der Elefant, liebt Musik. Wenn du ihn besuchen kommst, siehst du", "Welches Instrument spielt er?"],
-        "ch2":["Edgar und eine Gruppe von Vögel singen ein Lied. Du siehst", "Wie sehen sie die Vögel aus?"],
-        "ch3":["Edgar, der Elefant, hat großen Erfolg mit seiner Musik. Eines Tages gewinnt er einen wichtigen Preis. Du siehst", "Wie sieht der Preis aus?"],
-        "consistency": "Edgar, the elephant, joyful, music"
+        "ch1":["Edgar, der Elefant, liebt Musik. Wenn du ihn besuchst, spielt er am liebsten", "Welches Instrument spielt er?"],
+        "ch2":["Eines Tages werden kleine Tiere, wie Hasen und Meerschweinchen, von Edgars Musik angezogen.", "Wie sehen die kleinen Tiere aus?"],
+        "ch3":["Es ist Nacht und die kleinen Tiere können nicht einschlafen, also spielt Edgar eine sanfte und beruhigende Melodie", "Was spielt er?"],
+        "consistency": "Edgar, the elephant, plays music"
     },
 
     "Grandma":{
-        "ch1":["Ich liebe es, wenn Oma für mich backt. Du siehst", "Was backt Oma?"],
-        "ch2":["Jeden Morgen steht Oma früh auf, um ihren Garten zu pflegen. Du siehst" , "Wie sieht ihr Garten aus?"],
-        "ch3":["Als ich Omas Haus verlasse, drückt sie mir eine Blume in die Hand. Du siehst", "Wie sieht die Blume aus?"],
+        "ch1":["Ich mag es, wenn Oma für mich in ihrem kleinen Haus backt. Sie", "Was backt Oma?"],
+        "ch2":["Jeden Morgen wacht Oma früh auf, um ihren schönen Garten zu pflegen, mit" , "Wie sieht ihr Garten aus?"],
+        "ch3":["Als ich das Haus meiner Großmutter verlasse, drückt sie mir eine Blume in die Hand, die", "Wie sieht die Blume aus?"],
         "consistency": "Grandma, old"
 
     },
@@ -35,9 +35,9 @@
     },
     
     "Datenkrake":{
-        "ch1":["Der Oktopus Datenkrake verbringt viel Zeit in der Bibliothek. Du siehst", "Wie sieht die Bibliothek aus?"],
-        "ch2":["Die Oktopus Datenkrake arbeitet viel Zeit am Computer. Du siehst", "Wie sieht er aus, wenn er arbeitet?"],
-        "ch3":["Der Oktopus Datenkrake liebt Museen, in denen er neue Technologien entdeckt. Du siehst", "Welche neuen Technologien entdeckt er?"],
+        "ch1":["Datenkrake, der Oktopus, hat acht Arme, mit denen er sich alle möglichen Informationen schnappen kann! Er schwimmt durch das Internet", "Wie sieht er aus?"],
+        "ch2":["Datenkrake liebt es, Menschen dazu zu bringen, ihre Geheimnisse zu verraten. Er verkleidet sich", "Als was verkleidet er sich?"],
+        "ch3":["Datenkrke liebt Kekse. Er versteckt sich im Hintergrund und sammelt Krümel.", "Wie sehen die Kekse aus?"],
         "consistency": "octopus, internet, data"
     }
 }

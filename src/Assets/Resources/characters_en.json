@@ -1,21 +1,21 @@
 {
     "Pfiffikus":{
-        "ch1":["Pfiffikus loves being in the forest. You see", "What does the forest look like?"],
-        "ch2":["One day, Pfiffikus finds a mysterious object in the forest. You see", "What object does he find?"],
-        "ch3":["Pfiffikus gets teleported to the entrance of a big building he’s never seen before. You see", "What does the building look like?"],
-        "consistency": "Light Grey Owl, Pfiffikus"
+        "ch1":["One morning Pfiffikus wakes up inside the museum, surrounded by blinking lights and a robot", "What does Pfiffikus and the robot look like?"],
+        "ch2":["At noon, Pfiffikus and the robot eat lunch together. They", "What do they eat?"],
+        "ch3":["At night, Pfiffikus and the robot visit the planetarium, where the ceiling is filled with stars that look like", "What do the stars look like?"],
+        "consistency": "Light Grey Owl, Pfiffikus, robot"
     },
     "Edgar":{
-        "ch1":["Edgar the elephant loves music. When you visit him, you see", "What instrument does he play?"],
-        "ch2":["Edgar the elephant and a group of birds sing a song. You see", "What do the birds look like?"],
-        "ch3":["Edgar the elephant has great success with his music. One day he wins an important award. You see", "What does he win?"],
-        "consistency": "Edgar, the elephant, joyful, music"
+        "ch1":["Edgar the elephant loves music. When you visit him, you see him play", "What instrument does he play?"],
+        "ch2":["One day, little animals, such as bunnies and guinea pigs, are drawn to Edgars music", "What do the litle animals look like?"],
+        "ch3":["It is nighttime and the little animals cannot fall asleep, so Edgar plays a soft and soothing tune", "What does he play?"],
+        "consistency": "Edgar, the elephant, music"
     },
 
     "Grandma":{
-        "ch1":["I like it when grandma bakes for me. You see", "What does grandma bake?"],
-        "ch2":["Every morning, Grandma wakes up early to tend to her beautiful garden. You see" , "What does her garden look like?"],
-        "ch3":["As I leave Grandma's house, she puts a flower in my hand. You see", "What does the flower look like?"],
+        "ch1":["I like it when grandma bakes for me at her little house. She", "What does grandma bake?"],
+        "ch2":["Every morning, Grandma wakes up early to tend to her beautiful garden with" , "What does her garden look like?"],
+        "ch3":["As I leave Grandma's house, she puts a flower in my hand that looks", "What does the flower look like?"],
         "consistency": "Grandma, old"
 
     },
@@ -35,9 +35,9 @@
     },
     
     "Datenkrake":{
-        "ch1":["The octopus Datenkrake spends a lot of time in the library. You see", "What does the library look like?"],
-        "ch2":["The octopus Datenkrake works a lot of time on the computer. You see", "What does he look like when he works?"],
-        "ch3":["The octopus Datenkrake loves museums where he discoveres new technologies. You see", "What new technologies does he discover?"],
+        "ch1":["Datenkrake the Octopus has eight arms, perfect for grabbing all sorts of information! He swims through the internet", "What does Datenkrake look like?"],
+        "ch2":["Datenkrake loves to trick people into sharing their secrets. He disguises himself", "What disguise does Datenkrake wear?"],
+        "ch3":["Datenkrke loves cookies. He hides in the background, collecting crumbs", "What do the cookies look like?"],
         "consistency": "octopus, internet, data"
     }
 }

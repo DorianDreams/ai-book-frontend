@@ -154,7 +154,7 @@ public class StartSelectionController : MonoBehaviour
         
         if (_currentSelectedIndex == null)
         {
-               _currentSelectedIndex = Random.Range(0, 6);
+               _currentSelectedIndex = Random.Range(0, 4);
         }
         
         
@@ -164,21 +164,15 @@ public class StartSelectionController : MonoBehaviour
                 Metadata.Instance.selectedCharacter = "Datenkrake";
                 break;
             case 1:
-                Metadata.Instance.selectedCharacter = "Grandma";
+                Metadata.Instance.selectedCharacter = "Pfiffikus";
                 break;
             case 2:
-                Metadata.Instance.selectedCharacter = "Pfiffikus";
+                Metadata.Instance.selectedCharacter = "Edgar";
 
                 break;
             case 3:
-                Metadata.Instance.selectedCharacter = "Edgar";
+                Metadata.Instance.selectedCharacter = "Grandma";
                 
-                break;
-            case 4:
-                Metadata.Instance.selectedCharacter = "Wissenschaf";
-                break;
-            case 5:
-                Metadata.Instance.selectedCharacter = "Wanda";
                 break;
         }
         
