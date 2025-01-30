@@ -1645,7 +1645,7 @@ MonoBehaviour:
   startingPrompt: 
   secondPrompt: 
   thirdPrompt: 
-  test: 0
+  test: 1
 --- !u!1001 &107187313
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1949,7 +1949,7 @@ MonoBehaviour:
   startingPrompt: 
   selectedCharacter: 
   currentImgID: 
-  testingMode: 0
+  testingMode: 1
   consistencyPrompt: 
   currentChapter: ch1
   currentLLM: 0
@@ -5006,7 +5006,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 405, y: -620}
+  m_AnchoredPosition: {x: 322.06, y: -620}
   m_SizeDelta: {x: 1356.971, y: 1012.1853}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &354782636
@@ -5062,7 +5062,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 8
   m_VerticalAlignment: 256
   m_textAlignment: 65535
@@ -10915,9 +10915,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Erstelle ein Kinderbuch mit KI und entscheide, wer die Autorin oder der
-    Autor ist. Das Buch wird drei Seiten lang sein, also nimm Dir ein paar Minuten
-    Zeit.
+  m_text: "Gestalte ein buntes Kinderbuch \nmit Hilfe von KI"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -10950,7 +10948,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 256
   m_textAlignment: 65535
@@ -11937,7 +11935,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 81.0229, y: -415}
+  m_AnchoredPosition: {x: 81.0229, y: -377.2}
   m_SizeDelta: {x: 1356.971, y: 1012.1853}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &960208535
@@ -11960,8 +11958,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Bemerkung zur deutschen Version: Da die KI alle Texte aus dem Englischen
-    ins Deutsche r\xFCck\xFCbersetzt, kommt es manchmal zu komischen Formulierungen."
+  m_text: 'Am Ende musst du entscheiden:
+
+    Wer hat das Buch gemacht, die KI oder
+    der Mench?'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -11994,7 +11994,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 256
   m_textAlignment: 65535

@@ -129,8 +129,9 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 111793169014710272
-    m_Localized: Erstelle ein Kinderbuch mit KI und entscheide, wer die Autorin oder
-      der Autor ist.
+    m_Localized: 'Gestalte ein buntes Kinderbuch
+
+      mit Hilfe von KI'
     m_Metadata:
       m_Items: []
   - m_Id: 111793445746499584
@@ -139,8 +140,10 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 111794138419027968
-    m_Localized: "Bemerkung zur deutschen Version: Da die KI alle Texte aus dem Englischen
-      ins Deutsche r\xFCck\xFCbersetzt, kommt es manchmal zu komischen Formulierungen."
+    m_Localized: 'Am Ende musst du entscheiden:
+
+      Wer hat das Buch gemacht,
+      du oder die KI?'
     m_Metadata:
       m_Items: []
   - m_Id: 111794197864898560

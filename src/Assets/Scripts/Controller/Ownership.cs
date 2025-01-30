@@ -32,6 +32,7 @@ public class OwnershipSelectionController : MonoBehaviour
 
     public Canvas DrawingCanvas;
 
+    private GameObject InstantiatedLineGenerator;
 
     [SerializeField]
     private LocalizedString SignText;
@@ -180,7 +181,7 @@ public class OwnershipSelectionController : MonoBehaviour
                 currentState = "signing";
                 Headline.GetComponent<TextMeshProUGUI>().text = SignText3.GetLocalizedString();
                 DrawingBackground.SetActive(true);
-                GameObject InstantiatedLineGenerator = Instantiate(LineGeneratorPrefab);
+                InstantiatedLineGenerator = Instantiate(LineGeneratorPrefab);
                 InstantiatedLineGenerator.GetComponent<LineGenerator>().parentCanvas = DrawingCanvas;
                 InstantiatedLineGenerator.GetComponent<LineGenerator>().width = LineWidth;
                 EventSystem.instance.PressColorButtonEvent(Color.black);
@@ -191,6 +192,8 @@ public class OwnershipSelectionController : MonoBehaviour
                 EventSystem.instance.EnableBookNavigatorEvent();
                 EventSystem.instance.PublishMetadataEvent();
                 EventSystem.instance.DisableOwnershipScreenEvent();
+                EventSystem.instance.CleanLineGeneratorEvent();
+
                 //EventSystem.instance.FinishPlaythroughEvent();
             }
         }
@@ -201,6 +204,8 @@ public class OwnershipSelectionController : MonoBehaviour
             EventSystem.instance.PublishMetadataEvent();
             EventSystem.instance.DisableOwnershipScreenEvent();
             EventSystem.instance.CleanLineGeneratorEvent();
+            Destroy(InstantiatedLineGenerator);
+
 
 
             //EventSystem.instance.FinishPlaythroughEvent();

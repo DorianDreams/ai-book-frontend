@@ -127,7 +127,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 111793169014710272
-    m_Localized: Create a children's book with AI and decide who the author is.
+    m_Localized: "Create a colourful children's book \nwith the help of AI"
     m_Metadata:
       m_Items: []
   - m_Id: 111793445746499584
@@ -136,7 +136,10 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 111794138419027968
-    m_Localized: ' '
+    m_Localized: 'In the end, you have to decide:
+
+      Who made the book, you or
+      the AI?'
     m_Metadata:
       m_Items: []
   - m_Id: 111794197864898560
